@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { FormControl, Input, InputLabel, Button, Paper, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { StateContext } from '../App';
-import { add_job_offer, set_job_value, set_name_value, set_location_value, set_salary_value, set_experience_value, search_for_work } from '../store/actions';
+import { add_job_offer, set_job_value, set_name_value, set_location_value, set_salary_value, set_experience_value, search_for_work, get_all_offers } from '../store/actions';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -33,7 +33,11 @@ const useStyles = makeStyles(theme => ({
     height: 50,
     fontSize: "1.2rem",
   },
-
+  buttonAllOffers: {
+    marginTop: 20,
+    height: 50,
+    fontSize: "1.2rem",
+  },
   heading: {
     fontSize: "2.2rem",
     textAlign: "center",
@@ -109,6 +113,10 @@ export default function AppForm(props) {
     }, dispatch)
   }
 
+  const handleSearchAll = () => {
+    get_all_offers(dispatch)
+  }
+
   return (
     <Paper className={classes.paper}>
       <div className={classes.heading}>
@@ -147,6 +155,11 @@ export default function AppForm(props) {
             onClick={handleAddWork}
           > Add work offer </Button>
         </div>
+        <Button
+          variant="outlined"
+          className={classes.buttonAllOffers}
+          onClick={handleSearchAll}
+        > Show all offers </Button>
       </form>
     </Paper>
   )
