@@ -1,13 +1,16 @@
-import React, { useReducer, createContext } from 'react';
+import React, { useReducer, createContext, useEffect } from 'react';
 import AppForm from './components/AppForm';
 import { makeStyles } from '@material-ui/styles';
 import rootReducer from './store/rootReducer';
-import { add_job_offer, add_job_request } from './store/actions';
+import { add_job_offer, add_job_request, get_all_offers } from './store/actions';
+import OfferList from './components/OfferList';
 
 const useStyles = makeStyles(theme => ({
   app: {
     display: "flex",
-    justifyContent: "center",
+    flexDirection: "column",
+    // justifyContent: "center",
+    // alignItems: "center",
     margin: 70,
   }
 }))
@@ -25,10 +28,18 @@ export const StateContext = createContext()
 function App() {
   const classes = useStyles();
   const [state, dispatch] = useReducer(rootReducer, initialState)
+
+  useEffect(() => {
+    get_all_offers(dispatch)
+  }, [get_all_offers])
   return (
     <div className={classes.app}>
       <StateContext.Provider value={[state, dispatch]}>
         <AppForm />
+        {state.search_results.length
+          ? <OfferList offers={state.search_results} />
+          : null
+        }
       </StateContext.Provider>
     </div>
   );

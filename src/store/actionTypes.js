@@ -1,4 +1,5 @@
 export const types = {
+  get_all_offers: "get_all_offers",
   search_for_work: "search_for_work",
   add_job_offer: "add_job_offer",
   add_job_request: "add_job_request",

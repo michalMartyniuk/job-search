@@ -6,9 +6,9 @@ import { add_job_offer, set_job_value, set_name_value, set_location_value, set_s
 
 const useStyles = makeStyles(theme => ({
   paper: {
-    width: 600,
+    width: 550,
     padding: 50,
-    marginRight: 100,
+    margin: "auto",
     border: "2px solid mediumturquoise"
   },
   form: {
@@ -35,6 +35,7 @@ const useStyles = makeStyles(theme => ({
   },
 
   heading: {
+    fontSize: "2.2rem",
     textAlign: "center",
     marginBottom: 40
   }
@@ -110,9 +111,9 @@ export default function AppForm(props) {
 
   return (
     <Paper className={classes.paper}>
-      <Typography variant="h4" className={classes.heading}>
+      <div className={classes.heading}>
         Search for Work or add job offer
-      </Typography>
+      </div>
       <form className={classes.form} onSubmit={formHandler}>
         <FormInput
           name="job"
