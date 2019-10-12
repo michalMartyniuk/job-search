@@ -2,7 +2,12 @@ import React, { useContext } from 'react';
 import { FormControl, Input, InputLabel, Button, Paper, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { StateContext } from '../App';
-import { add_job_offer, set_job_value, set_name_value, set_location_value, set_salary_value, set_experience_value, search_for_work, get_all_offers } from '../store/actions';
+import {
+  add_job_offer, set_job_value, set_location_value,
+  set_salary_value_min, set_salary_value_max,
+  set_experience_value_min, set_experience_value_max,
+  search_for_work, get_all_offers
+} from '../store/actions';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -17,12 +22,39 @@ const useStyles = makeStyles(theme => ({
     justifyItems: "center",
     alignItems: "center",
   },
+  formControl: {
+    width: 328
+  },
+  formControlMinMax: {
+    width: 154,
+    "&:nth-child(1)": {
+      marginRight: 20
+    }
+  },
   input: {
     fontSize: "1.5rem",
     marginBottom: 20
   },
+  inputsHeader: {
+    fontSize: "1.4rem",
+    marginBottom: "1rem"
+  },
   inputLabel: {
     fontSize: "1.5rem"
+  },
+  salaryContainer: {
+    display: "flex",
+    flexDirection: "column"
+  },
+  salaryInputs: {
+    display: "flex"
+  },
+  expContainer: {
+    display: "flex",
+    flexDirection: "column"
+  },
+  expInputs: {
+    display: "flex"
   },
   buttonsContainer: {
     display: "flex",
@@ -45,10 +77,10 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const FormInput = ({ name, value, onChange }) => {
+const FormInput = ({ name, value, onChange, className }) => {
   const classes = useStyles()
   return (
-    <FormControl>
+    <FormControl className={className ? className : classes.formControl}>
       <InputLabel className={classes.inputLabel}>{name}</InputLabel>
       <Input
         className={classes.input}
@@ -64,8 +96,10 @@ export default function AppForm(props) {
   const {
     job_input_value,
     location_input_value,
-    experience_input_value,
-    salary_input_value
+    experience_input_value_min,
+    experience_input_value_max,
+    salary_input_value_min,
+    salary_input_value_max
   } = state;
   const classes = useStyles()
 
@@ -74,8 +108,10 @@ export default function AppForm(props) {
     props.handler({
       job: job_input_value,
       location: location_input_value,
-      exp: experience_input_value,
-      salary: salary_input_value
+      exp_min: experience_input_value_min,
+      exp_max: experience_input_value_max,
+      salary_min: salary_input_value_min,
+      salary_max: salary_input_value_max
     }, dispatch)
   }
 
@@ -87,20 +123,26 @@ export default function AppForm(props) {
     set_location_value(event.target.value, dispatch)
   }
 
-  const handleSalaryValue = event => {
-    set_salary_value(event.target.value, dispatch)
+  const handleSalaryValueMin = event => {
+    set_salary_value_min(event.target.value, dispatch)
   }
-
-  const handleExperienceValue = event => {
-    set_experience_value(event.target.value, dispatch)
+  const handleSalaryValueMax = event => {
+    set_salary_value_max(event.target.value, dispatch)
   }
-
+  const handleExperienceValueMin = event => {
+    set_experience_value_min(event.target.value, dispatch)
+  }
+  const handleExperienceValueMax = event => {
+    set_experience_value_max(event.target.value, dispatch)
+  }
   const handleAddWork = () => {
     add_job_offer({
       job: job_input_value,
       location: location_input_value,
-      exp: experience_input_value,
-      salary: salary_input_value
+      exp_min: experience_input_value_min,
+      exp_max: experience_input_value_max,
+      salary_min: salary_input_value_min,
+      salary_max: salary_input_value_max
     }, dispatch)
   }
 
@@ -108,8 +150,10 @@ export default function AppForm(props) {
     search_for_work({
       job: job_input_value,
       location: location_input_value,
-      exp: experience_input_value,
-      salary: salary_input_value
+      exp_min: experience_input_value_min,
+      exp_max: experience_input_value_max,
+      salary_min: salary_input_value_min,
+      salary_max: salary_input_value_max
     }, dispatch)
   }
 
@@ -133,16 +177,40 @@ export default function AppForm(props) {
           value={location_input_value}
           onChange={handleLocationValue}
         />
-        <FormInput
-          name="salary"
-          value={salary_input_value}
-          onChange={handleSalaryValue}
-        />
-        <FormInput
-          name="experience"
-          value={experience_input_value}
-          onChange={handleExperienceValue}
-        />
+        <div className={classes.salaryContainer}>
+          <h4 className={classes.inputsHeader}>Salary</h4>
+          <div className={classes.salaryInputs}>
+            <FormInput
+              name="$ min"
+              className={classes.formControlMinMax}
+              value={salary_input_value_min}
+              onChange={handleSalaryValueMin}
+            />
+            <FormInput
+              name="$ max"
+              className={classes.formControlMinMax}
+              value={salary_input_value_max}
+              onChange={handleSalaryValueMax}
+            />
+          </div>
+        </div>
+        <div className={classes.expContainer}>
+          <h4 className={classes.inputsHeader}>Experience</h4>
+          <div className={classes.expInputs}>
+            <FormInput
+              name="min"
+              className={classes.formControlMinMax}
+              value={experience_input_value_min}
+              onChange={handleExperienceValueMin}
+            />
+            <FormInput
+              name="max"
+              className={classes.formControlMinMax}
+              value={experience_input_value_max}
+              onChange={handleExperienceValueMax}
+            />
+          </div>
+        </div>
         <div className={classes.buttonsContainer}>
           <Button
             variant="outlined"
@@ -161,6 +229,6 @@ export default function AppForm(props) {
           onClick={handleSearchAll}
         > Show all offers </Button>
       </form>
-    </Paper>
+    </Paper >
   )
 }

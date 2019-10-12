@@ -27,16 +27,16 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const Offer = ({ job, location, exp, salary }) => {
+const Offer = ({ job, location, exp_min, exp_max, salary_min, salary_max }) => {
   const classes = useStyles();
   let locationElem = location
     ? <div className={classes.offerText}>Location: {location}</div>
     : null
-  let expElem = exp
-    ? <div className={classes.offerText}>Experience: {exp} {exp > 4 ? "lat" : "lata"}</div>
+  let expElem = exp_min || exp_max
+    ? <div className={classes.offerText}>Experience: {exp_min ? exp_min : 0}{exp_max ? ` - ${exp_max}` : null} {(exp_max || exp_min) > 4 ? "lat" : "lata"}</div>
     : null
-  let salaryElem = exp
-    ? <div className={classes.offerText}>Salary: {salary} PLN</div>
+  let salaryElem = salary_min || salary_max
+    ? <div className={classes.offerText}>Salary: {salary_min ? salary_min : 0}{salary_max ? ` - ${salary_max}` : null} PLN</div>
     : null
   return (
     <div className={classes.offer}>
@@ -59,8 +59,10 @@ export default function OfferList({ offers }) {
             key={offer.id}
             job={offer.job}
             location={offer.location}
-            exp={offer.exp}
-            salary={offer.salary}
+            exp_min={offer.exp_min}
+            exp_max={offer.exp_max}
+            salary_min={offer.salary_min}
+            salary_max={offer.salary_max}
           />
         })}
       </div>

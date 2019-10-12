@@ -1,6 +1,6 @@
 import { types } from './actionTypes';
-export default function rootReducer (state, action) {
-  switch(action.type) {
+export default function rootReducer(state, action) {
+  switch (action.type) {
     case types.get_all_offers:
       return {
         ...state,
@@ -26,15 +26,25 @@ export default function rootReducer (state, action) {
         ...state,
         location_input_value: action.value
       }
-    case types.experience_input_value:
+    case types.experience_input_value_min:
       return {
         ...state,
-        experience_input_value: action.value
+        experience_input_value_min: action.value
       }
-    case types.salary_input_value:
+    case types.experience_input_value_max:
       return {
         ...state,
-        salary_input_value: action.value
+        experience_input_value_max: action.value
+      }
+    case types.salary_input_value_min:
+      return {
+        ...state,
+        salary_input_value_min: action.value
+      }
+    case types.salary_input_value_max:
+      return {
+        ...state,
+        salary_input_value_max: action.value
       }
     default:
       return state

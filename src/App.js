@@ -9,8 +9,6 @@ const useStyles = makeStyles(theme => ({
   app: {
     display: "flex",
     flexDirection: "column",
-    // justifyContent: "center",
-    // alignItems: "center",
     margin: 70,
   }
 }))
@@ -19,8 +17,10 @@ const initialState = {
   search_results: [],
   job_input_value: "",
   name_input_value: "",
-  experience_input_value: "",
-  salary_input_value: "",
+  experience_input_value_min: "",
+  experience_input_value_max: "",
+  salary_input_value_min: "",
+  salary_input_value_max: "",
   location_input_value: ""
 }
 export const StateContext = createContext()
