@@ -44,7 +44,7 @@ export const search_for_work = (values, dispatch) => {
       }
       if (exp_min) {
         results = results.filter(doc => {
-          if (!doc.exp_max) return true
+          if (!doc.exp_max) return exp_min <= doc.exp_min
           return exp_min <= doc.exp_max
         })
       }
@@ -56,7 +56,7 @@ export const search_for_work = (values, dispatch) => {
       }
       if (salary_min) {
         results = results.filter(doc => {
-          if (!doc.salary_max) return true
+          if (!doc.salary_max) return salary_min <= doc.salary_min
           return salary_min <= doc.salary_max
         })
       }
