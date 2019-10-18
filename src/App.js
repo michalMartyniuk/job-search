@@ -1,9 +1,10 @@
-import React, { useReducer, createContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import AppForm from './components/AppForm';
 import { makeStyles } from '@material-ui/styles';
-import rootReducer from './store/rootReducer';
-import { add_job_offer, add_job_request, get_all_offers } from './store/actions';
+import { get_all_offers } from './store/app/appActions';
 import OfferList from './components/OfferList';
+import FiltersDrawer from './components/Drawer';
+import { connect } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   app: {
@@ -13,36 +14,27 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const initialState = {
-  search_results: [],
-  job_input_value: "",
-  name_input_value: "",
-  experience_input_value_min: "",
-  experience_input_value_max: "",
-  salary_input_value_min: "",
-  salary_input_value_max: "",
-  location_input_value: ""
-}
-export const StateContext = createContext()
-
-function App() {
+function App(props) {
   const classes = useStyles();
-  const [state, dispatch] = useReducer(rootReducer, initialState)
+  const { search_results, get_all_offers } = props
 
   useEffect(() => {
-    get_all_offers(dispatch)
+    get_all_offers()
   }, [get_all_offers])
+
   return (
     <div className={classes.app}>
-      <StateContext.Provider value={[state, dispatch]}>
-        <AppForm />
-        {state.search_results.length
-          ? <OfferList offers={state.search_results} />
-          : null
-        }
-      </StateContext.Provider>
+      <FiltersDrawer />
+      {/* <AppForm />
+      {search_results.length
+        ? <OfferList offers={search_results} />
+        : null
+      } */}
     </div>
   );
 }
-
-export default App;
+const mapStateToProps = state => ({ ...state.app })
+const mapDispatchToProps = dispatch => ({
+  get_all_offers: () => dispatch(get_all_offers())
+})
+export default connect(mapStateToProps, mapDispatchToProps)(App);

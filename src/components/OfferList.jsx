@@ -27,21 +27,25 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const Offer = ({ job, location, exp_min, exp_max, salary_min, salary_max }) => {
+const Offer = ({ job, location, city, exp_min, exp_max, salary_min, salary_max }) => {
   const classes = useStyles();
   let locationElem = location
-    ? <div className={classes.offerText}>Location: {location}</div>
+    ? <div className={classes.offerText}>Kraj: {location}</div>
+    : null
+  let cityElem = city
+    ? <div className={classes.offerText}>Miasto: {city}</div>
     : null
   let expElem = exp_min || exp_max
-    ? <div className={classes.offerText}>Experience: {exp_min ? exp_min : 0}{exp_max ? ` - ${exp_max}` : null} {(exp_max || exp_min) > 4 ? "lat" : "lata"}</div>
+    ? <div className={classes.offerText}>Doświadczenie: {exp_min ? exp_min : 0}{exp_max ? ` - ${exp_max}` : null} {(exp_max || exp_min) > 4 ? "lat" : "lata"}</div>
     : null
   let salaryElem = salary_min || salary_max
-    ? <div className={classes.offerText}>Salary: {salary_min ? salary_min : 0}{salary_max ? ` - ${salary_max}` : null} PLN</div>
+    ? <div className={classes.offerText}>Zarobki: {salary_min ? salary_min : 0}{salary_max ? ` - ${salary_max}` : null} PLN</div>
     : null
   return (
     <div className={classes.offer}>
-      <div className={classes.offerText}>Job: {job}</div>
+      <div className={classes.offerText}>Zawód: {job}</div>
       {locationElem}
+      {cityElem}
       {expElem}
       {salaryElem}
     </div>
@@ -52,13 +56,14 @@ export default function OfferList({ offers }) {
   const classes = useStyles();
   return (
     <div className={classes.container}>
-      <h3 className={classes.header}>{offers.length} job offers found</h3>
+      <h3 className={classes.header}>{offers.length} znalezionych ofert pracy</h3>
       <div className={classes.offerList}>
         {offers.map(offer => {
           return <Offer
             key={offer.id}
             job={offer.job}
             location={offer.location}
+            city={offer.city}
             exp_min={offer.exp_min}
             exp_max={offer.exp_max}
             salary_min={offer.salary_min}

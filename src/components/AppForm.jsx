@@ -1,13 +1,17 @@
-import React, { useContext } from 'react';
-import { FormControl, Input, InputLabel, Button, Paper, Typography } from '@material-ui/core';
+import React from 'react';
+import { FormControl, Input, InputLabel, Button, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { StateContext } from '../App';
 import {
-  add_job_offer, set_job_value, set_location_value,
-  set_salary_value_min, set_salary_value_max,
-  set_experience_value_min, set_experience_value_max,
-  search_for_work, get_all_offers
-} from '../store/actions';
+  add_job_offer, set_job, set_country, set_city,
+  set_salary_min, set_salary_max,
+  set_exp_min, set_exp_max,
+  search, get_all_offers, select_job_type, 
+  select_country, select_city,
+  select_exp_min, select_exp_max,
+  select_salary_min, select_salary_max
+} from '../store/app/appActions';
+import FormSelect from './FormSelect';
+import { connect } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -91,123 +95,97 @@ const FormInput = ({ name, value, onChange, className }) => {
   )
 }
 
-export default function AppForm(props) {
-  const [state, dispatch] = useContext(StateContext);
-  const {
-    job_input_value,
-    location_input_value,
-    experience_input_value_min,
-    experience_input_value_max,
-    salary_input_value_min,
-    salary_input_value_max
-  } = state;
+function AppForm(props) {
   const classes = useStyles()
 
-  const formHandler = event => {
-    event.preventDefault()
-    props.handler({
-      job: job_input_value,
-      location: location_input_value,
-      exp_min: experience_input_value_min,
-      exp_max: experience_input_value_max,
-      salary_min: salary_input_value_min,
-      salary_max: salary_input_value_max
-    }, dispatch)
-  }
+  const { exp_value_min, exp_value_max, job_value, country, city_value,
+    salary_value_min, salary_value_max, set_job, set_country,
+    set_salary_min, set_salary_max, set_exp_min, set_exp_max, get_all_offers,
+    search, add_job_offer } = props
 
-  const handleJobValue = event => {
-    set_job_value(event.target.value, dispatch)
-  }
-
-  const handleLocationValue = event => {
-    set_location_value(event.target.value, dispatch)
-  }
-
-  const handleSalaryValueMin = event => {
-    set_salary_value_min(event.target.value, dispatch)
-  }
-  const handleSalaryValueMax = event => {
-    set_salary_value_max(event.target.value, dispatch)
-  }
-  const handleExperienceValueMin = event => {
-    set_experience_value_min(event.target.value, dispatch)
-  }
-  const handleExperienceValueMax = event => {
-    set_experience_value_max(event.target.value, dispatch)
-  }
   const handleAddWork = () => {
     add_job_offer({
-      job: job_input_value,
-      location: location_input_value,
-      exp_min: experience_input_value_min,
-      exp_max: experience_input_value_max,
-      salary_min: salary_input_value_min,
-      salary_max: salary_input_value_max
-    }, dispatch)
+      job: job_value,
+      location: country,
+      city: city_value,
+      exp_min: exp_value_min,
+      exp_max: exp_value_max,
+      salary_min: salary_value_min,
+      salary_max: salary_value_max
+    })
   }
-
   const handleSearchWork = () => {
-    search_for_work({
-      job: job_input_value,
-      location: location_input_value,
-      exp_min: experience_input_value_min,
-      exp_max: experience_input_value_max,
-      salary_min: salary_input_value_min,
-      salary_max: salary_input_value_max
-    }, dispatch)
+    search({
+      job: job_value,
+      location: country,
+      city: city_value,
+      exp_min: exp_value_min,
+      exp_max: exp_value_max,
+      salary_min: salary_value_min,
+      salary_max: salary_value_max
+    })
   }
-
   const handleSearchAll = () => {
-    get_all_offers(dispatch)
+    get_all_offers()
   }
-
   return (
     <Paper className={classes.paper}>
       <div className={classes.heading}>
-        Search for Work or add job offer
+        Szukaj pracy albo dodaj ofertę
       </div>
-      <form className={classes.form} onSubmit={formHandler}>
-        <FormInput
-          name="job"
-          value={job_input_value}
-          onChange={handleJobValue}
+      <form className={classes.form}>
+        <FormSelect
+          name="Branża"
+          value={props.job_type}
+          onChange={props.select_job_type}
+          options={["one", "two", "three"]}
         />
         <FormInput
-          name="location"
-          value={location_input_value}
-          onChange={handleLocationValue}
+          name="Zawód"
+          value={job_value}
+          onChange={set_job}
+        />
+        <FormInput
+          name="Kraj"
+          value={country}
+          onChange={set_country}
+        />
+        <FormInput
+          name="Miasto"
+          value={city_value}
+          onChange={set_city}
         />
         <div className={classes.salaryContainer}>
-          <h4 className={classes.inputsHeader}>Salary</h4>
+          <h4 className={classes.inputsHeader}>Zarobki</h4>
           <div className={classes.salaryInputs}>
             <FormInput
               name="$ min"
               className={classes.formControlMinMax}
-              value={salary_input_value_min}
-              onChange={handleSalaryValueMin}
+              value={salary_value_min}
+              onChange={set_salary_min}
             />
             <FormInput
               name="$ max"
               className={classes.formControlMinMax}
-              value={salary_input_value_max}
-              onChange={handleSalaryValueMax}
+              value={salary_value_max}
+              onChange={set_salary_max}
             />
           </div>
         </div>
         <div className={classes.expContainer}>
-          <h4 className={classes.inputsHeader}>Experience</h4>
+          <h4 className={classes.inputsHeader}>Doświadczenie</h4>
           <div className={classes.expInputs}>
             <FormInput
               name="min"
               className={classes.formControlMinMax}
-              value={experience_input_value_min}
-              onChange={handleExperienceValueMin}
+              value={exp_value_min}
+              onChange={set_exp_min}
             />
             <FormInput
               name="max"
               className={classes.formControlMinMax}
-              value={experience_input_value_max}
-              onChange={handleExperienceValueMax}
+              value={exp_value_max}
+              onChange={set_exp_max}
             />
           </div>
         </div>
@@ -216,19 +194,42 @@ export default function AppForm(props) {
             variant="outlined"
             className={classes.button}
             onClick={handleSearchWork}
-          > Search for work </Button>
+          >Szukaj pracy</Button>
           <Button
             variant="outlined"
             className={classes.button}
             onClick={handleAddWork}
-          > Add work offer </Button>
+          >Dodaj ofertę</Button>
         </div>
         <Button
           variant="outlined"
           className={classes.buttonAllOffers}
           onClick={handleSearchAll}
-        > Show all offers </Button>
+        >Pokaż wszystkie oferty</Button>
       </form>
     </Paper >
   )
 }
+
+const mapStateToProps = (state) => ({ ...state.app })
+const mapDispatchToProps = (dispatch) => ({
+  set_job: event => dispatch(set_job(event.target.value)),
+  set_country: event => dispatch(set_country(event.target.value)),
+  set_city: event => dispatch(set_city(event.target.value)),
+  set_salary_min: event => dispatch(set_salary_min(event.target.value)),
+  set_salary_max: event => dispatch(set_salary_max(event.target.value)),
+  set_exp_min: event => dispatch(set_exp_min(event.target.value)),
+  set_exp_max: event => dispatch(set_exp_max(event.target.value)),
+  get_all_offers: () => dispatch(get_all_offers()),
+  search: values => dispatch(search(values)),
+  add_job_offer: values => dispatch(add_job_offer(values)),
+  select_job_type: event => dispatch(select_job_type(event.target.value)),
+  select_country: event => dispatch(select_country(event.target.value)),
+  select_city: event => dispatch(select_city(event.target.value)),
+  select_exp_min: event => dispatch(select_exp_min(event.target.value)),
+  select_exp_max: event => dispatch(select_exp_max(event.target.value)),
+  select_salary_min: event => dispatch(select_salary_min(event.target.value)),
+  select_salary_max: event => dispatch(select_salary_max(event.target.value))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(AppForm)
