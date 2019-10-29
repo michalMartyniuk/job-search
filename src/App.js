@@ -1,40 +1,39 @@
-import React, { useEffect } from 'react';
-import AppForm from './components/AppForm';
+import React from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { get_all_offers } from './store/app/appActions';
-import OfferList from './components/OfferList';
-import FiltersDrawer from './components/Drawer';
-import { connect } from 'react-redux';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
+import Auth from './components/Auth/Auth';
+import WorkSearch from './components/WorkSearch/WorkSearch';
+import Home from './components/Home';
+import AddOffer from './components/WorkSearch/AddOffer';
+import Notification from './components/Notification';
 
 const useStyles = makeStyles(theme => ({
   app: {
     display: "flex",
     flexDirection: "column",
-    margin: 70,
-  }
+  },
 }))
 
-function App(props) {
+function App() {
   const classes = useStyles();
-  const { search_results, get_all_offers } = props
-
-  useEffect(() => {
-    get_all_offers()
-  }, [get_all_offers])
 
   return (
-    <div className={classes.app}>
-      <FiltersDrawer />
-      {/* <AppForm />
-      {search_results.length
-        ? <OfferList offers={search_results} />
-        : null
-      } */}
-    </div>
+    <Router>
+      <div className={classes.app}>
+        <Notification />
+        <Switch>
+          <Route path="/search"><WorkSearch /></Route>
+          <Route path="/addOffer"><AddOffer /></Route>
+          <Route path="/auth"><Auth /></Route>
+          <Route path="/"><Home /></Route>
+        </Switch>
+      </div>
+    </Router>
   );
 }
-const mapStateToProps = state => ({ ...state.app })
-const mapDispatchToProps = dispatch => ({
-  get_all_offers: () => dispatch(get_all_offers())
-})
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+
+export default App;

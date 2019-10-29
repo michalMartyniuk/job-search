@@ -1,19 +1,37 @@
 import { types } from './appTypes';
 
 const initialState = {
+  notification: {
+    state: false,
+    message: "",
+    variant: ""
+  },
   search_results: [],
-  job_value: "",
+  job: "",
   job_type: "",
-  exp_value_min: "",
-  exp_value_max: "",
-  salary_value_min: "",
-  salary_value_max: "",
+  experience: "",
+  salary: "",
   country: "",
   city: "",
+  selected_job_type: "",
+  selected_experience: "",
+  selected_salary: "",
+  selected_country: "",
+  selected_city: ""
 }
 
 export function appReducer(state = initialState, action) {
   switch (action.type) {
+    case types.SET_NOTIFICATION:
+      console.log(action)
+      return {
+        ...state,
+        notification: {
+          state: action.state,
+          message: action.message,
+          variant: action.variant
+        }
+      }
     case types.GET_ALL_OFFERS:
       return {
         ...state,
@@ -29,14 +47,19 @@ export function appReducer(state = initialState, action) {
     case types.SET_CITY:
       return {
         ...state,
-        city_value: action.value
+        city: action.value
       }
     case types.SET_JOB:
       return {
         ...state,
-        job_value: action.value
+        job: action.value
       }
-    case types.SET_LOCATION:
+    case types.SET_JOB_TYPE:
+      return {
+        ...state,
+        job_type: action.value
+      }
+    case types.SET_COUNTRY:
       return {
         ...state,
         country: action.value
@@ -44,7 +67,7 @@ export function appReducer(state = initialState, action) {
     case types.SET_EXP_MIN:
       return {
         ...state,
-        exp_value_min: action.value
+        experience: action.value
       }
     case types.SET_EXP_MAX:
       return {
@@ -54,7 +77,7 @@ export function appReducer(state = initialState, action) {
     case types.SET_SALARY_MIN:
       return {
         ...state,
-        salary_value_min: action.value
+        salary: action.value
       }
     case types.SET_SALARY_MAX:
       return {
@@ -64,42 +87,42 @@ export function appReducer(state = initialState, action) {
     case types.SELECT_JOB_TYPE:
       return {
         ...state,
-        job_type: action.value
+        selected_job_type: action.value
       }
     case types.SELECT_COUNTRY:
       return {
         ...state,
-        country: action.value
+        selected_country: action.value
       }
 
     case types.SELECT_CITY:
       return {
         ...state,
-        city: action.value
+        selected_city: action.value
       }
 
     case types.SELECT_EXP_MIN:
       return {
         ...state,
-        exp_value_min: action.value
+        selected_experience: action.value
       }
 
     case types.SELECT_EXP_MAX:
       return {
         ...state,
-        exp_value_max: action.value
+        selected_exp_value_max: action.value
       }
 
     case types.SELECT_SALARY_MIN:
       return {
         ...state,
-        salary_value_min: action.value
+        selected_salary: action.value
       }
 
     case types.SELECT_SALARY_MAX:
       return {
         ...state,
-        salary_value_max: action.value
+        selected_salary_value_max: action.value
       }
     default:
       return state

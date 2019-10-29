@@ -4,9 +4,29 @@ import firebase from '../../config/firebase';
 const db = firebase.firestore();
 const auth = firebase.auth();
 
+function filterFunc(values) {
+  values = Object.keys(values).map(key => {
+    if (!values[key]) {
+      return
+    }
+    return { [key]: values[key] }
+  })
+  values = values.filter(value => value)
+  return values
+}
+
+export const set_notification = (state, message="", variant="") => {
+  return ({
+    type: types.SET_NOTIFICATION,
+    state,
+    message,
+    variant
+  })
+}
+
 export const get_all_offers = () => {
   return dispatch => {
-    db.collection("hire").get()
+    db.collection("offers").get()
       .then(snapshot => {
         return snapshot.docs.map(doc => {
           let data = doc.data()
@@ -24,17 +44,32 @@ export const get_all_offers = () => {
 }
 
 export const search = values => {
-  let { job, location, city, exp_min, exp_max, salary_min, salary_max } = values;
-  exp_min = parseInt(exp_min)
-  exp_max = parseInt(exp_max)
-  salary_min = parseInt(salary_min)
-  salary_max = parseInt(salary_max)
+  if (!filterFunc(values).length) {
+    return { type: {} }
+  }
+  const offersRef = db.collection("offers")
+  const filteredValues = filterFunc(values)
 
-  const hireRef = db.collection("hire");
-  const jobQuery = hireRef.where("job", "==", job)
+  const queryKeys = filteredValues.map(value => {
+    return Object.keys(value)[0]
+  })
+  const queryValues = filteredValues.map(value => {
+    value = Object.values(value)[0];
+    return value
+  })
+  const myQuery = offersRef.where(queryKeys[0], "==", queryValues[0])
 
+  function filterResults(results) {
+    queryKeys.map((key, index) => {
+      results = results.filter(doc => {
+        return doc[key] == queryValues[index]
+      })
+      return results
+    })
+    return results
+  }
   return dispatch => {
-    jobQuery.get()
+    myQuery.get()
       .then(snapshot => {
         return snapshot.docs.map(doc => {
           let data = doc.data()
@@ -43,54 +78,20 @@ export const search = values => {
         })
       })
       .then(results => {
-        if (location) {
-          results = results.filter(doc => doc.location === location)
-        }
-        if (city) {
-          results = results.filter(doc => doc.city === city)
-        }
-        if (exp_min) {
-          results = results.filter(doc => {
-            if (!doc.exp_max) return exp_min <= doc.exp_min
-            return exp_min <= doc.exp_max
-          })
-        }
-        if (exp_max) {
-          results = results.filter(doc => {
-            if (!doc.exp_min) return exp_max >= doc.exp_min
-            return exp_max >= doc.exp_min
-          })
-        }
-        if (salary_min) {
-          results = results.filter(doc => {
-            if (!doc.salary_max) return salary_min <= doc.salary_min
-            return salary_min <= doc.salary_max
-          })
-        }
-        if (salary_max) {
-          results = results.filter(doc => {
-            if (!doc.salary_min) return salary_max >= doc.salary_min
-            return salary_max >= doc.salary_min
-          })
-        }
-        return results
+        console.log(filterResults(results))
       })
-      .then(results => dispatch({ type: types.SEARCH, results }))
-      .catch(err => console.log(err))
   }
-
 }
+
 export const add_job_offer = offer => {
-  if (!offer.job) return
-  let { job, location, city, exp_min, exp_max, salary_min, salary_max } = offer;
-  exp_min = parseInt(exp_min)
-  exp_max = parseInt(exp_max)
-  salary_min = parseInt(salary_min)
-  salary_max = parseInt(salary_max)
+  if (!filterFunc(offer).length || !offer.job) {
+    return { type: {} }
+  }
+  let { job, job_type, country, city, experience, salary } = offer;
 
   return dispatch => {
-    db.collection("hire")
-      .add({ job, location, city, exp_min, exp_max, salary_min, salary_max })
+    db.collection("offers")
+      .add({ job, job_type, country, city, experience, salary })
       .then(doc => {
         dispatch(get_all_offers())
       })
@@ -98,17 +99,9 @@ export const add_job_offer = offer => {
 }
 
 export const set_job = value => ({ type: types.SET_JOB, value })
+export const set_job_type = value => ({ type: types.SET_JOB_TYPE, value })
 export const set_name = value => ({ type: types.SET_NAME, value })
-export const set_exp_min = value => ({ type: types.SET_EXP_MIN, value })
-export const set_exp_max = value => ({ type: types.SET_EXP_MAX, value })
-export const set_salary_min = value => ({ type: types.SET_SALARY_MIN, value })
-export const set_salary_max = value => ({ type: types.SET_SALARY_MAX, value })
-export const set_country = value => ({ type: types.SET_LOCATION, value })
+export const set_experience = value => ({ type: types.SET_EXP_MIN, value })
+export const set_salary = value => ({ type: types.SET_SALARY_MIN, value })
+export const set_country = value => ({ type: types.SET_COUNTRY, value })
 export const set_city = value => ({ type: types.SET_CITY, value })
-export const select_country = value => ({ type: types.SELECT_COUNTRY, value })
-export const select_city = value => ({ type: types.SELECT_CITY, value })
-export const select_job_type = value => ({ type: types.SELECT_JOB_TYPE, value })
-export const select_exp_min = value => ({ type: types.SELECT_EXP_MIN, value })
-export const select_exp_max = value => ({ type: types.SELECT_EXP_MAX, value })
-export const select_salary_min = value => ({ type: types.SELECT_SALARY_MIN, value })
-export const select_salary_max = value => ({ type: types.SELECT_SALARY_MAX, value })

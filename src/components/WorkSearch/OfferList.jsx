@@ -12,7 +12,6 @@ const useStyles = makeStyles(theme => ({
   offerList: {
     display: "flex",
     flexWrap: "wrap",
-    justifyContent: "center",
   },
   offer: {
     minWidth: 200,
@@ -27,24 +26,24 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const Offer = ({ job, location, city, exp_min, exp_max, salary_min, salary_max }) => {
+const Offer = ({ job, country, city, experience, exp_max, salary, salary_max }) => {
   const classes = useStyles();
-  let locationElem = location
-    ? <div className={classes.offerText}>Kraj: {location}</div>
+  let countryElem = country
+    ? <div className={classes.offerText}>Kraj: {country}</div>
     : null
   let cityElem = city
     ? <div className={classes.offerText}>Miasto: {city}</div>
     : null
-  let expElem = exp_min || exp_max
-    ? <div className={classes.offerText}>Doświadczenie: {exp_min ? exp_min : 0}{exp_max ? ` - ${exp_max}` : null} {(exp_max || exp_min) > 4 ? "lat" : "lata"}</div>
+  let expElem = experience || exp_max
+    ? <div className={classes.offerText}>Doświadczenie: {experience ? experience : 0}{exp_max ? ` - ${exp_max}` : null} {(exp_max || experience) > 4 ? "lat" : "lata"}</div>
     : null
-  let salaryElem = salary_min || salary_max
-    ? <div className={classes.offerText}>Zarobki: {salary_min ? salary_min : 0}{salary_max ? ` - ${salary_max}` : null} PLN</div>
+  let salaryElem = salary || salary_max
+    ? <div className={classes.offerText}>Zarobki: {salary ? salary : 0}{salary_max ? ` - ${salary_max}` : null} PLN</div>
     : null
   return (
     <div className={classes.offer}>
       <div className={classes.offerText}>Zawód: {job}</div>
-      {locationElem}
+      {countryElem}
       {cityElem}
       {expElem}
       {salaryElem}
@@ -52,7 +51,7 @@ const Offer = ({ job, location, city, exp_min, exp_max, salary_min, salary_max }
   )
 }
 
-export default function OfferList({ offers }) {
+function OfferList({ offers }) {
   const classes = useStyles();
   return (
     <div className={classes.container}>
@@ -62,11 +61,11 @@ export default function OfferList({ offers }) {
           return <Offer
             key={offer.id}
             job={offer.job}
-            location={offer.location}
+            country={offer.country}
             city={offer.city}
-            exp_min={offer.exp_min}
+            experience={offer.experience}
             exp_max={offer.exp_max}
-            salary_min={offer.salary_min}
+            salary={offer.salary}
             salary_max={offer.salary_max}
           />
         })}
@@ -74,3 +73,5 @@ export default function OfferList({ offers }) {
     </div>
   )
 }
+
+export default OfferList;
