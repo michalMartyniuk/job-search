@@ -50,33 +50,8 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function MySnackbarContentWrapper(props) {
-  const classes = useStyles();
-  const { className, message, onClose, variant, ...other } = props;
-  const Icon = variantIcon[variant];
-
-  return (
-    <SnackbarContent
-      className={clsx(classes[variant], className)}
-      aria-describedby="client-notification"
-      message={
-        <span id="client-notification" className={classes.message}>
-          <Icon className={classes.icon} />
-          {message}
-        </span>
-      }
-      action={[
-        <IconButton key="close" aria-label="close" color="inherit" onClick={onClose}>
-          <CloseIcon className={classes.closeIcon} />
-        </IconButton>,
-      ]}
-      {...other}
-    />
-  );
-}
-
 function Notification(props) {
-  console.log(props.notification)
+  const Icon = variantIcon[props.notification.variant] || variantIcon["success"];
   const classes = useStyles();
   return (
     <div>
@@ -86,14 +61,28 @@ function Notification(props) {
           horizontal: 'left',
         }}
         open={props.notification.state}
-        autoHideDuration={2000}
+        autoHideDuration={4000}
         onClose={() => props.set_notification(false)}
       >
-        <MySnackbarContentWrapper
-          onClose={() => props.set_notification(false)}
-          variant={props.notification.variant}
-          message={props.notification.message}
-          className={classes.content}
+        <SnackbarContent
+          className={clsx(classes[props.notification.variant], classes.content)}
+          aria-describedby="client-notification"
+          message={
+            <span id="client-notification" className={classes.message}>
+               <Icon className={classes.icon} />
+               {props.notification.message}
+            </span>
+          }
+          action={[
+            <IconButton
+              key="close"
+              aria-label="close"
+              color="inherit"
+              onClick={() => props.set_notification(false)}
+            >
+              <CloseIcon className={classes.closeIcon} />
+            </IconButton>,
+          ]}
         />
       </Snackbar>
     </div>

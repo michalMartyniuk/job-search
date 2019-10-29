@@ -7,6 +7,7 @@ const db = firebase.firestore();
 const auth = firebase.auth();
 
 export const set_signUp_name = name => ({ type: types.SET_SIGNUP_NAME, name })
+export const set_signUp_surname = surname => ({ type: types.SET_SIGNUP_SURNAME, surname })
 export const set_signUp_email = email => ({ type: types.SET_SIGNUP_EMAIL, email })
 export const set_signUp_password = password => ({ type: types.SET_SIGNUP_PASSWORD, password })
 export const set_logIn_name = name => ({ type: types.SET_LOGIN_NAME, name })
@@ -15,14 +16,23 @@ export const set_logIn_password = password => ({ type: types.SET_LOGIN_PASSWORD,
 export const set_signUp_state = state => ({ type: types.SET_SIGNUP_STATE, state })
 export const set_logIn_state = state => ({ type: types.SET_LOGIN_STATE, state })
 
-export const auth_sign_up = (email, password, account_type) => {
+export const auth_sign_up = (name, surname, email, password) => {
   return dispatch => {
     auth.createUserWithEmailAndPassword(email, password).then(user => {
-      dispatch({
-        type: types.SIGNUP,
-        user
+      db.collection("users").doc(user.user.uid).set({
+        name,
+        surname,
+        email,
       })
-      dispatch({ type: types.LOGIN_ERROR_RESET })
+        .then(() => {
+          db.collection("users").doc(user.user.uid).get().then(doc => {
+            dispatch({
+              type: types.LOGIN,
+              user: doc.data()
+            })
+            dispatch({ type: types.SIGNUP_ERROR_RESET })
+          })
+        })
     }).catch(error => {
       dispatch(signUp_error(error.message))
     })
@@ -31,8 +41,18 @@ export const auth_sign_up = (email, password, account_type) => {
 export const auth_log_in = (email, password) => {
   return dispatch => {
     auth.signInWithEmailAndPassword(email, password).then(user => {
-      dispatch({ type: types.LOGIN, user })
-      dispatch({ type: types.LOGIN_ERROR_RESET })
+      if (user) {
+        db.collection("users").doc(user.user.uid).get().then(doc => {
+          dispatch({
+            type: types.LOGIN,
+            user: doc.data()
+          })
+          dispatch({ type: types.LOGIN_ERROR_RESET })
+        })
+      } else {
+        dispatch(logIn_error("User not found"))
+      }
+      // dispatch({ type: types.LOGIN, user })
     }).catch(error => {
       dispatch(logIn_error(error.message))
     })

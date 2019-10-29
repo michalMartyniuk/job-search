@@ -15,7 +15,7 @@ function filterFunc(values) {
   return values
 }
 
-export const set_notification = (state, message="", variant="") => {
+export const set_notification = (state=false, message="", variant="") => {
   return ({
     type: types.SET_NOTIFICATION,
     state,

@@ -1,7 +1,7 @@
 import React from "react";
 import { MDBContainer, MDBInput, MDBBtn, MDBCard, MDBCardBody } from 'mdbreact';
 import {
-  set_signUp_name, set_signUp_password, set_signUp_email,
+  set_signUp_name, set_signUp_surname, set_signUp_password, set_signUp_email,
   set_signUp_state, auth_sign_up
 } from '../../store/auth/authActions';
 import { connect } from 'react-redux';
@@ -26,15 +26,20 @@ const MDSignUp = (props) => {
   const handleSignUp = (event) => {
     event.preventDefault()
     const account_type = () => {
-      if(props.work_giver) {
+      if (props.work_giver) {
         return "work_giver"
-      } 
-      else if (props.work_taker){
+      }
+      else if (props.work_taker) {
         return "work_taker"
       }
       else { return null }
     }
-    props.auth_sign_up(props.signUp_email, props.signUp_password, account_type())
+    props.auth_sign_up(
+      props.signUp_name,
+      props.signUp_surname,
+      props.signUp_email,
+      props.signUp_password
+    )
     props.set_signUp_state(false)
   }
   return (
@@ -53,6 +58,18 @@ const MDSignUp = (props) => {
                 validate
                 onChange={props.set_signUp_name}
                 value={props.signUp_name}
+                error="wrong"
+                success="right"
+              />
+              <MDBInput
+                size="lg"
+                label="Nazwisko"
+                icon="user"
+                group
+                type="text"
+                validate
+                onChange={props.set_signUp_surname}
+                value={props.signUp_surname}
                 error="wrong"
                 success="right"
               />
@@ -89,7 +106,7 @@ const MDSignUp = (props) => {
                 Zarejestruj
                   </MDBBtn>
             </div>
-            { 
+            {
               props.signUp_error &&
               <div className={classes.error}>
                 <span className={classes.errorText}>{props.signUp_error}</span>
@@ -104,8 +121,9 @@ const MDSignUp = (props) => {
 
 const mapStateToProps = (state) => ({ ...state.auth })
 const mapDispatchToProps = (dispatch) => ({
-  auth_sign_up: (email, password) => dispatch(auth_sign_up(email, password)),
+  auth_sign_up: (name, surname, email, password) => dispatch(auth_sign_up(name, surname, email, password)),
   set_signUp_name: event => dispatch(set_signUp_name(event.target.value)),
+  set_signUp_surname: event => dispatch(set_signUp_surname(event.target.value)),
   set_signUp_password: event => dispatch(set_signUp_password(event.target.value)),
   set_signUp_email: event => dispatch(set_signUp_email(event.target.value)),
   set_signUp_state: state => dispatch(set_signUp_state(state))

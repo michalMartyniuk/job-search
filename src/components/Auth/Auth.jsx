@@ -10,13 +10,12 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "row",
     margin: "auto",
-    marginTop: 200
+    marginTop: 150
   }
 }))
 
 function Auth(props) {
   const classes = useStyles()
-  console.log(props)
   return (
     <div className={classes.authContainer}>
       {props.work_giver && props.loggedIn && <Redirect to="/addOffer" />}

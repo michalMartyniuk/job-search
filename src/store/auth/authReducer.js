@@ -2,6 +2,7 @@ import { types } from './authTypes';
 
 const initialState = {
   signUp_name: "",
+  signUp_surname: "",
   signUp_email: "",
   signUp_password: "",
   logIn_name: "",
@@ -55,6 +56,11 @@ export const authReducer = (state = initialState, action) => {
         ...state,
         signUp_name: action.name
       }
+    case types.SET_SIGNUP_SURNAME:
+      return {
+        ...state,
+        signUp_surname: action.surname
+      }
     case types.SET_SIGNUP_EMAIL:
       return {
         ...state,
@@ -80,27 +86,21 @@ export const authReducer = (state = initialState, action) => {
         ...state,
         logIn_password: action.password
       }
-    case types.SIGNUP:
-      return {
-        ...state,
-        user: action.user,
-        loggedIn: true
-      }
     case types.LOGIN:
       return {
         ...state,
-        user: action.user,
-        loggedIn: true
+        loggedIn: true,
+        user: action.user
       }
     case types.LOGOUT:
       return {
         ...state,
         loggedIn: false,
         work_giver: false,
-        work_taker: false
+        work_taker: false,
+        user: null
       }
     case types.SET_WORK_GIVER:
-      console.log("giver reducer")
       return {
         ...state,
         work_giver: true

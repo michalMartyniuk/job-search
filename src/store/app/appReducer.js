@@ -4,7 +4,7 @@ const initialState = {
   notification: {
     state: false,
     message: "",
-    variant: ""
+    variant: "success"
   },
   search_results: [],
   job: "",
@@ -23,7 +23,6 @@ const initialState = {
 export function appReducer(state = initialState, action) {
   switch (action.type) {
     case types.SET_NOTIFICATION:
-      console.log(action)
       return {
         ...state,
         notification: {
