@@ -10,7 +10,6 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "row",
     margin: "auto",
-    marginTop: 150
   }
 }))
 

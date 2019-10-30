@@ -25,16 +25,22 @@ export const auth_sign_up = (name, surname, email, password) => {
         email,
       })
         .then(() => {
-          db.collection("users").doc(user.user.uid).get().then(doc => {
-            dispatch({
-              type: types.LOGIN,
-              user: doc.data()
-            })
-            dispatch({ type: types.SIGNUP_ERROR_RESET })
-          })
+          dispatch(set_log_in(user.user))
         })
     }).catch(error => {
       dispatch(signUp_error(error.message))
+    })
+  }
+}
+export const set_log_in = (user) => {
+  return dispatch => {
+    db.collection("users").doc(user.uid).get().then(doc => {
+      dispatch({
+        type: types.LOGIN,
+        user: doc.data()
+      })
+      dispatch({ type: types.SIGNUP_ERROR_RESET })
+      dispatch({ type: types.LOGIN_ERROR_RESET })
     })
   }
 }
@@ -42,17 +48,10 @@ export const auth_log_in = (email, password) => {
   return dispatch => {
     auth.signInWithEmailAndPassword(email, password).then(user => {
       if (user) {
-        db.collection("users").doc(user.user.uid).get().then(doc => {
-          dispatch({
-            type: types.LOGIN,
-            user: doc.data()
-          })
-          dispatch({ type: types.LOGIN_ERROR_RESET })
-        })
+        dispatch(set_log_in(user.user))
       } else {
         dispatch(logIn_error("User not found"))
       }
-      // dispatch({ type: types.LOGIN, user })
     }).catch(error => {
       dispatch(logIn_error(error.message))
     })
@@ -61,7 +60,7 @@ export const auth_log_in = (email, password) => {
 export const auth_log_out = () => {
   return dispatch => {
     auth.signOut().then(() => {
-      dispatch({ type: types.auth.LOGOUT })
+      dispatch({ type: types.LOGOUT })
     })
   }
 }

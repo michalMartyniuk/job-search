@@ -6,11 +6,13 @@ import {
 } from '../../store/auth/authActions';
 import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/styles';
+import { Redirect } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   container: {
     width: 500,
-    margin: 0,
+    margin: "auto",
+    marginTop: 150
   },
   error: {
     display: "flex",
@@ -25,15 +27,6 @@ const MDSignUp = (props) => {
   const classes = useStyles()
   const handleSignUp = (event) => {
     event.preventDefault()
-    const account_type = () => {
-      if (props.work_giver) {
-        return "work_giver"
-      }
-      else if (props.work_taker) {
-        return "work_taker"
-      }
-      else { return null }
-    }
     props.auth_sign_up(
       props.signUp_name,
       props.signUp_surname,
@@ -44,6 +37,7 @@ const MDSignUp = (props) => {
   }
   return (
     <MDBContainer className={classes.container}>
+      {props.loggedIn && <Redirect to="/profile" />}
       <MDBCard className="px-4">
         <MDBCardBody>
           <form>

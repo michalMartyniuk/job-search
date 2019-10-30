@@ -11,7 +11,8 @@ import { makeStyles } from '@material-ui/styles';
 const useStyles = makeStyles(theme => ({
   container: {
     width: 500,
-    margin: 0
+    margin: "auto",
+    marginTop: 150
   },
   error: {
     display: "flex",
@@ -32,6 +33,7 @@ function MDLogIn(props) {
   }
   return (
     <MDBContainer className={classes.container}>
+      {props.loggedIn && <Redirect to="/profile" />}
       <MDBCard className="px-4">
         <MDBCardBody>
           <form>

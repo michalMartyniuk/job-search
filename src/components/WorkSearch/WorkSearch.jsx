@@ -17,13 +17,9 @@ function WorkSearch(props) {
   const classes = useStyles()
   const { search_results, get_all_offers } = props
 
-  // React.useEffect(() => {
-  //   get_all_offers()
-  // }, [get_all_offers])
-
   return (
     <div className={classes.workSearchkContainer}>
-      {!props.loggedIn && <Redirect to="/auth" />}
+      {!props.loggedIn && <Redirect to="/login" />}
       <AppForm />
       {search_results.length
         ? <OfferList offers={search_results} />

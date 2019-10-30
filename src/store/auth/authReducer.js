@@ -90,7 +90,14 @@ export const authReducer = (state = initialState, action) => {
       return {
         ...state,
         loggedIn: true,
-        user: action.user
+        user: action.user,
+        signUp_name: "",
+        signUp_surname: "",
+        signUp_email: "",
+        signUp_password: "",
+        logIn_name: "",
+        logIn_email: "",
+        logIn_password: ""
       }
     case types.LOGOUT:
       return {

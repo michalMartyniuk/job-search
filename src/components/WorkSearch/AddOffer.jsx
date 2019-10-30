@@ -112,9 +112,10 @@ function AddOffer(props) {
   const handleSearchAll = () => {
     get_all_offers()
   }
+  console.log(props.loggedIn)
   return (
     <Paper className={classes.paper}>
-      {(!props.work_giver || !props.loggedIn) && <Redirect to="/auth" />}
+      {!props.loggedIn && <Redirect to="/login" />}
       <div className={classes.heading}>
         Dodaj ofertę
       </div>
@@ -146,7 +147,7 @@ function AddOffer(props) {
   )
 }
 
-const mapStateToProps = (state) => ({ ...state.app })
+const mapStateToProps = (state) => ({ ...state.app, ...state.auth })
 const mapDispatchToProps = (dispatch) => ({
   set_job: event => dispatch(set_job(event.target.value)),
   set_job_type: event => {

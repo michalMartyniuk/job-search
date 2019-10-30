@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function Navigation({ user }) {
+export default function Navigation({ logged_in, logout }) {
   const classes = useStyles();
   return (
     <div className={classes.root}>
@@ -60,19 +60,25 @@ export default function Navigation({ user }) {
           <Link to="/home" className={classes.link}>
             <Button className={classes.button}>Strona główna</Button>
           </Link>
-          {user && <Link to="/search" className={classes.link}>
+          {logged_in && <Link to="/search" className={classes.link}>
             <Button className={classes.button}>Szukaj pracy</Button>
           </Link>}
-          {user && <Link to="/addOffer" className={classes.link}>
+          {logged_in && <Link to="/addOffer" className={classes.link}>
             <Button className={classes.button}>Dodaj ofertę</Button>
           </Link>}
-          {!user && <Link to="/auth" className={classes.link}>
+          {!logged_in && <Link to="/signup" className={classes.link}>
             <Button className={classes.button}>Rejestracja</Button>
           </Link>}
-          {!user && <Link to="/auth" className={classes.link}>
+          {!logged_in && <Link to="/login" className={classes.link}>
             <Button className={classes.button}>Logowanie</Button>
           </Link>}
-          {user && <Button className={classes.button}>Wylogowanie</Button>}
+          {logged_in && <Link to="/profile" className={classes.link}>
+            <Button className={classes.button}>Profil</Button>
+          </Link>}
+          {logged_in && <Button
+            className={classes.button}
+            onClick={logout}
+          >Wylogowanie</Button>}
         </Toolbar>
       </AppBar>
     </div>
