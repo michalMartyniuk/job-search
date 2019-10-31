@@ -90,10 +90,14 @@ export const add_job_offer = offer => {
   let { job, job_type, country, city, experience, salary } = offer;
 
   return dispatch => {
-    db.collection("offers")
-      .add({ job, job_type, country, city, experience, salary })
+    const data = { job, job_type, country, city, experience, salary }
+    db.collection(`users/${auth.currentUser.uid}/offers`)
+      .add(data)
       .then(doc => {
-        dispatch(get_all_offers())
+        db.collection('offers').doc(doc.id).set(data)
+        .then(() => {
+          dispatch(set_notification(true, "Twoja oferta zostało pomyślnie dodana", "success"))
+        })
       })
   }
 }

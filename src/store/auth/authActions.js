@@ -1,5 +1,4 @@
 import { types } from "./authTypes";
-import { types as appTypes } from '../app/appTypes';
 import firebase from '../../config/firebase';
 import { set_notification } from "../app/appActions";
 
@@ -25,6 +24,7 @@ export const auth_sign_up = (name, surname, email, password) => {
         email,
       })
         .then(() => {
+          dispatch(set_notification(true, "Zostałeś pomyślnie zalogowany", "success"))
           dispatch(set_log_in(user.user))
         })
     }).catch(error => {
@@ -48,6 +48,7 @@ export const auth_log_in = (email, password) => {
   return dispatch => {
     auth.signInWithEmailAndPassword(email, password).then(user => {
       if (user) {
+        dispatch(set_notification(true, "Zostałeś pomyślnie zalogowany", "success"))
         dispatch(set_log_in(user.user))
       } else {
         dispatch(logIn_error("User not found"))

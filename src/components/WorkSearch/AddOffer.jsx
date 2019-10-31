@@ -79,11 +79,6 @@ const FormInput = ({ name, value, onChange, className }) => {
 
 function AddOffer(props) {
   const classes = useStyles()
-
-  const { experience, job, country, city,
-    salary, set_job,
-    get_all_offers, search, add_job_offer } = props
-
   const selectsData = [
     { name: "Branża", value: props.job_type, onChange: props.set_job_type, options: ["Medycyna", "Szkolnictwo", "Informatyka", "Rolnictwo"] },
     { name: "Kraj", value: props.country, onChange: props.set_country, options: ["Polska", "Niemcy", "Francja", "Wielka Brytania", "Stany Zjednoczone"] },
@@ -92,27 +87,18 @@ function AddOffer(props) {
     { name: "Doświadczenie", value: props.experience, onChange: props.set_experience, options: [1, 2, 3, 4, 5, 10, 15, 20] },
   ]
   const handleAddWork = () => {
-    add_job_offer({
-      job,
-      country,
-      city,
-      experience: experience,
-      salary: salary,
-    })
-  }
-  const handleSearchWork = () => {
-    search({
-      job,
-      country,
-      city,
-      experience: experience,
-      salary: salary,
+    props.add_job_offer({
+      job: props.job,
+      job_type: props.job_type,
+      country: props.country,
+      city: props.city,
+      experience: props.experience,
+      salary: props.salary,
     })
   }
   const handleSearchAll = () => {
-    get_all_offers()
+    props.get_all_offers()
   }
-  console.log(props.loggedIn)
   return (
     <Paper className={classes.paper}>
       {!props.loggedIn && <Redirect to="/login" />}
@@ -122,8 +108,8 @@ function AddOffer(props) {
       <form className={classes.form}>
         <FormInput
           name="Zawód"
-          value={job}
-          onChange={set_job}
+          value={props.job}
+          onChange={props.set_job}
         />
         {selectsData.map(select => {
           return <FormSelect

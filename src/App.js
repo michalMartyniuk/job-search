@@ -17,7 +17,6 @@ import MDLogin from './components/Auth/MDLogIn';
 import MDSignUp from './components/Auth/MDSignUp';
 import Auth from './components/Auth/Auth';
 import { set_log_in, auth_log_out } from './store/auth/authActions';
-import OffersTable from './components/WorkSearch/OfferTable';
 
 const auth = firebase.auth();
 
@@ -44,7 +43,6 @@ function App(props) {
       <div className={classes.app}>
         <Notification />
         <Switch>
-          <Route path="/offers"><OffersTable /></Route>
           <Route path="/search"><WorkSearch /></Route>
           <Route path="/profile"><Profile /></Route>
           <Route path="/addOffer"><AddOffer /></Route>
