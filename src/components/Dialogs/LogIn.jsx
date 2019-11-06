@@ -1,28 +1,39 @@
-import React from 'react';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { set_password, set_email, set_logIn_state, auth_log_in } from '../../store/auth/authActions';
+import React from "react";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import { connect } from "react-redux";
+import {
+  setLogInPassword,
+  setLogInEmail,
+  setLogInState,
+  authLogIn
+} from "../../store/auth/authActions";
 
 function LogIn({
-  email, password, set_email, set_password,
-  logIn_state, set_logIn_state, auth_log_in }) {
-  const handle_logIn = () => {
-    auth_log_in(email, password)
-    set_logIn_state(false)
-  }
+  email,
+  password,
+  setEmail,
+  setPassword,
+  logInState,
+  setLogInState,
+  authLogIn
+}) {
+  const handleLogIn = () => {
+    authLogIn(email, password);
+    setLogInState(false);
+  };
   return (
     <div>
-      <Dialog open={logIn_state} onClose={() => set_logIn_state(false)}>
+      <Dialog open={logInState} onClose={() => setLogInState(false)}>
         <DialogTitle>Log in</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
-            onChange={set_email}
+            onChange={setEmail}
             value={email}
             margin="dense"
             label="Email Address"
@@ -30,7 +41,7 @@ function LogIn({
             fullWidth
           />
           <TextField
-            onChange={set_password}
+            onChange={setPassword}
             value={password}
             margin="dense"
             label="Password"
@@ -39,10 +50,10 @@ function LogIn({
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => set_logIn_state(false)} color="primary">
+          <Button onClick={() => setLogInState(false)} color="primary">
             Cancel
           </Button>
-          <Button onClick={handle_logIn} color="primary">
+          <Button onClick={handleLogIn} color="primary">
             Log in
           </Button>
         </DialogActions>
@@ -51,12 +62,15 @@ function LogIn({
   );
 }
 
-const mapStateToProps = (state) => ({ ...state.auth })
-const mapDispatchToProps = (dispatch) => ({
-  auth_log_in: (email, password) => dispatch(auth_log_in(email, password)),
-  set_password: event => dispatch(set_password(event.target.value)),
-  set_email: event => dispatch(set_email(event.target.value)),
-  set_logIn_state: state => dispatch(set_logIn_state(state))
-})
+const mapStateToProps = state => ({ ...state.auth });
+const mapDispatchToProps = dispatch => ({
+  authLogIn: (email, password) => dispatch(authLogIn(email, password)),
+  setPassword: event => dispatch(setLogInPassword(event.target.value)),
+  setEmail: event => dispatch(setLogInEmail(event.target.value)),
+  setLogInState: state => dispatch(setLogInState(state))
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(LogIn)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LogIn);

@@ -1,13 +1,15 @@
-import React from 'react';
-import FormSelect from '../WorkSearch/FormSelect';
-import FiltersDrawer from './Drawer';
-import { connect } from 'react-redux';
-import { makeStyles } from '@material-ui/styles';
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
+import React from "react";
+import { connect } from "react-redux";
+import { makeStyles } from "@material-ui/styles";
 import {
-  select_job_type, select_country, select_city, select_experience,
-  select_salary, set_experience, set_salary, set_country, set_city,
-  set_job_type
-} from '../../store/app/appActions';
+  setExperience,
+  setSalary,
+  setCountry,
+  setCity,
+  setJobType
+} from "../../store/app/appActions";
 
 const useStyles = makeStyles(theme => ({
   selectContainer: {
@@ -19,38 +21,36 @@ const useStyles = makeStyles(theme => ({
     marginTop: 40,
     marginRight: 20,
     height: 50,
-    fontSize: "1.2rem",
-  },
-}))
-function Filters(props) {
-  const classes = useStyles()
- 
-
-  return (
-     
-  )
+    fontSize: "1.2rem"
+  }
+}));
+function Filters() {
+  return <div />;
 }
-const mapStateToProps = state => ({ ...state.app })
+const mapStateToProps = state => ({ ...state.app });
 const mapDispatchToProps = dispatch => ({
-  select_job_type: event => {
-    dispatch(select_job_type(event.target.value))
-    dispatch(set_job_type(event.target.value))
+  selectJobType: event => {
+    dispatch(selectJobType(event.target.value));
+    dispatch(setJobType(event.target.value));
   },
-  select_country: event => {
-    dispatch(select_country(event.target.value))
-    dispatch(set_country(event.target.value))
+  selectCountry: event => {
+    dispatch(selectCountry(event.target.value));
+    dispatch(setCountry(event.target.value));
   },
-  select_city: event => {
-    dispatch(select_city(event.target.value))
-    dispatch(set_city(event.target.value))
+  selectCity: event => {
+    dispatch(selectCity(event.target.value));
+    dispatch(setCity(event.target.value));
   },
-  select_experience: event => {
-    dispatch(select_experience(event.target.value))
-    dispatch(set_experience(event.target.value))
+  selectExperience: event => {
+    dispatch(selectExperience(event.target.value));
+    dispatch(setExperience(event.target.value));
   },
-  select_salary: event => {
-    dispatch(select_salary(event.target.value))
-    dispatch(set_salary(event.target.value))
-  },
-})
-export default connect(mapStateToProps, mapDispatchToProps)(Filters)
+  selectSalary: event => {
+    dispatch(selectSalary(event.target.value));
+    dispatch(setSalary(event.target.value));
+  }
+});
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Filters);

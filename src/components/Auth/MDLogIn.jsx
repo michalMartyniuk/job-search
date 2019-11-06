@@ -1,39 +1,52 @@
 import React from "react";
-import { MDBContainer, MDBInput, MDBBtn, MDBCard, MDBCardBody } from 'mdbreact';
-import {
-  set_logIn_password, set_logIn_email,
-  set_logIn_state, auth_log_in
-} from '../../store/auth/authActions';
+import { MDBContainer, MDBInput, MDBBtn, MDBCard, MDBCardBody } from "mdbreact";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from "@material-ui/styles";
+import PropTypes from "prop-types";
+import {
+  setLogInPassword,
+  setLogInEmail,
+  setLogInState,
+  authLogIn
+} from "../../store/auth/authActions";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   container: {
     width: 500,
     margin: "auto",
     marginTop: 150
   },
   error: {
-    display: "flex",
+    display: "flex"
   },
   errorText: {
     fontSize: "1.3rem",
     color: "red",
     margin: "auto"
   }
-}))
+}));
 
-function MDLogIn(props) {
-  const classes = useStyles()
-  const handleLogIn = (event) => {
-    event.preventDefault()
-    props.auth_log_in(props.logIn_email, props.logIn_password)
-    props.set_logIn_state(false)
-  }
+function MDLogIn({
+  loggedIn,
+  authLogIn,
+  setLogInState,
+  setLogInEmail,
+  setLogInPassword,
+  logInPassword,
+  logInEmail,
+  logInError
+}) {
+  const classes = useStyles();
+  const handleLogIn = event => {
+    event.preventDefault();
+    authLogIn(logInEmail, logInPassword);
+    setLogInState(false);
+  };
+  console.log(logInEmail)
   return (
     <MDBContainer className={classes.container}>
-      {props.loggedIn && <Redirect to="/profile" />}
+      {loggedIn && <Redirect to="/profile" />}
       <MDBCard className="px-4">
         <MDBCardBody>
           <form>
@@ -46,8 +59,8 @@ function MDLogIn(props) {
                 group
                 type="email"
                 validate
-                onChange={props.set_logIn_email}
-                value={props.logIn_email}
+                onChange={setLogInEmail}
+                value={logInEmail}
                 error="wrong"
                 success="right"
               />
@@ -57,8 +70,8 @@ function MDLogIn(props) {
                 icon="lock"
                 group
                 type="password"
-                onChange={props.set_logIn_password}
-                value={props.logIn_password}
+                onChange={setLogInPassword}
+                value={logInPassword}
                 validate
               />
             </div>
@@ -70,27 +83,40 @@ function MDLogIn(props) {
                 onClick={handleLogIn}
               >
                 Zaloguj
-                  </MDBBtn>
+              </MDBBtn>
             </div>
-            {
-              props.logIn_error &&
+            {logInError && (
               <div className={classes.error}>
-                <span className={classes.errorText}>{props.logIn_error}</span>
+                <span className={classes.errorText}>{logInError}</span>
               </div>
-            }
+            )}
           </form>
         </MDBCardBody>
       </MDBCard>
-    </MDBContainer >
+    </MDBContainer>
   );
+}
+
+const mapStateToProps = state => ({ ...state.auth });
+const mapDispatchToProps = dispatch => ({
+  authLogIn: (email, password) => dispatch(authLogIn(email, password)),
+  setLogInEmail: event => dispatch(setLogInEmail(event.target.value)),
+  setLogInPassword: event => dispatch(setLogInPassword(event.target.value)),
+  setLogInState: state => dispatch(setLogInState(state))
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MDLogIn);
+
+MDLogIn.propTypes = {
+  authLogIn: PropTypes.func,
+  setLogInEmail: PropTypes.func,
+  setLogInState: PropTypes.func,
+  setLogInPassword: PropTypes.func,
+  loggedIn: PropTypes.bool,
+  logInEmail: PropTypes.string,
+  logInPassword: PropTypes.string,
+  logInError: PropTypes.string
 };
-
-const mapStateToProps = (state) => ({ ...state.auth })
-const mapDispatchToProps = (dispatch) => ({
-  auth_log_in: (email, password) => dispatch(auth_log_in(email, password)),
-  set_logIn_email: event => dispatch(set_logIn_email(event.target.value)),
-  set_logIn_password: event => dispatch(set_logIn_password(event.target.value)),
-  set_logIn_state: state => dispatch(set_logIn_state(state))
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(MDLogIn)

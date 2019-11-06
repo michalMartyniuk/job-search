@@ -1,4 +1,4 @@
-import { types } from './authTypes';
+import types from "./authTypes";
 
 const initialState = {
   signUp_name: "",
@@ -10,82 +10,82 @@ const initialState = {
   logIn_password: "",
   user: {
     name: "",
-    email: "",
+    email: ""
   },
   loggedIn: false,
-  logIn_error: false,
-  signUp_error: false,
+  logInError: false,
+  signUpError: false,
   work_giver: false,
   work_taker: false
-}
+};
 
-export const authReducer = (state = initialState, action) => {
+export default function authReducer(state = initialState, action) {
   switch (action.type) {
-    case types.SET_SIGNUP_STATE:
+    case types.setSignUpState:
       return {
         ...state,
         signUp_state: action.state
-      }
-    case types.SIGNUP_ERROR:
+      };
+    case types.signUpError:
       return {
         ...state,
-        signUp_error: action.error
-      }
-    case types.SIGNUP_ERROR_RESET:
+        signUpError: action.error
+      };
+    case types.signUpErrorReset:
       return {
         ...state,
-        signUp_error: false
-      }
-    case types.SET_LOGIN_STATE:
+        signUpError: false
+      };
+    case types.setLogInState:
       return {
         ...state,
-        logIn_state: action.state
-      }
-    case types.LOGIN_ERROR:
+        logInState: action.state
+      };
+    case types.logInError:
       return {
         ...state,
-        logIn_error: action.error
-      }
-    case types.LOGIN_ERROR_RESET:
+        logInError: action.error
+      };
+    case types.logInErrorReset:
       return {
         ...state,
-        logIn_error: false
-      }
-    case types.SET_SIGNUP_NAME:
+        logInError: false
+      };
+    case types.setSignUpName:
       return {
         ...state,
         signUp_name: action.name
-      }
-    case types.SET_SIGNUP_SURNAME:
+      };
+    case types.setSignUpsurname:
       return {
         ...state,
         signUp_surname: action.surname
-      }
-    case types.SET_SIGNUP_EMAIL:
+      };
+    case types.setSignUpEmail:
       return {
         ...state,
         signUp_email: action.email
-      }
-    case types.SET_SIGNUP_PASSWORD:
+      };
+    case types.setSignUpPassword:
       return {
         ...state,
         signUp_password: action.password
-      }
-    case types.SET_LOGIN_NAME:
+      };
+    case types.setLogInName:
       return {
         ...state,
         logIn_name: action.name
-      }
-    case types.SET_LOGIN_EMAIL:
+      };
+    case types.setLogInEmail:
       return {
         ...state,
         logIn_email: action.email
-      }
-    case types.SET_LOGIN_PASSWORD:
+      };
+    case types.setLogInPassword:
       return {
         ...state,
         logIn_password: action.password
-      }
+      };
     case types.LOGIN:
       return {
         ...state,
@@ -98,7 +98,7 @@ export const authReducer = (state = initialState, action) => {
         logIn_name: "",
         logIn_email: "",
         logIn_password: ""
-      }
+      };
     case types.LOGOUT:
       return {
         ...state,
@@ -106,18 +106,18 @@ export const authReducer = (state = initialState, action) => {
         work_giver: false,
         work_taker: false,
         user: null
-      }
-    case types.SET_WORK_GIVER:
+      };
+    case types.setWorkGiver:
       return {
         ...state,
         work_giver: true
-      }
-    case types.SET_WORK_TAKER:
+      };
+    case types.setWorkTaker:
       return {
         ...state,
         work_taker: true
-      }
+      };
     default:
-      return state
+      return state;
   }
 }

@@ -1,38 +1,38 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/styles';
-import AppForm from './AppForm';
-import OfferList from './OfferList';
-import { get_all_offers } from '../../store/app/appActions';
-import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import React from "react";
+import { makeStyles } from "@material-ui/styles";
+import { Redirect } from "react-router-dom";
+import { connect } from "react-redux";
+import AppForm from "./AppForm";
+import OfferList from "./OfferList";
+import { getAllOffers, resetForm } from "../../store/app/appActions";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   workSearchkContainer: {
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "column"
   }
-}))
+}));
 
 function WorkSearch(props) {
-  const classes = useStyles()
-  const { search_results, get_all_offers } = props
+  const classes = useStyles();
+  const { searchResults } = props;
 
   return (
     <div className={classes.workSearchkContainer}>
       {!props.loggedIn && <Redirect to="/login" />}
       <AppForm />
-      {search_results.length
-        ? <OfferList offers={search_results} />
-        : null
-      }
+      {searchResults.length ? <OfferList offers={searchResults} /> : null}
     </div>
-  )
+  );
 }
 
-const mapStateToProps = state => ({ ...state.app, ...state.auth })
+const mapStateToProps = state => ({ ...state.app, ...state.auth });
 
 const mapDispatchToProps = dispatch => ({
-  get_all_offers: () => dispatch(get_all_offers()),
-})
+  getAllOffers: () => dispatch(getAllOffers())
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(WorkSearch);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(WorkSearch);

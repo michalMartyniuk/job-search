@@ -1,40 +1,44 @@
 import React from "react";
-import { MDBContainer, MDBInput, MDBBtn, MDBCard, MDBCardBody } from 'mdbreact';
+import { MDBContainer, MDBInput, MDBBtn, MDBCard, MDBCardBody } from "mdbreact";
+import { connect } from "react-redux";
+import { makeStyles } from "@material-ui/styles";
+import { Redirect } from "react-router-dom";
 import {
-  set_signUp_name, set_signUp_surname, set_signUp_password, set_signUp_email,
-  set_signUp_state, auth_sign_up
-} from '../../store/auth/authActions';
-import { connect } from 'react-redux';
-import { makeStyles } from '@material-ui/styles';
-import { Redirect } from 'react-router-dom';
+  setSignUpName,
+  setSignUpsurname,
+  setSignUpPassword,
+  setSignUpEmail,
+  setSignUpState,
+  authSignUp
+} from "../../store/auth/authActions";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   container: {
     width: 500,
     margin: "auto",
     marginTop: 150
   },
   error: {
-    display: "flex",
+    display: "flex"
   },
   errorText: {
     fontSize: "1.3rem",
     color: "red",
     margin: "auto"
   }
-}))
-const MDSignUp = (props) => {
-  const classes = useStyles()
-  const handleSignUp = (event) => {
-    event.preventDefault()
-    props.auth_sign_up(
+}));
+const MDSignUp = props => {
+  const classes = useStyles();
+  const handleSignUp = event => {
+    event.preventDefault();
+    props.authSignUp(
       props.signUp_name,
       props.signUp_surname,
       props.signUp_email,
       props.signUp_password
-    )
-    props.set_signUp_state(false)
-  }
+    );
+    props.setSignUpState(false);
+  };
   return (
     <MDBContainer className={classes.container}>
       {props.loggedIn && <Redirect to="/profile" />}
@@ -50,7 +54,7 @@ const MDSignUp = (props) => {
                 group
                 type="text"
                 validate
-                onChange={props.set_signUp_name}
+                onChange={props.setSignUpName}
                 value={props.signUp_name}
                 error="wrong"
                 success="right"
@@ -62,7 +66,7 @@ const MDSignUp = (props) => {
                 group
                 type="text"
                 validate
-                onChange={props.set_signUp_surname}
+                onChange={props.setSignUpsurname}
                 value={props.signUp_surname}
                 error="wrong"
                 success="right"
@@ -74,7 +78,7 @@ const MDSignUp = (props) => {
                 group
                 type="email"
                 validate
-                onChange={props.set_signUp_email}
+                onChange={props.setSignUpEmail}
                 value={props.signUp_email}
                 error="wrong"
                 success="right"
@@ -84,7 +88,7 @@ const MDSignUp = (props) => {
                 label="Hasło"
                 icon="lock"
                 group
-                onChange={props.set_signUp_password}
+                onChange={props.setSignUpPassword}
                 value={props.signUp_password}
                 type="password"
                 validate
@@ -98,14 +102,13 @@ const MDSignUp = (props) => {
                 onClick={handleSignUp}
               >
                 Zarejestruj
-                  </MDBBtn>
+              </MDBBtn>
             </div>
-            {
-              props.signUp_error &&
+            {props.signUpError && (
               <div className={classes.error}>
-                <span className={classes.errorText}>{props.signUp_error}</span>
+                <span className={classes.errorText}>{props.signUpError}</span>
               </div>
-            }
+            )}
           </form>
         </MDBCardBody>
       </MDBCard>
@@ -113,14 +116,18 @@ const MDSignUp = (props) => {
   );
 };
 
-const mapStateToProps = (state) => ({ ...state.auth })
-const mapDispatchToProps = (dispatch) => ({
-  auth_sign_up: (name, surname, email, password) => dispatch(auth_sign_up(name, surname, email, password)),
-  set_signUp_name: event => dispatch(set_signUp_name(event.target.value)),
-  set_signUp_surname: event => dispatch(set_signUp_surname(event.target.value)),
-  set_signUp_password: event => dispatch(set_signUp_password(event.target.value)),
-  set_signUp_email: event => dispatch(set_signUp_email(event.target.value)),
-  set_signUp_state: state => dispatch(set_signUp_state(state))
-})
+const mapStateToProps = state => ({ ...state.auth });
+const mapDispatchToProps = dispatch => ({
+  authSignUp: (name, surname, email, password) =>
+    dispatch(authSignUp(name, surname, email, password)),
+  setSignUpName: event => dispatch(setSignUpName(event.target.value)),
+  setSignUpsurname: event => dispatch(setSignUpsurname(event.target.value)),
+  setSignUpPassword: event => dispatch(setSignUpPassword(event.target.value)),
+  setSignUpEmail: event => dispatch(setSignUpEmail(event.target.value)),
+  setSignUpState: state => dispatch(setSignUpState(state))
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(MDSignUp)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MDSignUp);

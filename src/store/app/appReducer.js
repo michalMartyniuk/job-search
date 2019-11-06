@@ -1,26 +1,26 @@
-import { types } from './appTypes';
+import { types } from "./appTypes";
 
 const initialState = {
   notification: {
-    state: false,
+    state: true,
     message: "",
     variant: "success"
   },
-  search_results: [],
+  searchResults: [],
   job: "",
-  job_type: "",
+  jobType: "",
   experience: "",
   salary: "",
   country: "",
   city: "",
-  selected_job_type: "",
+  selected_jobType: "",
   selected_experience: "",
   selected_salary: "",
   selected_country: "",
   selected_city: ""
-}
+};
 
-export function appReducer(state = initialState, action) {
+export default function appReducer(state = initialState, action) {
   switch (action.type) {
     case types.SET_NOTIFICATION:
       return {
@@ -30,100 +30,132 @@ export function appReducer(state = initialState, action) {
           message: action.message,
           variant: action.variant
         }
-      }
+      };
+    case types.RESET_FORM:
+      return {
+        ...state,
+        job: "",
+        jobType: "",
+        country: "",
+        city: "",
+        salary: "",
+        experience: ""
+      };
     case types.GET_ALL_OFFERS:
       return {
         ...state,
-        search_results: action.results
-      }
+        searchResults: action.results,
+        job: "",
+        jobType: "",
+        country: "",
+        city: "",
+        salary: "",
+        experience: ""
+      };
     case types.SEARCH:
       return {
         ...state,
-        search_results: action.results
+        searchResults: action.results,
+        job: "",
+        jobType: "",
+        country: "",
+        city: "",
+        salary: "",
+        experience: ""
       };
     case types.ADD_JOB:
-      return state
+      return state;
     case types.SET_CITY:
       return {
         ...state,
         city: action.value
-      }
+      };
     case types.SET_JOB:
       return {
         ...state,
         job: action.value
-      }
+      };
     case types.SET_JOB_TYPE:
       return {
         ...state,
-        job_type: action.value
-      }
+        jobType: action.value
+      };
+    case types.setJob:
+      return {
+        ...state,
+        job: action.value
+      };
+    case types.setJobType:
+      return {
+        ...state,
+        jobType: action.value
+      };
     case types.SET_COUNTRY:
       return {
         ...state,
         country: action.value
-      }
+      };
     case types.SET_EXP_MIN:
       return {
         ...state,
         experience: action.value
-      }
+      };
     case types.SET_EXP_MAX:
       return {
         ...state,
         exp_value_max: action.value
-      }
+      };
     case types.SET_SALARY_MIN:
       return {
         ...state,
         salary: action.value
-      }
+      };
     case types.SET_SALARY_MAX:
       return {
         ...state,
         salary_value_max: action.value
-      }
-    case types.SELECT_JOB_TYPE:
+      };
+    case types.SELECT_jobType:
       return {
         ...state,
-        selected_job_type: action.value
-      }
+        selected_jobType: action.value
+      };
     case types.SELECT_COUNTRY:
       return {
         ...state,
         selected_country: action.value
-      }
+      };
 
     case types.SELECT_CITY:
       return {
         ...state,
         selected_city: action.value
-      }
+      };
 
     case types.SELECT_EXP_MIN:
       return {
         ...state,
         selected_experience: action.value
-      }
+      };
 
     case types.SELECT_EXP_MAX:
       return {
         ...state,
         selected_exp_value_max: action.value
-      }
+      };
 
     case types.SELECT_SALARY_MIN:
       return {
         ...state,
         selected_salary: action.value
-      }
+      };
 
     case types.SELECT_SALARY_MAX:
       return {
         ...state,
         selected_salary_value_max: action.value
-      }
+      };
     default:
-      return state
+      return state;
   }
 }

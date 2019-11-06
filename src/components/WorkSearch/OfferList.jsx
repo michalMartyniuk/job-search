@@ -1,23 +1,22 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import Divider from '@material-ui/core/Divider';
-import { Paper } from '@material-ui/core';
-import ListItemText from '@material-ui/core/ListItemText';
-import Typography from '@material-ui/core/Typography';
-import { withStyles } from '@material-ui/styles';
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import List from "@material-ui/core/List";
+import Divider from "@material-ui/core/Divider";
+import { Paper, Grid } from "@material-ui/core";
+import ListItemText from "@material-ui/core/ListItemText";
+import Typography from "@material-ui/core/Typography";
+import { withStyles } from "@material-ui/styles";
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: '100%',
+    width: "100%",
     maxWidth: 1200,
     backgroundColor: theme.palette.background.paper,
     margin: "auto",
-    marginTop: 100,
+    marginTop: 100
   },
   inline: {
-    display: 'inline',
+    display: "inline"
   },
   list: {
     padding: 0
@@ -34,48 +33,43 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const StyledDivider = withStyles(theme => ({
-  root: {
-    backgroundColor: "black",
-    height: 1
-  }
-}))(Divider)
-const StyledListItemText = withStyles(theme => ({
+const StyledDivider = withStyles(() => ({
+  root: {}
+}))(Divider);
+const StyledListItemText = withStyles(() => ({
   primary: {
     fontSize: "1.5rem"
   },
   secondary: {
     fontSize: "1.3rem"
   }
-}))(ListItemText)
+}))(ListItemText);
 
 const Offer = props => {
+  const StyledGridContainer = withStyles(() => ({
+    container: {
+      padding: 8,
+      "&:hover": {
+        backgroundColor: "#ddd"
+      }
+    }
+  }))(Grid);
   return (
-    <React.Fragment>
-      <ListItem alignItems="flex-start">
-        <StyledListItemText
-          primary={props.job}
-        />
-        <StyledListItemText
-          primary={props.job_type}
-        />
-        <StyledListItemText
-          primary={props.country}
-        />
-        <StyledListItemText
-          primary={props.city}
-        />
-        <StyledListItemText
-          primary={props.salary}
-        />
-        <StyledListItemText
-          primary={props.experience}
-        />
-      </ListItem>
+    <>
+      <StyledGridContainer container>
+        {Object.entries(props).map(prop => {
+          const [key, value] = prop;
+          return (
+            <Grid item xs={2}>
+              <StyledListItemText primary={value} />
+            </Grid>
+          );
+        })}
+      </StyledGridContainer>
       <StyledDivider component="li" />
-    </React.Fragment>
-  )
-}
+    </>
+  );
+};
 export default function OfferList({ offers }) {
   const classes = useStyles();
   return (
@@ -87,16 +81,17 @@ export default function OfferList({ offers }) {
           </Typography>
         </div>
         {offers.map(offer => {
-          return <Offer
-            key={offer.id}
-            job={offer.job}
-            job_type={offer.job_type}
-            country={offer.country}
-            city={offer.city}
-            experience={offer.experience}
-            salary={offer.salary}
-            exp_max={offer.experience}
-          />
+          return (
+            <Offer
+              key={offer.id}
+              job={offer.job}
+              jobType={offer.jobType}
+              country={offer.country}
+              city={offer.city}
+              experience={offer.experience}
+              salary={offer.salary}
+            />
+          );
         })}
       </List>
     </Paper>
