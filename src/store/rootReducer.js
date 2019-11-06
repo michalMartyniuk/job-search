@@ -6,9 +6,3 @@ export default combineReducers({
   app: appReducer,
   auth: authReducer
 });
-// export default function rootReducer() {
-//   return combineReducers({
-//     app: appReducer,
-//     auth: authReducer
-//   });
-// }

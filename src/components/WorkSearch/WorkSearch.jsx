@@ -4,7 +4,7 @@ import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import AppForm from "./AppForm";
 import OfferList from "./OfferList";
-import { getAllOffers, resetForm } from "../../store/app/appActions";
+import { getAllOffers } from "../../store/app/appActions";
 
 const useStyles = makeStyles(() => ({
   workSearchkContainer: {

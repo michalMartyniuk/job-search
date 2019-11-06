@@ -1,34 +1,4 @@
 {
-<<<<<<< HEAD
-    "env": {
-        "browser": true,
-        "es6": true
-    },
-    "extends": [
-        "airbnb"
-    ],
-    "globals": {
-        "Atomics": "readonly",
-        "SharedArrayBuffer": "readonly"
-    },
-    "parserOptions": {
-        "ecmaFeatures": {
-            "jsx": true
-        },
-        "ecmaVersion": 2018,
-        "sourceType": "module"
-    },
-    "plugins": [
-        "react"
-    ],
-    "rules": {
-        "indent": ["error", "tab"],
-        "no-tabs": "off",
-        "react/jsx-indent": "off"
-
-    }
-}
-=======
   "env": {
     "browser": true,
     "es6": true,
@@ -56,4 +26,3 @@
 		"no-console": "off"
   }
 }
->>>>>>> 40fdedf823d3a2ccc898fdce1f189dbbfbd74221
