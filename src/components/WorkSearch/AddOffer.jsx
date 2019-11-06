@@ -1,15 +1,29 @@
-import React from 'react';
-import { FormControl, Input, InputLabel, Button, Paper } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+import React from "react";
 import {
-  add_job_offer, set_job, set_job_type, set_country, set_city,
-  set_salary, set_experience, search, get_all_offers,
-} from '../../store/app/appActions';
-import FormSelect from './FormSelect';
-import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+  FormControl,
+  Input,
+  InputLabel,
+  Button,
+  Paper
+} from "@material-ui/core";
+import { makeStyles } from "@material-ui/styles";
+import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
+import {
+  addJobOffer,
+  setJob,
+  setJobType,
+  setCountry,
+  setCity,
+  setSalary,
+  setExperience,
+  search,
+  getAllOffers,
+  resetForm
+} from "../../store/app/appActions";
+import FormSelect from "./FormSelect";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   paper: {
     padding: 50,
     margin: "auto",
@@ -20,7 +34,7 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     flexDirection: "column",
     justifyItems: "center",
-    alignItems: "center",
+    alignItems: "center"
   },
   formControl: {
     width: 328
@@ -33,7 +47,7 @@ const useStyles = makeStyles(theme => ({
     fontSize: "1.5rem"
   },
   buttonsContainer: {
-    display: "flex",
+    display: "flex"
   },
   button: {
     color: "white",
@@ -61,99 +75,137 @@ const useStyles = makeStyles(theme => ({
     textAlign: "center",
     marginBottom: 40
   }
-}))
+}));
 
 const FormInput = ({ name, value, onChange, className }) => {
-  const classes = useStyles()
+  const classes = useStyles();
   return (
-    <FormControl className={className ? className : classes.formControl}>
+    <FormControl className={className || classes.formControl}>
       <InputLabel className={classes.inputLabel}>{name}</InputLabel>
-      <Input
-        className={classes.input}
-        value={value}
-        onChange={onChange}
-      />
+      <Input className={classes.input} value={value} onChange={onChange} />
     </FormControl>
-  )
-}
+  );
+};
 
 function AddOffer(props) {
-  const classes = useStyles()
+  const classes = useStyles();
   const selectsData = [
-    { name: "Branża", value: props.job_type, onChange: props.set_job_type, options: ["Medycyna", "Szkolnictwo", "Informatyka", "Rolnictwo"] },
-    { name: "Kraj", value: props.country, onChange: props.set_country, options: ["Polska", "Niemcy", "Francja", "Wielka Brytania", "Stany Zjednoczone"] },
-    { name: "Miasto", value: props.city, onChange: props.set_city, options: ["Warszawa", "Poznań", "Kraków", "Pruszków", "Szczecinek"] },
-    { name: "Zarobki", value: props.salary, onChange: props.set_salary, options: [1000, 3000, 6000, 10000, 15000, 20000] },
-    { name: "Doświadczenie", value: props.experience, onChange: props.set_experience, options: [1, 2, 3, 4, 5, 10, 15, 20] },
-  ]
+    {
+      name: "Branża",
+      value: props.jobType,
+      onChange: props.setJobType,
+      options: ["Medycyna", "Szkolnictwo", "Informatyka", "Rolnictwo"]
+    },
+    {
+      name: "Kraj",
+      value: props.country,
+      onChange: props.setCountry,
+      options: [
+        "Polska",
+        "Niemcy",
+        "Francja",
+        "Wielka Brytania",
+        "Stany Zjednoczone"
+      ]
+    },
+    {
+      name: "Miasto",
+      value: props.city,
+      onChange: props.setCity,
+      options: ["Warszawa", "Poznań", "Kraków", "Pruszków", "Szczecinek"]
+    },
+    {
+      name: "Zarobki",
+      value: props.salary,
+      onChange: props.setSalary,
+      options: [1000, 3000, 6000, 10000, 15000, 20000]
+    },
+    {
+      name: "Doświadczenie",
+      value: props.experience,
+      onChange: props.setExperience,
+      options: [1, 2, 3, 4, 5, 10, 15, 20]
+    }
+  ];
   const handleAddWork = () => {
-    props.add_job_offer({
+    props.addJobOffer({
       job: props.job,
-      job_type: props.job_type,
+      jobType: props.jobType,
       country: props.country,
       city: props.city,
       experience: props.experience,
-      salary: props.salary,
-    })
-  }
+      salary: props.salary
+    });
+  };
   const handleSearchAll = () => {
-    props.get_all_offers()
-  }
+    props.getAllOffers();
+  };
   return (
     <Paper className={classes.paper}>
       {!props.loggedIn && <Redirect to="/login" />}
-      <div className={classes.heading}>
-        Dodaj ofertę
-      </div>
+      <div className={classes.heading}>Dodaj ofertę</div>
       <form className={classes.form}>
-        <FormInput
-          name="Zawód"
-          value={props.job}
-          onChange={props.set_job}
-        />
+        <FormInput name="Zawód" value={props.job} onChange={props.setJob} />
         {selectsData.map(select => {
-          return <FormSelect
-            key={select.name}
-            name={select.name}
-            value={select.value}
-            className={classes.formControl}
-            onChange={select.onChange}
-            options={select.options}
-          />
+          return (
+            <FormSelect
+              key={select.name}
+              name={select.name}
+              value={select.value}
+              className={classes.formControl}
+              onChange={select.onChange}
+              options={select.options}
+            />
+          );
         })}
         <div className={classes.buttonsContainer}>
           <Button
             variant="contained"
             className={classes.button}
+            onClick={props.resetForm}
+          >
+            Zresetuj formularz
+          </Button>
+          <Button
+            variant="contained"
+            className={classes.button}
             onClick={handleAddWork}
-          >Dodaj ofertę</Button>
+          >
+            Dodaj ofertę
+          </Button>
         </div>
       </form>
-    </Paper >
-  )
+    </Paper>
+  );
 }
 
-const mapStateToProps = (state) => ({ ...state.app, ...state.auth })
-const mapDispatchToProps = (dispatch) => ({
-  set_job: event => dispatch(set_job(event.target.value)),
-  set_job_type: event => {
-    dispatch(set_job_type(event.target.value))
+const mapStateToProps = state => ({ ...state.app, ...state.auth });
+const mapDispatchToProps = dispatch => ({
+  resetForm: () => dispatch(resetForm()),
+  setJob: event => {
+    dispatch(setJob(event.target.value));
   },
-  set_country: event => {
-    dispatch(set_country(event.target.value))
+  setJobType: event => {
+    dispatch(setJobType(event.target.value));
   },
-  set_city: event => {
-    dispatch(set_city(event.target.value))
+  setCountry: event => {
+    dispatch(setCountry(event.target.value));
   },
-  set_salary: event => {
-    dispatch(set_salary(event.target.value))
+  setCity: event => {
+    dispatch(setCity(event.target.value));
   },
-  set_experience: event => {
-    dispatch(set_experience(event.target.value))
+  setSalary: event => {
+    dispatch(setSalary(event.target.value));
   },
-  get_all_offers: () => dispatch(get_all_offers()),
+  setExperience: event => {
+    dispatch(setExperience(event.target.value));
+  },
+  getAllOffers: () => dispatch(getAllOffers()),
   search: values => dispatch(search(values)),
-  add_job_offer: values => dispatch(add_job_offer(values)),
-})
+  addJobOffer: values => dispatch(addJobOffer(values))
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddOffer)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AddOffer);

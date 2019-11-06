@@ -1,11 +1,10 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/styles';
-import { Button } from '@material-ui/core';
-import { Paper } from '@material-ui/core';
-import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { set_work_giver, set_work_taker } from '../store/auth/authActions';
-import { Redirect } from 'react-router-dom';
+import React from "react";
+import { makeStyles } from "@material-ui/styles";
+import { Button, Paper } from "@material-ui/core";
+
+import { Link, Redirect } from "react-router-dom";
+import { connect } from "react-redux";
+import { setWorkGiver, setWorkTaker } from "../store/auth/authActions";
 
 const useStyles = makeStyles(theme => ({
   homeContainer: {
@@ -30,10 +29,10 @@ const useStyles = makeStyles(theme => ({
       backgroundColor: "#008c9e"
     }
   }
-}))
+}));
 
 function Home(props) {
-  const classes = useStyles()
+  const classes = useStyles();
 
   return (
     <Paper className={classes.homeContainer}>
@@ -45,7 +44,7 @@ function Home(props) {
           <Button
             variant="contained"
             className={classes.button}
-            onClick={props.set_work_taker}
+            onClick={props.setWorkTaker}
           >
             Szukam pracy
           </Button>
@@ -54,17 +53,22 @@ function Home(props) {
           <Button
             variant="contained"
             className={classes.button}
-            onClick={props.set_work_giver}
-          >Jestem pracodawcą</Button>
+            onClick={props.setWorkGiver}
+          >
+            Jestem pracodawcą
+          </Button>
         </Link>
       </div>
     </Paper>
-  )
+  );
 }
 
-const mapStateToProps = state => state.auth
+const mapStateToProps = state => state.auth;
 const mapDispatchToProps = dispatch => ({
-  set_work_taker: () => dispatch(set_work_taker()),
-  set_work_giver: () => dispatch(set_work_giver())
-})
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+  setWorkTaker: () => dispatch(setWorkTaker()),
+  setWorkGiver: () => dispatch(setWorkGiver())
+});
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Home);
