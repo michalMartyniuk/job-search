@@ -43,7 +43,6 @@ function MDLogIn({
     authLogIn(logInEmail, logInPassword);
     setLogInState(false);
   };
-  console.log(logInEmail)
   return (
     <MDBContainer className={classes.container}>
       {loggedIn && <Redirect to="/profile" />}
@@ -109,14 +108,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(MDLogIn);
-
-MDLogIn.propTypes = {
-  authLogIn: PropTypes.func,
-  setLogInEmail: PropTypes.func,
-  setLogInState: PropTypes.func,
-  setLogInPassword: PropTypes.func,
-  loggedIn: PropTypes.bool,
-  logInEmail: PropTypes.string,
-  logInPassword: PropTypes.string,
-  logInError: PropTypes.string
-};

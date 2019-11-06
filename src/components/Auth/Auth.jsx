@@ -8,7 +8,8 @@ const useStyles = makeStyles(() => ({
   authContainer: {
     display: "flex",
     flexDirection: "row",
-    margin: "auto"
+    margin: "auto",
+    marginTop: 0
   }
 }));
 

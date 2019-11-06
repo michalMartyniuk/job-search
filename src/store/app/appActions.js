@@ -104,11 +104,7 @@ export const addJobOffer = offer => {
           .set(data)
           .then(() => {
             dispatch(
-              setNotification(
-                true,
-                "Twoja oferta zostało pomyślnie dodana",
-                "success"
-              )
+              setNotification(true, "Twoja oferta została dodana", "success")
             );
           });
       });

@@ -13,13 +13,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { setNotification } from "../store/app/appActions";
 
-const variantIcon = {
-  success: CheckCircleIcon,
-  warning: WarningIcon,
-  error: ErrorIcon,
-  info: InfoIcon
-};
-
 const useStyles = makeStyles(theme => ({
   content: {
     fontSize: "1.3rem",
@@ -52,12 +45,17 @@ const useStyles = makeStyles(theme => ({
 
 function Notification(props) {
   // eslint-disable-next-line dot-notation
-  const Icon = () =>
-    variantIcon[props.notification.variant] || variantIcon["success"];
   const classes = useStyles();
+  const MessageContent = () => {
+    return (
+      <span id="client-notification" className={classes.message}>
+        {props.notification.message}
+      </span>
+    );
+  };
   return (
     <div>
-      {/* <Snackbar
+      <Snackbar
         anchorOrigin={{
           vertical: "bottom",
           horizontal: "left"
@@ -69,12 +67,7 @@ function Notification(props) {
         <SnackbarContent
           className={clsx(classes[props.notification.variant], classes.content)}
           aria-describedby="client-notification"
-          message={
-            <span id="client-notification" className={classes.message}>
-              <Icon className={classes.icon} />
-              {props.notification.message}
-            </span>
-          }
+          message={<MessageContent />}
           action={[
             <IconButton
               key="close"
@@ -86,7 +79,7 @@ function Notification(props) {
             </IconButton>
           ]}
         />
-      </Snackbar> */}
+      </Snackbar>
     </div>
   );
 }

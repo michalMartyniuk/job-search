@@ -19,6 +19,7 @@ const auth = firebase.auth();
 
 const useStyles = makeStyles(() => ({
   app: {
+    height: "100%",
     display: "flex",
     flexDirection: "column",
     backgroundColor: "#f2f2f2"
@@ -36,12 +37,15 @@ function App(props) {
     });
     return () => unsubscribe();
   }, [auth.onAuthStateChanged]);
-  console.log(props);
   return (
     <Router>
       <div className={classes.app}>
-        <Navigation logged_in={loggedIn} logout={authLogOut} />
-        {/* <Notification /> */}
+        <Navigation
+          loggedIn={loggedIn}
+          logout={authLogOut}
+          accountType={props.user ? props.user.accountType : null}
+        />
+        <Notification />
         <Switch>
           <Route path="/search">
             <WorkSearch />
@@ -52,7 +56,10 @@ function App(props) {
           <Route path="/addOffer">
             <AddOffer />
           </Route>
-          <Route path="/auth">
+          <Route path="/auth/employer">
+            <Auth />
+          </Route>
+          <Route path="/auth/employee">
             <Auth />
           </Route>
           <Route path="/signup">

@@ -2,7 +2,7 @@ import { types } from "./appTypes";
 
 const initialState = {
   notification: {
-    state: true,
+    state: false,
     message: "",
     variant: "success"
   },
@@ -13,11 +13,11 @@ const initialState = {
   salary: "",
   country: "",
   city: "",
-  selected_jobType: "",
-  selected_experience: "",
-  selected_salary: "",
-  selected_country: "",
-  selected_city: ""
+  selectedJobType: "",
+  selectedExperience: "",
+  selectedSalary: "",
+  selectedCountry: "",
+  selectedCity: ""
 };
 
 export default function appReducer(state = initialState, action) {
@@ -118,24 +118,24 @@ export default function appReducer(state = initialState, action) {
     case types.SELECT_jobType:
       return {
         ...state,
-        selected_jobType: action.value
+        selectedJobType: action.value
       };
     case types.SELECT_COUNTRY:
       return {
         ...state,
-        selected_country: action.value
+        selectedCountry: action.value
       };
 
     case types.SELECT_CITY:
       return {
         ...state,
-        selected_city: action.value
+        selectedCity: action.value
       };
 
     case types.SELECT_EXP_MIN:
       return {
         ...state,
-        selected_experience: action.value
+        selectedExperience: action.value
       };
 
     case types.SELECT_EXP_MAX:
@@ -147,13 +147,13 @@ export default function appReducer(state = initialState, action) {
     case types.SELECT_SALARY_MIN:
       return {
         ...state,
-        selected_salary: action.value
+        selectedSalary: action.value
       };
 
     case types.SELECT_SALARY_MAX:
       return {
         ...state,
-        selected_salary_value_max: action.value
+        selectedSalary_value_max: action.value
       };
     default:
       return state;

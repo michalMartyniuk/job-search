@@ -10,7 +10,6 @@ import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   root: {
-    flexGrow: 1,
     height: "auto"
   },
   menuButton: {
@@ -46,7 +45,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function Navigation({ logged_in, logout }) {
+export default function Navigation({ loggedIn, logout, accountType }) {
   const classes = useStyles();
   return (
     <div className={classes.root}>
@@ -63,35 +62,27 @@ export default function Navigation({ logged_in, logout }) {
           <Typography variant="h6" className={classes.title}>
             Wyszukiwarka pracy
           </Typography>
-          <Link to="/home" className={classes.link}>
-            <Button className={classes.button}>Strona główna</Button>
-          </Link>
-          {logged_in && (
+          {!loggedIn && (
+            <Link to="/home" className={classes.link}>
+              <Button className={classes.button}>Strona główna</Button>
+            </Link>
+          )}
+          {loggedIn && (
             <Link to="/search" className={classes.link}>
               <Button className={classes.button}>Szukaj pracy</Button>
             </Link>
           )}
-          {logged_in && (
+          {loggedIn && accountType === "employer" && (
             <Link to="/addOffer" className={classes.link}>
               <Button className={classes.button}>Dodaj ofertę</Button>
             </Link>
           )}
-          {!logged_in && (
-            <Link to="/signup" className={classes.link}>
-              <Button className={classes.button}>Rejestracja</Button>
-            </Link>
-          )}
-          {!logged_in && (
-            <Link to="/login" className={classes.link}>
-              <Button className={classes.button}>Logowanie</Button>
-            </Link>
-          )}
-          {logged_in && (
+          {loggedIn && (
             <Link to="/profile" className={classes.link}>
               <Button className={classes.button}>Profil</Button>
             </Link>
           )}
-          {logged_in && (
+          {loggedIn && (
             <Button className={classes.button} onClick={logout}>
               Wylogowanie
             </Button>

@@ -31,11 +31,13 @@ const MDSignUp = props => {
   const classes = useStyles();
   const handleSignUp = event => {
     event.preventDefault();
+    // console.log(props.accountType);
     props.authSignUp(
-      props.signUp_name,
-      props.signUp_surname,
-      props.signUp_email,
-      props.signUp_password
+      props.signUpName,
+      props.signUpSurname,
+      props.signUpEmail,
+      props.signUpPassword,
+      props.accountType
     );
     props.setSignUpState(false);
   };
@@ -55,7 +57,7 @@ const MDSignUp = props => {
                 type="text"
                 validate
                 onChange={props.setSignUpName}
-                value={props.signUp_name}
+                value={props.signUpName}
                 error="wrong"
                 success="right"
               />
@@ -67,7 +69,7 @@ const MDSignUp = props => {
                 type="text"
                 validate
                 onChange={props.setSignUpsurname}
-                value={props.signUp_surname}
+                value={props.signUpSurname}
                 error="wrong"
                 success="right"
               />
@@ -79,7 +81,7 @@ const MDSignUp = props => {
                 type="email"
                 validate
                 onChange={props.setSignUpEmail}
-                value={props.signUp_email}
+                value={props.signUpEmail}
                 error="wrong"
                 success="right"
               />
@@ -89,7 +91,7 @@ const MDSignUp = props => {
                 icon="lock"
                 group
                 onChange={props.setSignUpPassword}
-                value={props.signUp_password}
+                value={props.signUpPassword}
                 type="password"
                 validate
               />
@@ -118,8 +120,8 @@ const MDSignUp = props => {
 
 const mapStateToProps = state => ({ ...state.auth });
 const mapDispatchToProps = dispatch => ({
-  authSignUp: (name, surname, email, password) =>
-    dispatch(authSignUp(name, surname, email, password)),
+  authSignUp: (name, surname, email, password, accountType) =>
+    dispatch(authSignUp(name, surname, email, password, accountType)),
   setSignUpName: event => dispatch(setSignUpName(event.target.value)),
   setSignUpsurname: event => dispatch(setSignUpsurname(event.target.value)),
   setSignUpPassword: event => dispatch(setSignUpPassword(event.target.value)),

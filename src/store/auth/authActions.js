@@ -5,55 +5,50 @@ import { setNotification } from "../app/appActions";
 const db = firebase.firestore();
 const auth = firebase.auth();
 
-export const setSignUpName = name => ({ type: types.setSignUpName, name });
+export const setSignUpName = name => ({ type: types.SET_SIGNUP_NAME, name });
 export const setSignUpsurname = surname => ({
-  type: types.setSignUpsurname,
+  type: types.SET_SIGNUP_SURNAME,
   surname
 });
 export const setSignUpEmail = email => ({
-  type: types.setSignUpEmail,
+  type: types.SET_SIGNUP_EMAIL,
   email
 });
 export const setSignUpPassword = password => ({
-  type: types.setSignUpPassword,
+  type: types.SET_SIGNUP_PASSWORD,
   password
 });
-export const set_logIn_name = name => ({ type: types.SET_LOGIN_NAME, name });
+export const set_logInName = name => ({ type: types.SET_LOGIN_NAME, name });
 export const setLogInEmail = email => ({
-  type: types.setLogInEmail,
+  type: types.SET_LOGIN_EMAIL,
   email
 });
 export const setLogInPassword = password => ({
-  type: types.setLogInPassword,
+  type: types.SET_LOGIN_PASSWORD,
   password
 });
 export const setSignUpState = state => ({
-  type: types.setSignUpState,
+  type: types.SET_SIGNUP_STATE,
   state
 });
 export const setLogInState = state => ({
-  type: types.setLogInState,
+  type: types.SET_LOGIN_STATE,
   state
 });
 export const signUpError = error => {
-  return { type: types.signUpError, error };
+  return { type: types.SIGNUP_ERROR, error };
 };
 export const signUpErrorReset = () => {
-  return { type: types.signUpErrorReset };
+  return { type: types.SIGNUP_ERROR_RESET };
 };
 export const logInError = error => {
-  return { type: types.logInError, error };
+  return { type: types.LOG_IN_ERROR, error };
 };
 export const logInErrorReset = () => {
-  return { type: types.logInErrorReset };
+  return { type: types.LOG_IN_ERROR_RESET };
 };
-export const setWorkGiver = () => {
-  console.log("work giver action");
-  return { type: types.setWorkGiver };
-};
-export const setWorkTaker = () => {
-  console.log("work taker action");
-  return { type: types.setWorkTaker };
+export const setAccountType = accountType => {
+  return { type: types.SET_ACCOUNT_TYPE, accountType };
 };
 export const setLogIn = user => {
   return dispatch => {
@@ -61,16 +56,29 @@ export const setLogIn = user => {
       .doc(user.uid)
       .get()
       .then(doc => {
-        dispatch({
-          type: types.LOGIN,
-          user: doc.data()
-        });
-        dispatch({ type: types.signUpErrorReset });
-        dispatch({ type: types.logInErrorReset });
+        let offers = [];
+        if (doc.data().accountType === "employer") {
+          db.collection(`users/${auth.currentUser.uid}/offers`)
+            .get()
+            .then(querySnapshot => {
+              querySnapshot.forEach(offer => offers.push(offer.data()));
+            });
+          dispatch({
+            type: types.LOGIN,
+            user: { ...doc.data(), offers }
+          });
+        } else {
+          dispatch({
+            type: types.LOGIN,
+            user: doc.data()
+          });
+        }
+        dispatch({ type: types.SIGNUP_ERROR_RESET });
+        dispatch({ type: types.LOG_IN_ERROR_RESET });
       });
   };
 };
-export const authSignUp = (name, surname, email, password) => {
+export const authSignUp = (name, surname, email, password, accountType) => {
   return dispatch => {
     auth
       .createUserWithEmailAndPassword(email, password)
@@ -80,7 +88,8 @@ export const authSignUp = (name, surname, email, password) => {
           .set({
             name,
             surname,
-            email
+            email,
+            accountType
           })
           .then(() => {
             dispatch(
@@ -90,6 +99,7 @@ export const authSignUp = (name, surname, email, password) => {
           });
       })
       .catch(error => {
+        console.log("Sign up error " + error.message);
         dispatch(signUpError(error.message));
       });
   };

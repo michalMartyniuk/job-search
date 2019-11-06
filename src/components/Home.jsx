@@ -4,7 +4,7 @@ import { Button, Paper } from "@material-ui/core";
 
 import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-import { setWorkGiver, setWorkTaker } from "../store/auth/authActions";
+import { setAccountType } from "../store/auth/authActions";
 
 const useStyles = makeStyles(theme => ({
   homeContainer: {
@@ -33,27 +33,26 @@ const useStyles = makeStyles(theme => ({
 
 function Home(props) {
   const classes = useStyles();
-
   return (
     <Paper className={classes.homeContainer}>
-      {props.work_giver && props.loggedIn && <Redirect to="/addOffer" />}
-      {props.work_taker && props.loggedIn && <Redirect to="/search" />}
+      {props.employer && props.loggedIn && <Redirect to="/addOffer" />}
+      {props.employee && props.loggedIn && <Redirect to="/search" />}
       <div>
         <h1 className={classes.header}>Wyszukiwarka pracy</h1>
-        <Link to="/auth">
+        <Link to="/auth/employee">
           <Button
             variant="contained"
             className={classes.button}
-            onClick={props.setWorkTaker}
+            onClick={() => props.setAccountType("employee")}
           >
             Szukam pracy
           </Button>
         </Link>
-        <Link to="/auth">
+        <Link to="/auth/employer">
           <Button
             variant="contained"
             className={classes.button}
-            onClick={props.setWorkGiver}
+            onClick={() => props.setAccountType("employer")}
           >
             Jestem pracodawcą
           </Button>
@@ -65,8 +64,7 @@ function Home(props) {
 
 const mapStateToProps = state => state.auth;
 const mapDispatchToProps = dispatch => ({
-  setWorkTaker: () => dispatch(setWorkTaker()),
-  setWorkGiver: () => dispatch(setWorkGiver())
+  setAccountType: accountType => dispatch(setAccountType(accountType))
 });
 export default connect(
   mapStateToProps,

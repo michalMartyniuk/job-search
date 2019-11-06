@@ -29,25 +29,41 @@ const useStyles = makeStyles(() => ({
 
 function Profile(props) {
   const classes = useStyles();
+  let accountType;
+  if (props.user) {
+    if (props.user.accountType === "employer") {
+      accountType = "pracodawca";
+    } else if (props.user.accountType === "employee") {
+      accountType = "pracownik";
+    } else {
+      accountType = null;
+    }
+  }
   const ListItem = props => (
     <li className={classes.infoItem}>
       <span className={classes.infoName}>{props.name}</span>
       <span className={classes.infoValue}>{props.value}</span>
     </li>
   );
-  return (
-    <Paper className={classes.container}>
-      {!props.loggedIn && <Redirect to="/login" />}
-      <h3>
-        {props.user.name} {props.user.surname}
-      </h3>
-      <ul className={classes.list}>
-        <ListItem name="Imię: " value={props.user.name} />
-        <ListItem name="Nazwisko: " value={props.user.surname} />
-        <ListItem name="Email: " value={props.user.email} />
-      </ul>
-    </Paper>
-  );
+  const Profile = () => {
+    return (
+      <Paper className={classes.container}>
+        <h3>
+          {props.user.name} {props.user.surname}
+        </h3>
+        <ul className={classes.list}>
+          <ListItem name="Imię: " value={props.user.name} />
+          <ListItem name="Nazwisko: " value={props.user.surname} />
+          <ListItem name="Email: " value={props.user.email} />
+          <ListItem name="Rodzaj konta: " value={accountType} />
+        </ul>
+      </Paper>
+    );
+  };
+  if (props.loggedIn && props.user) {
+    return <Profile />;
+  }
+  return <Redirect to="/home" />;
 }
 
 const mapStateToProps = state => state.auth;
