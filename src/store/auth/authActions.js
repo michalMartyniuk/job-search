@@ -61,7 +61,9 @@ export const setLogIn = user => {
           db.collection(`users/${auth.currentUser.uid}/offers`)
             .get()
             .then(querySnapshot => {
-              querySnapshot.forEach(offer => offers.push(offer.data()));
+              querySnapshot.forEach(offer =>
+                offers.push({ id: offer.id, ...offer.data() })
+              );
             });
           dispatch({
             type: types.LOGIN,
