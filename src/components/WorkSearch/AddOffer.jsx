@@ -22,6 +22,7 @@ import {
   resetForm
 } from "../../store/app/appActions";
 import FormSelect from "./FormSelect";
+import { filterFalsyProperties } from "../../utility";
 
 const useStyles = makeStyles(() => ({
   paper: {
@@ -128,18 +129,14 @@ function AddOffer(props) {
     }
   ];
   const handleAddWork = () => {
-    props.addJobOffer({
-      job: props.job,
-      jobType: props.jobType,
-      country: props.country,
-      city: props.city,
-      experience: props.experience,
-      salary: props.salary
-    });
+    const { job, jobType, country, city, experience, salary } = props;
+    const inputs = { job, jobType, country, city, experience, salary };
+    const filteredInputs = filterFalsyProperties(inputs);
+    props.addJobOffer(filteredInputs);
   };
-  const handleSearchAll = () => {
-    props.getAllOffers();
-  };
+  // const handleSearchAll = () => {
+  //   props.getAllOffers();
+  // };
   return (
     <Paper className={classes.paper}>
       {!props.loggedIn && <Redirect to="/login" />}
