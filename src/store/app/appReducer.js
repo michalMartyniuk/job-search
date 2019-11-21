@@ -8,16 +8,28 @@ const initialState = {
   },
   searchResults: [],
   job: "",
-  jobType: "",
-  experience: "",
-  salary: "",
-  country: "",
-  city: "",
-  selectedJobType: "",
-  selectedExperience: "",
-  selectedSalary: "",
-  selectedCountry: "",
-  selectedCity: ""
+  jobTypes: {
+    Medycyna: false,
+    IT: false,
+    Edukacja: false,
+    Rolnictwo: false
+  },
+  salary_min: "",
+  salary_max: "",
+  exp_min: "",
+  exp_max: "",
+  countries: {
+    Polska: false,
+    Niemcy: false,
+    Francja: false,
+    "Wielka Brytania": false
+  },
+  cities: {
+    Warszawa: false,
+    Poznań: false,
+    Kraków: false,
+    Szczecinek: false
+  },
 };
 
 export default function appReducer(state = initialState, action) {
@@ -34,126 +46,99 @@ export default function appReducer(state = initialState, action) {
     case types.RESET_FORM:
       return {
         ...state,
+        searchResults: action.results,
         job: "",
-        jobType: "",
-        country: "",
-        city: "",
-        salary: "",
-        experience: ""
+        jobTypes: "",
+        countries: "",
+        cities: "",
+        salary_min: "",
+        salary_max: "",
+        exp_min: "",
+        exp_max: ""
       };
     case types.GET_ALL_OFFERS:
       return {
         ...state,
         searchResults: action.results,
         job: "",
-        jobType: "",
-        country: "",
-        city: "",
-        salary: "",
-        experience: ""
+        jobTypes: "",
+        countries: "",
+        cities: "",
+        salary_min: "",
+        salary_max: "",
+        exp_min: "",
+        exp_max: ""
       };
     case types.SEARCH:
       return {
         ...state,
         searchResults: action.results,
         job: "",
-        jobType: "",
-        country: "",
-        city: "",
-        salary: "",
-        experience: ""
+        jobTypes: "",
+        countries: "",
+        cities: "",
+        salary_min: "",
+        salary_max: "",
+        exp_min: "",
+        exp_max: ""
       };
     case types.ADD_JOB:
       return state;
-    case types.SET_CITY:
-      return {
-        ...state,
-        city: action.value
-      };
+
     case types.SET_JOB:
       return {
         ...state,
         job: action.value
       };
-    case types.SET_JOB_TYPE:
+    case types.SET_JOB_TYPES:
       return {
         ...state,
-        jobType: action.value
+        jobTypes: {
+          ...state.jobTypes,
+          [action.value]: !state.jobTypes[action.value]
+        }
       };
     case types.setJob:
       return {
         ...state,
         job: action.value
       };
-    case types.setJobType:
+    case types.SET_CITIES:
       return {
         ...state,
-        jobType: action.value
+        cities: {
+          ...state.cities,
+          [action.value]: !state.cities[action.value]
+        }
       };
-    case types.SET_COUNTRY:
+    case types.SET_COUNTRIES:
+      console.log("siema", action.value)
       return {
         ...state,
-        country: action.value
+        countries: {
+          ...state.countries,
+          [action.value]: !state.countries[action.value]
+        }
       };
     case types.SET_EXP_MIN:
       return {
         ...state,
-        experience: action.value
+        exp_min: action.value
       };
     case types.SET_EXP_MAX:
       return {
         ...state,
-        exp_value_max: action.value
+        exp_max: action.value
       };
     case types.SET_SALARY_MIN:
       return {
         ...state,
-        salary: action.value
+        salary_min: action.value
       };
     case types.SET_SALARY_MAX:
       return {
         ...state,
-        salary_value_max: action.value
-      };
-    case types.SELECT_jobType:
-      return {
-        ...state,
-        selectedJobType: action.value
-      };
-    case types.SELECT_COUNTRY:
-      return {
-        ...state,
-        selectedCountry: action.value
-      };
-
-    case types.SELECT_CITY:
-      return {
-        ...state,
-        selectedCity: action.value
-      };
-
-    case types.SELECT_EXP_MIN:
-      return {
-        ...state,
-        selectedExperience: action.value
-      };
-
-    case types.SELECT_EXP_MAX:
-      return {
-        ...state,
-        selected_exp_value_max: action.value
-      };
-
-    case types.SELECT_SALARY_MIN:
-      return {
-        ...state,
-        selectedSalary: action.value
-      };
-
-    case types.SELECT_SALARY_MAX:
-      return {
-        ...state,
-        selectedSalary_value_max: action.value
+        salary_max: action.value
       };
     default:
       return state;

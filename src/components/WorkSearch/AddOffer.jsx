@@ -12,17 +12,18 @@ import { Redirect } from "react-router-dom";
 import {
   addJobOffer,
   setJob,
-  setJobType,
-  setCountry,
-  setCity,
-  setSalary,
-  setExperience,
+  setJobTypes,
+  setCountries,
+  setCities,
+  setSalaryMin,
+  setSalaryMax,
+  setExpMin,
+  setExpMax,
   search,
   getAllOffers,
   resetForm
 } from "../../store/app/appActions";
-import FormSelect from "./FormSelect";
-import { filterFalsyProperties } from "../../utility";
+import Filters from "../Filters/Filters";
 
 const useStyles = makeStyles(() => ({
   paper: {
@@ -90,71 +91,63 @@ const FormInput = ({ name, value, onChange, className }) => {
 
 function AddOffer(props) {
   const classes = useStyles();
-  const selectsData = [
-    {
-      name: "Branża",
-      value: props.jobType,
-      onChange: props.setJobType,
-      options: ["Medycyna", "Szkolnictwo", "Informatyka", "Rolnictwo"]
-    },
-    {
-      name: "Kraj",
-      value: props.country,
-      onChange: props.setCountry,
-      options: [
-        "Polska",
-        "Niemcy",
-        "Francja",
-        "Wielka Brytania",
-        "Stany Zjednoczone"
-      ]
-    },
-    {
-      name: "Miasto",
-      value: props.city,
-      onChange: props.setCity,
-      options: ["Warszawa", "Poznań", "Kraków", "Pruszków", "Szczecinek"]
-    },
-    {
-      name: "Zarobki",
-      value: props.salary,
-      onChange: props.setSalary,
-      options: [1000, 3000, 6000, 10000, 15000, 20000]
-    },
-    {
-      name: "Doświadczenie",
-      value: props.experience,
-      onChange: props.setExperience,
-      options: [1, 2, 3, 4, 5, 10, 15, 20]
-    }
-  ];
+  const {
+    job,
+    jobTypes,
+    countries,
+    cities,
+    salaryMin,
+    salaryMax,
+    expMin,
+    expMax
+  } = props;
   const handleAddWork = () => {
-    const { job, jobType, country, city, experience, salary } = props;
-    const inputs = { job, jobType, country, city, experience, salary };
-    const filteredInputs = filterFalsyProperties(inputs);
-    props.addJobOffer(filteredInputs);
+    props.addJobOffer({
+      job,
+      jobTypes,
+      countries,
+      cities,
+      salaryMin,
+      salaryMax,
+      expMin,
+      expMax
+    });
   };
-  // const handleSearchAll = () => {
-  //   props.getAllOffers();
-  // };
+  const filtersStyles = {
+    container: {
+      display: "flex",
+      justifyContent: "center",
+      width: 600,
+      margin: "auto"
+    },
+    filter: {
+      notActive: {
+        backgroundColor: "white",
+        border: "1px solid black"
+      },
+      active: {
+        backgroundColor: "lightgreen",
+        border: "1px solid white"
+      }
+    }
+  };
   return (
     <Paper className={classes.paper}>
       {!props.loggedIn && <Redirect to="/login" />}
       <div className={classes.heading}>Dodaj ofertę</div>
       <form className={classes.form}>
         <FormInput name="Zawód" value={props.job} onChange={props.setJob} />
-        {selectsData.map(select => {
-          return (
-            <FormSelect
-              key={select.name}
-              name={select.name}
-              value={select.value}
-              className={classes.formControl}
-              onChange={select.onChange}
-              options={select.options}
-            />
-          );
-        })}
+        <Filters
+          names={props.jobTypes}
+          set={setJobTypes}
+          styles={filtersStyles}
+        />
+        <Filters names={props.cities} set={setCities} styles={filtersStyles} />
+        <Filters
+          names={props.countries}
+          set={setCountries}
+          styles={filtersStyles}
+        />
         <div className={classes.buttonsContainer}>
           <Button
             variant="contained"
@@ -182,20 +175,26 @@ const mapDispatchToProps = dispatch => ({
   setJob: event => {
     dispatch(setJob(event.target.value));
   },
-  setJobType: event => {
-    dispatch(setJobType(event.target.value));
+  setJobTypes: event => {
+    dispatch(setJobTypes(event.target.value));
   },
-  setCountry: event => {
-    dispatch(setCountry(event.target.value));
+  setCountries: event => {
+    dispatch(setCountries(event.target.value));
   },
-  setCity: event => {
-    dispatch(setCity(event.target.value));
+  setCities: event => {
+    dispatch(setCities(event.target.value));
   },
-  setSalary: event => {
-    dispatch(setSalary(event.target.value));
+  setSalaryMin: event => {
+    dispatch(setSalaryMin(event.target.value));
   },
-  setExperience: event => {
-    dispatch(setExperience(event.target.value));
+  setSalaryMax: event => {
+    dispatch(setSalaryMax(event.target.value));
+  },
+  setExpMin: event => {
+    dispatch(setExpMin(event.target.value));
+  },
+  setExpMax: event => {
+    dispatch(setExpMax(event.target.value));
   },
   getAllOffers: () => dispatch(getAllOffers()),
   search: values => dispatch(search(values)),

@@ -1,19 +1,9 @@
 import { types } from "./appTypes";
 import firebase from "../../config/firebase";
+import { filterFalsyProperties, filterDocs } from "../../utility";
 
 const db = firebase.firestore();
 const auth = firebase.auth();
-
-function filterFunc(values) {
-  values = Object.keys(values).map(key => {
-    if (!values[key]) {
-      return false;
-    }
-    return { [key]: values[key] };
-  });
-  values = values.filter(value => value);
-  return values;
-}
 
 export const setNotification = (state = false, message = "", variant = "") => {
   return {
@@ -44,31 +34,19 @@ export const getAllOffers = () => {
   };
 };
 
-export const search = values => {
-  if (!filterFunc(values).length) {
-    return { type: {} };
-  }
+export const search = inputs => {
   const offersRef = db.collection("offers");
-  const filteredValues = filterFunc(values);
+  const inputsKeys = Object.keys(inputs);
+  const inputsValues = Object.values(inputs);
+  const myQuery = offersRef.where(inputsKeys[0], "==", inputsValues[0]);
 
-  const queryKeys = filteredValues.map(value => {
-    return Object.keys(value)[0];
-  });
-  const queryValues = filteredValues.map(value => {
-    value = Object.values(value)[0];
-    return value;
-  });
-  const myQuery = offersRef.where(queryKeys[0], "==", queryValues[0]);
+  const searchFilters = {
+    cities: ["Warszawa", "Kraków"],
+    countries: ["Polska", "Niemcy"],
+    salary: [4000, 6000],
+    experience: [2, 5]
+  };
 
-  function filterResults(results) {
-    queryKeys.map((key, index) => {
-      results = results.filter(doc => {
-        return doc[key] === queryValues[index];
-      });
-      return results;
-    });
-    return results;
-  }
   return dispatch => {
     myQuery
       .get()
@@ -79,17 +57,17 @@ export const search = values => {
           return { ...data, id };
         });
       })
-      .then(results => {
-        return filterResults(results);
+      .then(docs => {
+        console.log(docs);
+        return filterDocs(inputs, docs);
       })
-      .then(results => {
-        dispatch({ type: types.SEARCH, results });
+      .then(docs => {
+        dispatch({ type: "" });
       });
   };
 };
-
 export const addJobOffer = offer => {
-  if (!filterFunc(offer).length || !offer.job) {
+  if (!filterFalsyProperties(offer).length || !offer.job) {
     return { type: {} };
   }
   const { job, jobType, country, city, experience, salary } = offer;
@@ -113,9 +91,11 @@ export const addJobOffer = offer => {
 
 export const resetForm = () => ({ type: types.RESET_FORM });
 export const setJob = value => ({ type: types.SET_JOB, value });
-export const setJobType = value => ({ type: types.SET_JOB_TYPE, value });
+export const setJobTypes = value => ({ type: types.SET_JOB_TYPES, value });
 export const setName = value => ({ type: types.SET_NAME, value });
-export const setExperience = value => ({ type: types.SET_EXP_MIN, value });
-export const setSalary = value => ({ type: types.SET_SALARY_MIN, value });
-export const setCountry = value => ({ type: types.SET_COUNTRY, value });
-export const setCity = value => ({ type: types.SET_CITY, value });
+export const setExpMin = value => ({ type: types.SET_EXP_MIN, value });
+export const setExpMax = value => ({ type: types.SET_EXP_MAX, value });
+export const setSalaryMin = value => ({ type: types.SET_SALARY_MIN, value });
+export const setSalaryMax = value => ({ type: types.SET_SALARY_MIN, value });
+export const setCities = value => ({ type: types.SET_CITIES, value });
+export const setCountries = value => ({ type: types.SET_COUNTRIES, value });

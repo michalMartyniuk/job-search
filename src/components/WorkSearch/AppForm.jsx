@@ -11,16 +11,18 @@ import { connect } from "react-redux";
 import {
   addJobOffer,
   setJob,
-  setJobType,
-  setCountry,
-  setCity,
-  setSalary,
-  setExperience,
+  setJobTypes,
+  setCountries,
+  setCities,
+  setSalaryMin,
+  setSalaryMax,
+  setExpMin,
+  setExpMax,
   search,
   getAllOffers,
   resetForm
 } from "../../store/app/appActions";
-import FormSelect from "./FormSelect";
+import Filters from "../Filters/Filters";
 
 const useStyles = makeStyles(() => ({
   paper: {
@@ -75,7 +77,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const FormInput = ({ name, value, onChange, className }) => {
+const FormInput = ({ name, value, onChange, className = undefined }) => {
   const classes = useStyles();
   return (
     <FormControl className={className || classes.formControl}>
@@ -86,88 +88,84 @@ const FormInput = ({ name, value, onChange, className }) => {
 };
 
 function AppForm(props) {
-  const classes = useStyles();
-
+  const classes = useStyles({});
   const {
-    experience,
     job,
-    jobType,
-    country,
-    city,
-    salary,
+    jobTypes,
+    countries,
+    cities,
+    salaryMin,
+    salaryMax,
+    expMin,
+    expMax,
     setJob,
     getAllOffers,
     search
   } = props;
 
-  const selectsData = [
-    {
-      name: "Branża",
-      value: props.jobType,
-      onChange: props.setJobType,
-      options: ["Medycyna", "Szkolnictwo", "Informatyka", "Rolnictwo"]
-    },
-    {
-      name: "Kraj",
-      value: props.country,
-      onChange: props.setCountry,
-      options: [
-        "Polska",
-        "Niemcy",
-        "Francja",
-        "Wielka Brytania",
-        "Stany Zjednoczone"
-      ]
-    },
-    {
-      name: "Miasto",
-      value: props.city,
-      onChange: props.setCity,
-      options: ["Warszawa", "Poznań", "Kraków", "Pruszków", "Szczecinek"]
-    },
-    {
-      name: "Zarobki",
-      value: props.salary,
-      onChange: props.setSalary,
-      options: [1000, 3000, 6000, 10000, 15000, 20000]
-    },
-    {
-      name: "Doświadczenie",
-      value: props.experience,
-      onChange: props.setExperience,
-      options: [1, 2, 3, 4, 5, 10, 15, 20]
-    }
-  ];
   const handleSearchWork = () => {
     search({
       job,
-      jobType,
-      country,
-      city,
-      experience,
-      salary
+      jobTypes,
+      countries,
+      cities,
+      salaryMin,
+      salaryMax,
+      expMin,
+      expMax
     });
   };
   const handleSearchAll = () => {
     getAllOffers();
+  };
+  const filtersStyles = {
+    container: {
+      display: "flex",
+      // justifyContent: "center",
+      width: 600,
+      margin: "10px auto"
+    },
+    filter: {
+      notActive: {
+        margin: "0 10px",
+        backgroundColor: "white",
+        border: "1px solid black",
+        "&:hover": {
+          backgroundColor: "lightgreen",
+          border: "1px solid lightblue"
+        }
+      },
+      active: {
+        margin: "0 10px",
+        backgroundColor: "lightgreen",
+        border: "1px solid lightblue",
+        "&:hover": {
+          backgroundColor: "lightgreen",
+          border: "1px solid lightblue"
+        }
+      }
+    }
   };
   return (
     <Paper className={classes.paper}>
       <div className={classes.heading}>Szukaj pracy</div>
       <form className={classes.form}>
         <FormInput name="Zawód" value={job} onChange={setJob} />
-        {selectsData.map(select => {
-          return (
-            <FormSelect
-              key={select.name}
-              name={select.name}
-              value={select.value}
-              className={classes.formControl}
-              onChange={select.onChange}
-              options={select.options}
-            />
-          );
-        })}
+        <Filters
+          names={props.jobTypes}
+          set={props.setJobTypes}
+          styles={filtersStyles}
+        />
+        <Filters
+          names={props.cities}
+          set={props.setCities}
+          styles={filtersStyles}
+        />
+        <Filters
+          names={props.countries}
+          set={props.setCountries}
+          styles={filtersStyles}
+        />
         <div className={classes.buttonsContainer}>
           <Button
             variant="contained"
@@ -201,20 +199,26 @@ const mapStateToProps = state => ({ ...state.app });
 const mapDispatchToProps = dispatch => ({
   resetForm: () => dispatch(resetForm()),
   setJob: event => dispatch(setJob(event.target.value)),
-  setJobType: event => {
-    dispatch(setJobType(event.target.value));
+  setJobTypes: jobType => {
+    dispatch(setJobTypes(jobType));
   },
-  setCountry: event => {
-    dispatch(setCountry(event.target.value));
+  setCountries: country => {
+    dispatch(setCountries(country));
   },
-  setCity: event => {
-    dispatch(setCity(event.target.value));
+  setCities: city => {
+    dispatch(setCities(city));
   },
-  setSalary: event => {
-    dispatch(setSalary(event.target.value));
+  setSalaryMin: event => {
+    dispatch(setSalaryMin(event.target.value));
   },
-  setExperience: event => {
-    dispatch(setExperience(event.target.value));
+  setSalaryMax: event => {
+    dispatch(setSalaryMax(event.target.value));
+  },
+  setExpMin: event => {
+    dispatch(setExpMin(event.target.value));
+  },
+  setExpMax: event => {
+    dispatch(setExpMax(event.target.value));
   },
   getAllOffers: () => dispatch(getAllOffers()),
   search: values => dispatch(search(values)),

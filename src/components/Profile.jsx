@@ -40,7 +40,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 function Profile(props) {
-  console.log(props.user);
+  // console.log(props.user);
   const classes = useStyles();
   let accountType;
   if (props.user) {

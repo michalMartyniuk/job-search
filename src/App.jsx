@@ -29,6 +29,7 @@ const useStyles = makeStyles(() => ({
 function App(props) {
   const { setLogIn, loggedIn, authLogOut } = props;
   const classes = useStyles();
+  const countries = ["poland", "germany", "england", "france"];
   React.useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(() => {
       if (auth.currentUser) {
@@ -37,6 +38,32 @@ function App(props) {
     });
     return () => unsubscribe();
   }, [auth.onAuthStateChanged]);
+  const createFilterStyles = (containerStyles, { active, notActive }) => {
+    return {
+      containerStyles,
+      filter: { active, notActive }
+    };
+  };
+
+  const filtersStyles = createFilterStyles(
+    {
+      backgroundColor: "yellow",
+      fontSize: "2rem",
+      width: 500
+    },
+    {
+      active: {
+        backgroundColor: "green",
+        border: "2px solid black",
+        fontSize: "1rem"
+      },
+      notActive: {
+        backgroundColor: "grey",
+        border: "2px solid black",
+        fontSize: "1rem"
+      }
+    }
+  );
   return (
     <Router>
       <div className={classes.app}>
@@ -77,7 +104,7 @@ function App(props) {
   );
 }
 
-const mapStateToProps = state => state.auth;
+const mapStateToProps = state => ({ ...state.auth, ...state.app });
 const mapDispatchToProps = dispatch => ({
   setLogIn: user => dispatch(setLogIn(user)),
   authLogOut: () => dispatch(authLogOut())
@@ -86,9 +113,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(App);
-
-App.propTypes = {
-  setLogIn: PropTypes.func,
-  loggedIn: PropTypes.bool,
-  authLogOut: PropTypes.func
-};
