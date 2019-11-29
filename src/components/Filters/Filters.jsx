@@ -1,15 +1,13 @@
-/* eslint-disable no-undef */
-/* eslint-disable no-unused-vars */
-
 import React from "react";
-import FiltersContainer from "./FiltersContainer";
+import Filter from "./Filter";
+import { filtersStyles } from "./filtersStyles";
 
 function createFilters(names, set) {
   const filters = Object.keys(names).map(name => {
     return {
       name,
       onClick: () => {
-        set(name)
+        set(name);
       },
       state: names[name]
     };
@@ -17,13 +15,19 @@ function createFilters(names, set) {
   return filters;
 }
 
-function Filters({ names, set, styles }) {
+export default function Filters({ names, set }) {
   const filters = createFilters(names, set);
+  const classes = filtersStyles();
   return (
-    <div>
-      <FiltersContainer filters={filters} styles={styles} />
+    <div className={classes.container}>
+      {filters.map(filter => (
+        <Filter
+          key={filter.name}
+          name={filter.name}
+          onClick={filter.onClick}
+          state={filter.state}
+        />
+      ))}
     </div>
   );
 }
-
-export default Filters;

@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 import { FormControl, InputLabel, Input } from "@material-ui/core";
-import { styles } from "./formInputStyles";
+import { inputStyles } from "./formStyles";
 
 export default function FormInput({ name, value, handleChange }) {
-  const classes = styles();
+  const classes = inputStyles();
   return (
     <FormControl className={classes.formControl}>
       <InputLabel className={classes.inputLabel}>{name}</InputLabel>

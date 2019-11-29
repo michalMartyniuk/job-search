@@ -1,13 +1,13 @@
 import React from "react";
 import { Button } from "@material-ui/core";
-import { styles } from "./formButtonsStyles";
+import { buttonStyles } from "./formStyles";
 
 export default function FormButtons({
   handleReset,
   handleSearch,
   handleShowAll
 }) {
-  const classes = styles();
+  const classes = buttonStyles();
   return (
     <div className={classes.buttonsContainer}>
       <Button

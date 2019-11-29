@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import Filters from "../../Filters/Filters";
-import { styles, filterStyles } from "./formFiltersStyles";
+import Filters from "../Filters/Filters";
 import {
   setJobTypes,
   setCountries,
@@ -9,8 +8,9 @@ import {
   setSalaryMin,
   setSalaryMax,
   setExpMin,
-  setExpMax,
-} from "../../../store/actions/formActions";
+  setExpMax
+} from "../../store/form/formActions";
+import { filtersStyles } from "./formStyles";
 
 function FormFilters({
   jobTypes,
@@ -20,12 +20,12 @@ function FormFilters({
   countries,
   setCountries
 }) {
-  const classes = styles();
+  const classes = filtersStyles();
   return (
     <div className={classes.container}>
-      <Filters names={jobTypes} set={setJobTypes} styles={filterStyles} />
-      <Filters names={cities} set={setCities} styles={filterStyles} />
-      <Filters names={countries} set={setCountries} styles={filterStyles} />
+      <Filters names={jobTypes} set={setJobTypes} />
+      <Filters names={cities} set={setCities} />
+      <Filters names={countries} set={setCountries} />
     </div>
   );
 }
@@ -39,4 +39,7 @@ const mapDispatchToProps = dispatch => ({
   setExpMin: value => dispatch(setExpMin(value)),
   setExpMax: value => dispatch(setExpMax(value))
 });
-export default connect(mapStateToProps, mapDispatchToProps)(FormFilters);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(FormFilters);
