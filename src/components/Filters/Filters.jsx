@@ -4,12 +4,11 @@
 import React from "react";
 import FiltersContainer from "./FiltersContainer";
 
-function createFilters(names: any, set: Function) {
+function createFilters(names, set) {
   const filters = Object.keys(names).map(name => {
     return {
       name,
       onClick: () => {
-        console.log(name, names[name])
         set(name)
       },
       state: names[name]
@@ -18,7 +17,7 @@ function createFilters(names: any, set: Function) {
   return filters;
 }
 
-function Filters({ names, set, styles }: FilterProps): JSX.Element {
+function Filters({ names, set, styles }) {
   const filters = createFilters(names, set);
   return (
     <div>
@@ -27,9 +26,4 @@ function Filters({ names, set, styles }: FilterProps): JSX.Element {
   );
 }
 
-interface FilterProps {
-  names: any;
-  set: Function;
-  styles: object;
-}
 export default Filters;
