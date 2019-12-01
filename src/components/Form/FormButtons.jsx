@@ -1,18 +1,18 @@
 import React from "react";
 import { Button } from "@material-ui/core";
-import { buttonStyles } from "./formStyles";
+import { formStyles } from "./formStyles";
 
 export default function FormButtons({
   handleReset,
   handleSearch,
   handleShowAll
 }) {
-  const classes = buttonStyles();
+  const classes = formStyles();
   return (
-    <div className={classes.buttonsContainer}>
+    <div className={classes.form__buttons}>
       <Button
         variant="contained"
-        className={classes.button}
+        className={classes.buttons__button}
         onClick={handleReset}
       >
         Zresetuj formularz
@@ -20,14 +20,14 @@ export default function FormButtons({
 
       <Button
         variant="contained"
-        className={classes.button}
+        className={classes.buttons__button}
         onClick={handleSearch}
       >
         Szukaj pracy
       </Button>
       <Button
         variant="contained"
-        className={classes.buttonAllOffers}
+        className={classes.buttons__button_allOffers}
         onClick={handleShowAll}
       >
         Pokaż wszystkie oferty

@@ -2,18 +2,18 @@ import React from "react";
 import { makeStyles } from "@material-ui/styles";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
-import WorkSearch from "./components/WorkSearch/WorkSearch";
-import Home from "./components/Home";
-import AddOffer from "./components/WorkSearch/AddOffer";
-import Notification from "./components/Notification";
-import Profile from "./components/Profile";
+// import PropTypes from "prop-types";
+// import Home from "./components/Home";
+// import AddOffer from "./components/WorkSearch/AddOffer";
+// import Notification from "./components/Notification";
+// import Profile from "./components/Profile";
 import firebase from "./config/firebase";
-import Navigation from "./components/Navigation";
-import MDLogin from "./components/Auth/MDLogIn";
-import MDSignUp from "./components/Auth/MDSignUp";
-import Auth from "./components/Auth/Auth";
+// import Navigation from "./components/Navigation";
+// import MDLogin from "./components/Auth/MDLogIn";
+// import MDSignUp from "./components/Auth/MDSignUp";
+// import Auth from "./components/Auth/Auth";
 import { setLogIn, authLogOut } from "./store/auth/authActions";
+import Form from "./components/Form/Form";
 
 const auth = firebase.auth();
 
@@ -29,7 +29,6 @@ const useStyles = makeStyles(() => ({
 function App(props) {
   const { setLogIn, loggedIn, authLogOut } = props;
   const classes = useStyles();
-  const countries = ["poland", "germany", "england", "france"];
   React.useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(() => {
       if (auth.currentUser) {
@@ -38,36 +37,13 @@ function App(props) {
     });
     return () => unsubscribe();
   }, [auth.onAuthStateChanged]);
-  const createFilterStyles = (containerStyles, { active, notActive }) => {
-    return {
-      containerStyles,
-      filter: { active, notActive }
-    };
-  };
 
-  const filtersStyles = createFilterStyles(
-    {
-      backgroundColor: "yellow",
-      fontSize: "2rem",
-      width: 500
-    },
-    {
-      active: {
-        backgroundColor: "green",
-        border: "2px solid black",
-        fontSize: "1rem"
-      },
-      notActive: {
-        backgroundColor: "grey",
-        border: "2px solid black",
-        fontSize: "1rem"
-      }
-    }
-  );
+  console.log(props.form);
   return (
     <Router>
       <div className={classes.app}>
-        <Navigation
+        <Form />
+        {/* <Navigation
           loggedIn={loggedIn}
           logout={authLogOut}
           accountType={props.user ? props.user.accountType : null}
@@ -98,13 +74,17 @@ function App(props) {
           <Route path="/">
             <Home />
           </Route>
-        </Switch>
+        </Switch> */}
       </div>
     </Router>
   );
 }
 
-const mapStateToProps = state => ({ ...state.auth, ...state.app });
+const mapStateToProps = state => ({
+  ...state.auth,
+  ...state.app,
+  form: { ...state.form }
+});
 const mapDispatchToProps = dispatch => ({
   setLogIn: user => dispatch(setLogIn(user)),
   authLogOut: () => dispatch(authLogOut())

@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import Filters from "../Filters/Filters";
+import Filters from "./Filters";
 import {
   setJobTypes,
   setCountries,
@@ -10,7 +10,7 @@ import {
   setExpMin,
   setExpMax
 } from "../../store/form/formActions";
-import { filtersStyles } from "./formStyles";
+import { formStyles } from "./formStyles";
 
 function FormFilters({
   jobTypes,
@@ -20,12 +20,12 @@ function FormFilters({
   countries,
   setCountries
 }) {
-  const classes = filtersStyles();
+  const classes = formStyles();
   return (
-    <div className={classes.container}>
-      <Filters names={jobTypes} set={setJobTypes} />
-      <Filters names={cities} set={setCities} />
-      <Filters names={countries} set={setCountries} />
+    <div className={classes.form__filters}>
+      <Filters header="Branża" names={jobTypes} set={setJobTypes} />
+      <Filters header="Miasta" names={cities} set={setCities} />
+      <Filters header="Kraje" names={countries} set={setCountries} />
     </div>
   );
 }
