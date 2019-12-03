@@ -8,10 +8,9 @@ const initialState = {
     Edukacja: false,
     Rolnictwo: false
   },
-  salary_min: "",
-  salary_max: "",
-  exp_min: "",
-  exp_max: "",
+  salaryMin: "",
+  salaryMax: "",
+  experience: null,
   countries: {
     Polska: false,
     Niemcy: false,
@@ -22,7 +21,7 @@ const initialState = {
     Warszawa: false,
     Poznań: false,
     Kraków: false,
-    Szczecinek: false,
+    Szczecinek: false
   }
 };
 
@@ -75,25 +74,20 @@ export default function formReducer(state = initialState, action) {
           [action.value]: !state.countries[action.value]
         }
       };
-    case types.SET_EXP_MIN:
+    case types.SET_EXPERIENCE:
       return {
         ...state,
-        exp_min: action.value
-      };
-    case types.SET_EXP_MAX:
-      return {
-        ...state,
-        exp_max: action.value
+        experience: action.value
       };
     case types.SET_SALARY_MIN:
       return {
         ...state,
-        salary_min: action.value
+        salaryMin: action.value
       };
     case types.SET_SALARY_MAX:
       return {
         ...state,
-        salary_max: action.value
+        salaryMax: action.value
       };
     default:
       return state;

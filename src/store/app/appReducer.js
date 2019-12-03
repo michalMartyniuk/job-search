@@ -26,27 +26,11 @@ export default function appReducer(state = initialState, action) {
       return {
         ...state,
         searchResults: action.results,
-        job: "",
-        jobTypes: "",
-        countries: "",
-        cities: "",
-        salary_min: "",
-        salary_max: "",
-        exp_min: "",
-        exp_max: ""
       };
     case types.SEARCH:
       return {
         ...state,
         searchResults: action.results,
-        job: "",
-        jobTypes: "",
-        countries: "",
-        cities: "",
-        salary_min: "",
-        salary_max: "",
-        exp_min: "",
-        exp_max: ""
       };
     default:
       return state;

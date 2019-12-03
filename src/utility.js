@@ -1,38 +1,29 @@
-const getObjArrayKeys = obj => {
-  /* Filter object keys which values are arrays and return array of them (keys) */
-  return Object.keys(obj).filter(key => Array.isArray(obj[key]));
-};
-const arrayInObject = (dataObj, callback) => {
-  // Map userData, if property is an Array, call function on it and
-  // return resulting array. Then, falsy values in array are filtered.
-  const results = Object.keys(dataObj).map(key => {
-    const value = dataObj[key];
-    if (Array.isArray(value)) {
-      return callback(key, value);
-    }
-  });
-  return results.filter(item => item);
-};
+const docs = [
+  {
+    job: "lekarz",
+    salary: [4000, 7000],
+    experience: [5],
+    jobTypes: ["Medycyna"],
+    countries: ["Niemcy", "Polska", "Wielka Brytania"],
+    cities: ["Poznań", "Warszawa"]
+  },
+  {
+    job: "stolarz",
+    salary: [1000, 1900],
+    jobTypes: ["Rzemiosło"],
+    countries: ["Polska"],
+    cities: ["Szczecinek"]
+  },
+  {
+    job: "lekarz",
+    experience: 5,
+    salary: [5000, 11000],
+    jobTypes: ["Rolnictwo"],
+    countries: ["Polska", "Niemcy"],
+    cities: ["Poznań", "Warszawa", "Kraków"]
+  }
+];
 
-const filterKeys = (obj, callback) => {
-  /* Returns array of obj keys which are passing callback function 
-    or false if none are matching */
-  const resultKeys = Object.keys(obj).filter(key => {
-    return callback(key);
-  });
-  return resultKeys.length ? resultKeys : false;
-};
-
-const testObjProps = obj => {
-  /* Test object's properties for falsy values or empty array value, 
-    returns array of bool values. */
-  return Object.keys(obj).map(key => {
-    if (Array.isArray(obj[key])) {
-      return !!obj[key].length;
-    }
-    return obj[key];
-  });
-};
 const compareProps = (propOne, propTwo) => propOne === propTwo;
 const compareArrays = (arrayOne, arrayTwo) => {
   /* Compare items between arrays and returns true or false 
@@ -40,14 +31,39 @@ const compareArrays = (arrayOne, arrayTwo) => {
   const matches = arrayOne.filter(item => arrayTwo.includes(item));
   return !!matches.length;
 };
-
-const isDocMatching = (inputObj, docObj) => {
+const isInRange = (value, min, max) => {
+  return value <= min && value < max;
+};
+const matchesRange = (rangeOne, rangeTwo) => {
+  const minOne = rangeOne[0] || 0;
+  const maxOne = rangeOne[1] || Infinity;
+  const minTwo = rangeTwo[0] || 0;
+  const maxTwo = rangeTwo[1] || Infinity;
+  return minOne <= maxTwo && maxOne >= minTwo;
+};
+export const removeFalsyProps = obj => {
+  let filteredObj = {};
+  Object.keys(obj).map(key => {
+    if (obj[key]) {
+      filteredObj = { ...filteredObj, [key]: obj[key] };
+    }
+  });
+  return filteredObj;
+};
+export const isDocMatching = (inputObj, docObj) => {
   const matches = Object.keys(inputObj).map(key => {
+    if (typeof docObj[key] === "undefined") {
+      return true;
+    }
+    if (key === "salary") {
+      console.log(key, matchesRange(inputObj[key], docObj[key]));
+      return matchesRange(inputObj[key], docObj[key]);
+    }
     if (Array.isArray(inputObj[key])) {
+      console.log(key, compareArrays(inputObj[key], docObj[key]));
       return compareArrays(inputObj[key], docObj[key]);
     }
-    // Match min max range of salaryMin-salaryMax
-    // Match min max range of expMin-expMax
+    console.log(key, compareProps(inputObj[key], docObj[key]));
     return compareProps(inputObj[key], docObj[key]);
   });
   const falsyFilteredMatches = matches.filter(value => value);

@@ -1,6 +1,6 @@
 import { types } from "./appTypes";
 import firebase from "../../config/firebase";
-import { filterFalsyProperties, filterDocs } from "../../utility";
+import { isDocMatching, removeFalsyProps } from "../../utility";
 
 const db = firebase.firestore();
 const auth = firebase.auth();
@@ -35,49 +35,50 @@ export const getAllOffers = () => {
 };
 
 export const search = inputs => {
-  const offersRef = db.collection("offers");
-  const inputsKeys = Object.keys(inputs);
-  const inputsValues = Object.values(inputs);
-  const myQuery = offersRef.where(inputsKeys[0], "==", inputsValues[0]);
+  // const offersRef = db.collection("offers");
+  const filteredInputs = removeFalsyProps(inputs);
+  // const inputsKeys = Object.keys(filteredInputs);
+  // const myQuery = offersRef.where(inputsKeys[0], "==", inputs[inputsKeys[0]]);
 
-  return dispatch => {
-    myQuery
-      .get()
-      .then(snapshot => {
-        return snapshot.docs.map(doc => {
-          const data = doc.data();
-          const { id } = doc;
-          return { ...data, id };
-        });
-      })
-      .then(docs => {
-        console.log(docs);
-        return filterDocs(inputs, docs);
-      })
-      .then(docs => {
-        dispatch({ type: "" });
-      });
-  };
+  console.log("inputs", inputs);
+  console.log("filtered", filteredInputs);
+  return { type: {} };
+  // return dispatch => {
+  //   myQuery
+  //     .get()
+  //     .then(snapshot => {
+  //       return snapshot.docs.map(doc => {
+  //         const data = doc.data();
+  //         const { id } = doc;
+  //         return { ...data, id };
+  //       });
+  //     })
+  //     .then(docs => {
+  //       console.log(docs);
+  //       return docs.filter(doc => isDocMatching(inputs, doc));
+  //     })
+  //     .then(docs => {
+  //       dispatch({ type: types.SEARCH, results: docs });
+  //     });
+  // };
 };
-export const addJobOffer = offer => {
-  if (!filterFalsyProperties(offer).length || !offer.job) {
-    return { type: {} };
-  }
-  const { job, jobType, country, city, experience, salary } = offer;
-
-  return dispatch => {
-    const data = { job, jobType, country, city, experience, salary };
-    db.collection(`users/${auth.currentUser.uid}/offers`)
-      .add(data)
-      .then(doc => {
-        db.collection("offers")
-          .doc(doc.id)
-          .set(data)
-          .then(() => {
-            dispatch(
-              setNotification(true, "Twoja oferta została dodana", "success")
-            );
-          });
-      });
-  };
+export const addJobOffer = inputs => {
+  console.log(inputs);
+  return { type: {} };
+  // const { job, jobTypes, countries, cities, experience, salary } = offer;
+  // return dispatch => {
+  //   const data = { job, jobTypes, countries, cities, experience, salary };
+  //   db.collection(`users/${auth.currentUser.uid}/offers`)
+  //     .add(data)
+  //     .then(doc => {
+  //       db.collection("offers")
+  //         .doc(doc.id)
+  //         .set(data)
+  //         .then(() => {
+  //           dispatch(
+  //             setNotification(true, "Twoja oferta została dodana", "success")
+  //           );
+  //         });
+  //     });
+  // };
 };

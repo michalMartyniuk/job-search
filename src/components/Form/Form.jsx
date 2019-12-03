@@ -16,11 +16,11 @@ import {
   setCities,
   setSalaryMin,
   setSalaryMax,
-  setExpMin,
-  setExpMax
+  setExperience
 } from "../../store/form/formActions";
 import { search, getAllOffers, addJobOffer } from "../../store/app/appActions";
 import Category from "./FiltersCategory";
+import DiscreteSlider from "./Slider";
 
 const Filters = styled.div`
   display: flex;
@@ -81,8 +81,23 @@ function Form({
   cities,
   setCities,
   countries,
-  setCountries
+  setCountries,
+  salaryMin,
+  salaryMax,
+  experience,
+  setExperience
 }) {
+  const handleSearch = () => {
+    const inputs = {
+      job,
+      jobTypes: Object.keys(jobTypes).map(key => key),
+      countries: Object.keys(countries).map(key => key),
+      cities: Object.keys(cities).map(key => key),
+      experience,
+      salary: [salaryMin, salaryMax]
+    };
+    search(inputs);
+  };
   return (
     <FormContainer>
       <Heading>Szukaj pracy</Heading>
@@ -97,10 +112,10 @@ function Form({
           <Category header="Miasta" names={cities} set={setCities} />
           <Category header="Kraje" names={countries} set={setCountries} />
         </Filters>
-
+        <DiscreteSlider />
         <Buttons>
           <Btn onClick={resetForm}>Zresetuj formularz</Btn>
-          <Btn onClick={search}>Szukaj pracy</Btn>
+          <Btn onClick={handleSearch}>Szukaj pracy</Btn>
           <Btn onClick={getAllOffers}>Pokaż wszystkie oferty</Btn>
         </Buttons>
       </StyledForm>
@@ -109,6 +124,7 @@ function Form({
 }
 const mapStateToProps = state => ({ ...state.form });
 const mapDispatchToProps = dispatch => ({
+  search: inputs => dispatch(search(inputs)),
   addJobOffer: inputs => dispatch(addJobOffer(inputs)),
   getAllOffers: () => dispatch(getAllOffers()),
   resetForm: () => dispatch(resetForm()),
@@ -118,8 +134,7 @@ const mapDispatchToProps = dispatch => ({
   setCities: city => dispatch(setCities(city)),
   setSalaryMin: value => dispatch(setSalaryMin(value)),
   setSalaryMax: value => dispatch(setSalaryMax(value)),
-  setExpMin: value => dispatch(setExpMin(value)),
-  setExpMax: value => dispatch(setExpMax(value))
+  setExperience: value => dispatch(setExperience(value))
 });
 
 export default connect(
