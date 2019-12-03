@@ -1,6 +1,8 @@
 import React from "react";
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles, StylesProvider } from "@material-ui/styles";
+import { ThemeProvider } from "styled-components";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import theme from "./theme";
 import { connect } from "react-redux";
 // import PropTypes from "prop-types";
 // import Home from "./components/Home";
@@ -38,12 +40,13 @@ function App(props) {
     return () => unsubscribe();
   }, [auth.onAuthStateChanged]);
 
-  console.log(props.form);
   return (
     <Router>
-      <div className={classes.app}>
-        <Form />
-        {/* <Navigation
+      <StylesProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <div className={classes.app}>
+            <Form />
+            {/* <Navigation
           loggedIn={loggedIn}
           logout={authLogOut}
           accountType={props.user ? props.user.accountType : null}
@@ -75,7 +78,9 @@ function App(props) {
             <Home />
           </Route>
         </Switch> */}
-      </div>
+          </div>
+        </ThemeProvider>
+      </StylesProvider>
     </Router>
   );
 }

@@ -9,6 +9,7 @@ export default createMuiTheme({
     myColor: "#efa"
   },
   status: {
-    danger: "orange"
+    danger: "orange",
+    success: "lightgreen"
   }
 });

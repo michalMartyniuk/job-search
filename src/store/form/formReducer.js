@@ -22,8 +22,8 @@ const initialState = {
     Warszawa: false,
     Poznań: false,
     Kraków: false,
-    Szczecinek: false
-  },
+    Szczecinek: false,
+  }
 };
 
 export default function formReducer(state = initialState, action) {
@@ -68,7 +68,6 @@ export default function formReducer(state = initialState, action) {
         }
       };
     case types.SET_COUNTRIES:
-      console.log("siema", action.value)
       return {
         ...state,
         countries: {
