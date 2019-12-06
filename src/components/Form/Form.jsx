@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Paper,
-  Button,
-  FormControl,
-  InputLabel,
-  Input
-} from "@material-ui/core";
+import { Paper, Button } from "@material-ui/core";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import {
@@ -21,6 +15,8 @@ import {
 import { search, getAllOffers, addJobOffer } from "../../store/app/appActions";
 import Category from "./FiltersCategory";
 import DiscreteSlider from "./Slider";
+import FormField from "./FormField";
+import FormSelect from "./Select";
 
 const Filters = styled.div`
   display: flex;
@@ -30,29 +26,29 @@ const Filters = styled.div`
 const Heading = styled.h2`
   fontsize: 2.2rem;
   text-align: center;
-  margin-bottom: 50px;
+  margin-bottom: 70px;
 `;
-const FormInput = styled(FormControl)`
-  width: 328px;
-  margin-bottom: 50px;
-`;
-const Label = styled(InputLabel)`
-  font-size: 1.5rem;
-`;
-const StyledInput = styled(Input)`
-  font-size: 1.5rem;
-  margin-bottom: 20px;
-`;
-const FormContainer = styled(Paper)`
+const Root = styled(Paper)`
   padding: 50px;
   margin: 50px auto;
   border: 2px solid #00bcd4;
 `;
-const StyledForm = styled.form`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
-  justify-items: center;
-  align-items: center;
+  width: 600px;
+  margin: auto;
+`;
+const FormFieldContainer = styled.div`
+  display: flex;
+  // border: 2px solid black;
+  margin-bottom: 30px;
+`;
+const StyledForm = styled.form`
+  width: 600px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
 `;
 const Buttons = styled.div`
   display: flex;
@@ -70,6 +66,7 @@ const Btn = styled(Button).attrs({
     background-color: #008c9e;
   }
 `;
+
 function Form({
   job,
   setJob,
@@ -98,15 +95,63 @@ function Form({
     };
     search(inputs);
   };
+  const handleExperience = event => {
+    setExperience(event.target.value);
+  };
+  const expSelectItems = [
+    { name: "1 rok", value: 1 },
+    { name: "2 lata", value: 2 },
+    { name: "3 lata", value: 3 },
+    { name: "4 lata", value: 4 },
+    { name: "5 lat", value: 5 },
+    { name: "6 lat", value: 6 },
+    { name: "7 lat", value: 7 },
+    { name: "8 lat", value: 8 },
+    { name: "9 lat", value: 9 },
+    { name: "10 lat", value: 10 }
+  ];
   return (
-    <FormContainer>
+    <Root>
       <Heading>Szukaj pracy</Heading>
       <StyledForm>
-        <FormInput>
-          <Label>Zawód</Label>
-          <StyledInput value={job} onChange={setJob} />
-        </FormInput>
-
+        <FormFieldContainer>
+          <FormField
+            variant="outlined"
+            label="Zawód"
+            value={job}
+            onChange={setJob}
+            styles={{
+              root: {
+                margin: "0px 20px 0px 0px"
+              },
+              input: {
+                fontSize: "1.3rem",
+                topBorderGapWidth: "58px"
+              }
+            }}
+          />
+          <FormSelect
+            name="Doświadczenie"
+            margin="0px"
+            width="200px"
+            value={experience}
+            onChange={handleExperience}
+            items={expSelectItems}
+            topBorderGapWidth="118px"
+            styles={{
+              root: {
+                width: "200px",
+                margin: "0px"
+              },
+              input: {
+                fontSize: "1.3rem",
+                topBorderGapWidth: "118px",
+                animateGapWidth: "90px",
+                height: "62px"
+              }
+            }}
+          />
+        </FormFieldContainer>
         <Filters>
           <Category header="Branża" names={jobTypes} set={setJobTypes} />
           <Category header="Miasta" names={cities} set={setCities} />
@@ -119,7 +164,7 @@ function Form({
           <Btn onClick={getAllOffers}>Pokaż wszystkie oferty</Btn>
         </Buttons>
       </StyledForm>
-    </FormContainer>
+    </Root>
   );
 }
 const mapStateToProps = state => ({ ...state.form });
