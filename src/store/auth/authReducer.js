@@ -11,6 +11,7 @@ const initialState = {
   user: {
     name: "",
     email: "",
+    offers: null,
     employer: false,
     employee: false
   },
@@ -101,7 +102,6 @@ export default function authReducer(state = initialState, action) {
         logInPassword: ""
       };
     case types.SET_ACCOUNT_TYPE:
-      console.log(action.accountType)
       return {
         ...state,
         accountType: action.accountType

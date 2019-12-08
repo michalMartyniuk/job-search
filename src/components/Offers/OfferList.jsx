@@ -47,7 +47,6 @@ export default function OfferList({ offers, title }) {
           cities={["Miasto"]}
           experience="Doświadczenie"
           salary={["Wynagrodzenie"]}
-          // fontSize="1.4rem"
         />
         {offers.map(offer => {
           return (
@@ -59,7 +58,6 @@ export default function OfferList({ offers, title }) {
               cities={offer.cities}
               experience={offer.experience}
               salary={offer.salary}
-              // fontSize="1.3rem"
             />
           );
         })}

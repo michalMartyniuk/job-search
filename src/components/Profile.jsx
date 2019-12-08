@@ -1,6 +1,6 @@
 import { Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { authLogOut } from "../store/auth/authActions";
@@ -40,7 +40,6 @@ const useStyles = makeStyles(() => ({
 }));
 
 function Profile(props) {
-  // console.log(props.user);
   const classes = useStyles();
   let accountType;
   if (props.user) {
@@ -58,32 +57,31 @@ function Profile(props) {
       <span className={classes.infoValue}>{props.value}</span>
     </li>
   );
-  const ProfileContent = () => {
-    return (
-      <div className={classes.container}>
-        <Paper className={classes.paper}>
-          <h3 className={classes.profileHeader}>
-            <Typography variant="body1" className={classes.profileHeaderText}>
-              {props.user.name} {props.user.surname}
-            </Typography>
-          </h3>
-          <ul className={classes.list}>
-            <ListItem name="Imię: " value={props.user.name} />
-            <ListItem name="Nazwisko: " value={props.user.surname} />
-            <ListItem name="Email: " value={props.user.email} />
-            <ListItem name="Rodzaj konta: " value={accountType} />
-          </ul>
-        </Paper>
-        {/* {props.user.offers && (
-          <OfferList title="Twoje oferty pracy" offers={props.user.offers} />
-        )} */}
-      </div>
-    );
-  };
-  if (props.loggedIn && props.user) {
-    return <ProfileContent />;
-  }
-  return <Redirect to="/home" />;
+  return (
+    <div className={classes.container}>
+      <Paper className={classes.paper}>
+        <h3 className={classes.profileHeader}>
+          <Typography variant="body1" className={classes.profileHeaderText}>
+            {props.user.name} {props.user.surname}
+          </Typography>
+        </h3>
+        <ul className={classes.list}>
+          <ListItem name="Imię: " value={props.user.name} />
+          <ListItem name="Nazwisko: " value={props.user.surname} />
+          <ListItem name="Email: " value={props.user.email} />
+          <ListItem name="Rodzaj konta: " value={accountType} />
+        </ul>
+      </Paper>
+      {props.user.offers && (
+        <OfferList offers={props.user.offers} title="Offers" />
+      )}
+    </div>
+  );
+  // };
+  // if (props.loggedIn && props.user) {
+  //   return <ProfileContent />;
+  // }
+  // return <Redirect to="/home" />;
 }
 
 const mapStateToProps = state => state.auth;

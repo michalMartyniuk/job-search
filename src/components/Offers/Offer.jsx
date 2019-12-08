@@ -9,17 +9,16 @@ import {
 } from "./OffersStyles";
 
 export default function Offer({
-  key,
   job,
   jobTypes,
   countries,
   cities,
   experience,
   salary,
-  fontSize
 }) {
   const GridContainer = StyledGrid(gridStyles);
   const Text = StyledListItemText(textStyles);
+  console.log(job)
   return (
     <>
       <GridContainer container>

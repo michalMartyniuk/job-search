@@ -1,10 +1,14 @@
 import React from "react";
 import { makeStyles, StylesProvider } from "@material-ui/styles";
 import { ThemeProvider } from "styled-components";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import theme from "./theme";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect
+} from "react-router-dom";
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import theme from "./theme";
 import Home from "./components/Home";
 import Notification from "./components/Notification";
 import Profile from "./components/Profile";
@@ -60,7 +64,7 @@ function App(props) {
                 ) : null}
               </Route>
               <Route path="/profile">
-                <Profile />
+                {props.loggedIn ? <Profile /> : <Redirect to="/auth" />}
               </Route>
               <Route path="/addOffer">
                 <AddForm />
@@ -75,7 +79,7 @@ function App(props) {
                 <MDLogin />
               </Route>
               <Route path="/">
-                <Home />
+                {props.loggedIn ? <Redirect to="/profile" /> : <Home />}
               </Route>
             </Switch>
           </div>

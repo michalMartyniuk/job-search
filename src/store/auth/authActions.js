@@ -57,27 +57,20 @@ export const setLogIn = user => {
       .doc(user.uid)
       .get()
       .then(doc => {
-        let offers = [];
-        if (doc.data().accountType === "employer") {
-          db.collection(`users/${auth.currentUser.uid}/offers`)
-            .get()
-            .then(querySnapshot => {
-              querySnapshot.forEach(offer =>
-                offers.push({ id: offer.id, ...offer.data() })
-              );
+        const offers = [];
+        db.collection(`users/${auth.currentUser.uid}/offers`)
+          .get()
+          .then(querySnapshot => {
+            querySnapshot.forEach(offer =>
+              offers.push({ id: offer.id, ...offer.data() })
+            );
+            dispatch({
+              type: types.LOGIN,
+              user: { ...doc.data(), offers }
             });
-          dispatch({
-            type: types.LOGIN,
-            user: { ...doc.data(), offers }
+            dispatch({ type: types.SIGNUP_ERROR_RESET });
+            dispatch({ type: types.LOG_IN_ERROR_RESET });
           });
-        } else {
-          dispatch({
-            type: types.LOGIN,
-            user: doc.data()
-          });
-        }
-        dispatch({ type: types.SIGNUP_ERROR_RESET });
-        dispatch({ type: types.LOG_IN_ERROR_RESET });
       });
   };
 };
@@ -102,7 +95,6 @@ export const authSignUp = (name, surname, email, password, accountType) => {
           });
       })
       .catch(error => {
-        console.log("Sign up error " + error.message);
         dispatch(signUpError(error.message));
       });
   };
