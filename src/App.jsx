@@ -14,7 +14,7 @@ import MDLogin from "./components/Auth/MDLogIn";
 import MDSignUp from "./components/Auth/MDSignUp";
 import Auth from "./components/Auth/Auth";
 import { setLogIn, authLogOut } from "./store/auth/authActions";
-import SearchForm from "./components/Form/Form";
+import SearchForm from "./components/Form/Search";
 import AddForm from "./components/Form/AddOffer";
 import OfferList from "./components/Offers/OfferList";
 
@@ -55,7 +55,9 @@ function App(props) {
             <Switch>
               <Route path="/search">
                 <SearchForm />
-                <OfferList offers={props.searchResults} title="Oferty" />
+                {props.searchResults.length ? (
+                  <OfferList offers={props.searchResults} title="Oferty" />
+                ) : null}
               </Route>
               <Route path="/profile">
                 <Profile />
@@ -63,7 +65,7 @@ function App(props) {
               <Route path="/addOffer">
                 <AddForm />
               </Route>
-              <Route path="/auth/employer">
+              <Route path="/auth">
                 <Auth />
               </Route>
               <Route path="/signup">

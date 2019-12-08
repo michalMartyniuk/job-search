@@ -9,7 +9,7 @@ const initialState = {
     Rolnictwo: false
   },
   salary: [1000, 5000],
-  experience: null,
+  experience: "",
   countries: {
     Polska: false,
     Niemcy: false,

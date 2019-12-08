@@ -2,6 +2,7 @@ import React from "react";
 import { Paper, Button } from "@material-ui/core";
 import { connect } from "react-redux";
 import styled from "styled-components";
+import { Redirect } from "react-router-dom";
 import {
   setJob,
   resetForm,
@@ -80,7 +81,8 @@ function Form({
   salary,
   experience,
   setExperience,
-  addJobOffer
+  addJobOffer,
+  loggedIn
 }) {
   const handleAddOffer = () => {
     const inputs = {
@@ -110,6 +112,7 @@ function Form({
   ];
   return (
     <Root>
+      {loggedIn ? null : <Redirect to="/login" />}
       <Heading>Dodaj ofertę</Heading>
       <StyledForm>
         <FormFieldContainer>
@@ -177,7 +180,7 @@ function Form({
     </Root>
   );
 }
-const mapStateToProps = state => ({ ...state.form });
+const mapStateToProps = state => ({ ...state.form, ...state.auth });
 const mapDispatchToProps = dispatch => ({
   addJobOffer: inputs => dispatch(addJobOffer(inputs)),
   resetForm: () => dispatch(resetForm()),

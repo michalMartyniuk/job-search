@@ -13,8 +13,9 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-function Auth() {
+function Auth(props) {
   const classes = useStyles();
+  console.log(props.accountType)
   return (
     <div className={classes.authContainer}>
       <MDSignUp />

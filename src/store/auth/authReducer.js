@@ -101,6 +101,7 @@ export default function authReducer(state = initialState, action) {
         logInPassword: ""
       };
     case types.SET_ACCOUNT_TYPE:
+      console.log(action.accountType)
       return {
         ...state,
         accountType: action.accountType

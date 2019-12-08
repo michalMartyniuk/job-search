@@ -54,7 +54,9 @@ export const search = inputs => {
         return docs.filter(doc => isDocMatching(inputs, doc));
       })
       .then(docs => {
-        setNotification(true, `Znaleziono ${docs.length} ofert`, "success");
+        dispatch(
+          setNotification(true, `Znaleziono ${docs.length} ofert`, "success")
+        );
         dispatch({ type: types.SEARCH, results: docs });
       });
   };

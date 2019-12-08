@@ -48,6 +48,7 @@ export const logInErrorReset = () => {
   return { type: types.LOG_IN_ERROR_RESET };
 };
 export const setAccountType = accountType => {
+  console.log(accountType);
   return { type: types.SET_ACCOUNT_TYPE, accountType };
 };
 export const setLogIn = user => {

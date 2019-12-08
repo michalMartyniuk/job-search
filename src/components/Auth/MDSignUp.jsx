@@ -31,7 +31,6 @@ const MDSignUp = props => {
   const classes = useStyles();
   const handleSignUp = event => {
     event.preventDefault();
-    // console.log(props.accountType);
     props.authSignUp(
       props.signUpName,
       props.signUpSurname,

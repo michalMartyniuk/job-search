@@ -2,7 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/styles";
 import { Button, Paper } from "@material-ui/core";
 
-import { Link, Redirect } from "react-router-dom";
+import { Link, Redirect, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
 import { setAccountType } from "../store/auth/authActions";
 
@@ -33,13 +33,14 @@ const useStyles = makeStyles(theme => ({
 
 function Home(props) {
   const classes = useStyles();
+  const history = useHistory();
   return (
     <Paper className={classes.homeContainer}>
       {props.employer && props.loggedIn && <Redirect to="/addOffer" />}
       {props.employee && props.loggedIn && <Redirect to="/search" />}
       <div>
         <h1 className={classes.header}>Wyszukiwarka pracy</h1>
-        <Link to="/auth/employee">
+        <Link to="/auth">
           <Button
             variant="contained"
             className={classes.button}
@@ -48,7 +49,7 @@ function Home(props) {
             Szukam pracy
           </Button>
         </Link>
-        <Link to="/auth/employer">
+        <Link to="/auth">
           <Button
             variant="contained"
             className={classes.button}
