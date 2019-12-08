@@ -8,22 +8,39 @@ import {
   gridStyles
 } from "./OffersStyles";
 
-export default function Offer(props) {
+export default function Offer({
+  key,
+  job,
+  jobTypes,
+  countries,
+  cities,
+  experience,
+  salary,
+  fontSize
+}) {
   const GridContainer = StyledGrid(gridStyles);
   const Text = StyledListItemText(textStyles);
-
   return (
     <>
       <GridContainer container>
-        {Object.entries(props).map(prop => {
-          const [propKey, value] = prop;
-          if (propKey === "fontSize") return null;
-          return (
-            <Grid item xs={2} key={propKey}>
-              <Text primary={value} />
-            </Grid>
-          );
-        })}
+        <Grid item xs={2}>
+          <Text primary={job} />
+        </Grid>
+        <Grid item xs={2}>
+          <Text primary={[...jobTypes]} />
+        </Grid>
+        <Grid item xs={2}>
+          <Text primary={[...countries]} />
+        </Grid>
+        <Grid item xs={2}>
+          <Text primary={[...cities]} />
+        </Grid>
+        <Grid item xs={2}>
+          <Text primary={experience} />
+        </Grid>
+        <Grid item xs={2}>
+          <Text primary={`${salary[0]} - ${salary[1]}`} />
+        </Grid>
       </GridContainer>
       <Divider component="li" />
     </>

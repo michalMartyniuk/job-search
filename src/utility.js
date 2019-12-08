@@ -1,29 +1,3 @@
-const docs = [
-  {
-    job: "lekarz",
-    salary: [4000, 7000],
-    experience: [5],
-    jobTypes: ["Medycyna"],
-    countries: ["Niemcy", "Polska", "Wielka Brytania"],
-    cities: ["Poznań", "Warszawa"]
-  },
-  {
-    job: "stolarz",
-    salary: [1000, 1900],
-    jobTypes: ["Rzemiosło"],
-    countries: ["Polska"],
-    cities: ["Szczecinek"]
-  },
-  {
-    job: "lekarz",
-    experience: 5,
-    salary: [5000, 11000],
-    jobTypes: ["Rolnictwo"],
-    countries: ["Polska", "Niemcy"],
-    cities: ["Poznań", "Warszawa", "Kraków"]
-  }
-];
-
 const compareProps = (propOne, propTwo) => propOne === propTwo;
 const compareArrays = (arrayOne, arrayTwo) => {
   /* Compare items between arrays and returns true or false 
@@ -45,26 +19,30 @@ export const removeFalsyProps = obj => {
   let filteredObj = {};
   Object.keys(obj).map(key => {
     if (obj[key]) {
+      if (Array.isArray(obj[key]) && !obj[key].length) {
+        return;
+      }
       filteredObj = { ...filteredObj, [key]: obj[key] };
     }
   });
   return filteredObj;
 };
 export const isDocMatching = (inputObj, docObj) => {
-  const matches = Object.keys(inputObj).map(key => {
+  const inputs = removeFalsyProps(inputObj);
+  const matches = Object.keys(inputs).map(key => {
     if (typeof docObj[key] === "undefined") {
       return true;
     }
     if (key === "salary") {
-      console.log(key, matchesRange(inputObj[key], docObj[key]));
-      return matchesRange(inputObj[key], docObj[key]);
+      console.log(key, matchesRange(inputs[key], docObj[key]));
+      return matchesRange(inputs[key], docObj[key]);
     }
-    if (Array.isArray(inputObj[key])) {
-      console.log(key, compareArrays(inputObj[key], docObj[key]));
-      return compareArrays(inputObj[key], docObj[key]);
+    if (Array.isArray(inputs[key])) {
+      console.log(key, compareArrays(inputs[key], docObj[key]));
+      return compareArrays(inputs[key], docObj[key]);
     }
-    console.log(key, compareProps(inputObj[key], docObj[key]));
-    return compareProps(inputObj[key], docObj[key]);
+    console.log(key, compareProps(inputs[key], docObj[key]));
+    return compareProps(inputs[key], docObj[key]);
   });
   const falsyFilteredMatches = matches.filter(value => value);
   return matches.length === falsyFilteredMatches.length;

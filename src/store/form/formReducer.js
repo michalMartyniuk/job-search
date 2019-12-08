@@ -8,8 +8,7 @@ const initialState = {
     Edukacja: false,
     Rolnictwo: false
   },
-  salaryMin: "",
-  salaryMax: "",
+  salary: [1000, 5000],
   experience: null,
   countries: {
     Polska: false,
@@ -29,16 +28,7 @@ export default function formReducer(state = initialState, action) {
   switch (action.type) {
     case types.RESET_FORM:
       return {
-        ...state,
-        searchResults: action.results,
-        job: "",
-        jobTypes: "",
-        countries: "",
-        cities: "",
-        salary_min: "",
-        salary_max: "",
-        exp_min: "",
-        exp_max: ""
+        ...initialState
       };
     case types.SET_JOB:
       return {
@@ -79,15 +69,10 @@ export default function formReducer(state = initialState, action) {
         ...state,
         experience: action.value
       };
-    case types.SET_SALARY_MIN:
+    case types.SET_SALARY:
       return {
         ...state,
-        salaryMin: action.value
-      };
-    case types.SET_SALARY_MAX:
-      return {
-        ...state,
-        salaryMax: action.value
+        salary: action.values
       };
     default:
       return state;

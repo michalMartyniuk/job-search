@@ -11,7 +11,7 @@ import {
   setSalary,
   setExperience
 } from "../../store/form/formActions";
-import { search, getAllOffers, addJobOffer } from "../../store/app/appActions";
+import { addJobOffer } from "../../store/app/appActions";
 import Category from "./FiltersCategory";
 import SalarySlider from "./Slider";
 import FormField from "./FormField";
@@ -70,8 +70,6 @@ function Form({
   job,
   setJob,
   resetForm,
-  search,
-  getAllOffers,
   jobTypes,
   setJobTypes,
   cities,
@@ -81,9 +79,10 @@ function Form({
   setSalary,
   salary,
   experience,
-  setExperience
+  setExperience,
+  addJobOffer
 }) {
-  const handleSearch = () => {
+  const handleAddOffer = () => {
     const inputs = {
       job,
       jobTypes: Object.keys(jobTypes).filter(key => jobTypes[key]),
@@ -92,7 +91,7 @@ function Form({
       experience,
       salary
     };
-    search(inputs);
+    addJobOffer(inputs);
   };
   const handleExperience = event => {
     setExperience(event.target.value);
@@ -111,7 +110,7 @@ function Form({
   ];
   return (
     <Root>
-      <Heading>Szukaj pracy</Heading>
+      <Heading>Dodaj ofertę</Heading>
       <StyledForm>
         <FormFieldContainer>
           <FormField
@@ -172,8 +171,7 @@ function Form({
         <SalarySlider values={salary} onChange={setSalary} name="Zarobki" />
         <Buttons>
           <Btn onClick={resetForm}>Zresetuj</Btn>
-          <Btn onClick={handleSearch}>Szukaj</Btn>
-          <Btn onClick={getAllOffers}>Pokaż wszystkie</Btn>
+          <Btn onClick={handleAddOffer}>Dodaj ofertę</Btn>
         </Buttons>
       </StyledForm>
     </Root>
@@ -181,9 +179,7 @@ function Form({
 }
 const mapStateToProps = state => ({ ...state.form });
 const mapDispatchToProps = dispatch => ({
-  search: inputs => dispatch(search(inputs)),
   addJobOffer: inputs => dispatch(addJobOffer(inputs)),
-  getAllOffers: () => dispatch(getAllOffers()),
   resetForm: () => dispatch(resetForm()),
   setJob: event => dispatch(setJob(event.target.value)),
   setJobTypes: jobType => dispatch(setJobTypes(jobType)),

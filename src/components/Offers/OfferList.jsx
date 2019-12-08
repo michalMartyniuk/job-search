@@ -42,24 +42,24 @@ export default function OfferList({ offers, title }) {
         </div>
         <Offer
           job="Zawód"
-          jobType="Branża"
-          country="Kraj"
-          city="Miasto"
+          jobTypes={["Branża"]}
+          countries={["Kraj"]}
+          cities={["Miasto"]}
           experience="Doświadczenie"
-          salary="Wynagrodzenie"
-          fontSize="1.4rem"
+          salary={["Wynagrodzenie"]}
+          // fontSize="1.4rem"
         />
         {offers.map(offer => {
           return (
             <Offer
               key={offer.id}
               job={offer.job}
-              jobType={offer.jobType}
-              country={offer.country}
-              city={offer.city}
+              jobTypes={offer.jobTypes}
+              countries={offer.countries}
+              cities={offer.cities}
               experience={offer.experience}
               salary={offer.salary}
-              fontSize="1.3rem"
+              // fontSize="1.3rem"
             />
           );
         })}

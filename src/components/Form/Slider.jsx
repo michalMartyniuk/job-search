@@ -1,17 +1,7 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
 import Typography from "@material-ui/core/Typography";
 import Slider from "@material-ui/core/Slider";
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    width: 300
-  },
-  margin: {
-    height: theme.spacing(3)
-  }
-}));
 
 const marks = [
   { value: 0, label: "0" },
@@ -37,26 +27,39 @@ const marks = [
   }
 ];
 
-function valuetext(value) {
-  return `${value}°C`;
-}
-
-function valueLabelFormat(value) {
-  return marks.findIndex(mark => mark.value === value) + 1;
-}
-
 const Container = styled.div`
   width: 100%;
-  margin: 50px 0;
-  padding: 0 150px;
+  margin: 0px;
+  border: 5px solid #686c78;
+`;
+const Header = styled.div`
+  display: flex;
+  padding: 20px 30px;
 `;
 const Heading = styled(Typography)`
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   font-weight: 400;
   line-height: 1.43;
-  margin-left: -5px;
-  text-align: center;
+`;
+const ValueLabel = styled(({ className, min, max }) => {
+  return (
+    <div className={className}>
+      <span>{min} PLN - </span>
+      <span>{max} PLN</span>
+    </div>
+  );
+})`
+  display: flex;
+  justify-content: center;
+  margin-left: auto;
+  font-size: 1.4rem;
+  span {
+    font-size: 1.6rem;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-weight: 400;
+    line-height: 1.43;
+  }
 `;
 const StyledSlider = styled(props => (
   <Slider
@@ -101,43 +104,31 @@ const StyledSlider = styled(props => (
     background-color: rgb(63, 81, 181);
   }
 `;
-const ValueLabel = styled(({ className, min, max }) => {
-  return (
-    <div className={className}>
-      <span>{min} PLN - </span>
-      <span>{max} PLN</span>
-    </div>
-  );
-})`
-  display: flex;
-  justify-content: center;
-  font-size: 1.7rem;
-  margin: 30px 0;
-  span {
-    // margin: auto;
-    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-    font-weight: 400;
-    line-height: 1.43;
-    white-space: nowrap;
-    letter-spacing: 0.01071em;
-  }
+
+const SliderContainer = styled.div`
+  padding: 0px 60px 32px 30px;
 `;
-export default function DiscreteSlider() {
-  const [values, setValues] = useState([1000, 5000]);
-  const handleChange = (event, value) => setValues(value);
+export default function FormSlider({ values, onChange, name }) {
+  const [localValues, setLocalValues] = useState(values);
+  const handleChange = (event, values) => setLocalValues(values);
   return (
     <Container>
-      <Heading>Custom marks</Heading>
-      <ValueLabel min={values[0]} max={values[1]} />
-      <StyledSlider
-        min={0}
-        max={25000}
-        step={1000}
-        value={values}
-        valueLabelDisplay="off"
-        onChange={handleChange}
-        marks={marks}
-      />
+      <Header>
+        <Heading>{name}</Heading>
+        <ValueLabel min={localValues[0]} max={localValues[1]} />
+      </Header>
+      <SliderContainer>
+        <StyledSlider
+          min={0}
+          max={25000}
+          step={1000}
+          value={localValues}
+          valueLabelDisplay="off"
+          onChange={handleChange}
+          onChangeCommitted={onChange}
+          marks={marks}
+        />
+      </SliderContainer>
     </Container>
   );
 }

@@ -13,16 +13,24 @@ export const Input_Root = styled(FormControl).attrs(props => ({
 export const Input_Label = styled(props => (
   <InputLabel classes={{ shrink: "shrink", outlined: "outlined" }} {...props} />
 )).attrs(props => ({
-  fontSize: "1rem",
-  transform: props.transform || "translate(14px, 24px) scale(1)",
-  shrinkedFontSize: "1rem",
-  shrinkedTransform: "translate(14px, -6px) scale(1)"
+  fontSize: props.fontSize || "1.2rem",
+  transform: props.transform || "translate(14px, 22px) scale(1)",
+  shrinkedFontSize: props.shrinkeFontSize || "1rem",
+  shrinkedTransform:
+    props.shrinkedTransform || "translate(14px, -10px) scale(1)",
+  shrinkedFocusedTransform:
+    props.shrinkedFocusedTransform || "translate(14px, -6px) scale(1)"
 }))`
+  color: black;
   font-size: ${props => props.fontSize};
   transform: ${props => props.transform};
+  &.shrink {
+    transform: ${props => props.shrinkedTransform};
+  }
   &.shrink.Mui-focused {
     font-size: ${props => props.shrinkedFontSize};
-    transform: ${props => props.shrinkedTransform};
+    font-weight: 500;
+    transform: ${props => props.shrinkedFocusedTransform};
   }
 `;
 export const Outlined_Input = styled(
@@ -38,7 +46,10 @@ export const Outlined_Input = styled(
   width: props.width || "auto",
   height: props.height || "auto",
   margin: props.margin || "0px",
-  fontSize: props.fontSize || "1rem",
+  fontSize: props.fontSize || "1.2rem",
+  border: props.border || "2px solid #686c78",
+  borderRadius: props.borderRadius || "0px",
+  borderHover: props.borderHover || "2px solid #686c78",
   topBorderGap: `${props.topBorderGapWidth} !important`,
   topBorderGapValue: () => {
     const { value, animateGapWidth } = props;
@@ -50,14 +61,24 @@ export const Outlined_Input = styled(
     return "0px !important";
   }
 }))`
+  color: black;
   width: ${props => props.width};
   height: ${props => props.height};
   font-size: ${props => props.fontSize};
+  font-weight: 400;
   margin: ${props => props.margin};
+  & .notched {
+    border: ${props => props.border};
+    border-radius: ${props => props.borderRadius}
+    &:hover: {
+      border: ${props => props.borderHover};
+    }
+  }
   & .notched legend {
     width: ${props => props.topBorderGapValue()};
   }
   &.Mui-focused {
+    background-color: white;
     & .notched legend {
       width: ${props => props.topBorderGap};
     }

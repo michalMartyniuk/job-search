@@ -1,8 +1,23 @@
 import React from "react";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
+import styled from "styled-components";
 import { Input_Root, Input_Label, Outlined_Input } from "./FormField";
 
+const StyledSelect = styled(props => (
+  <Select
+    classes={{
+      select: "select"
+    }}
+    {...props}
+  >
+    {props.children}
+  </Select>
+))`
+  & .select:focus {
+    background-color: white;
+  }
+`;
 export default function FormSelect({
   name,
   items,
@@ -13,7 +28,7 @@ export default function FormSelect({
   return (
     <Input_Root {...styles.root}>
       <Input_Label {...styles.label}>{name}</Input_Label>
-      <Select
+      <StyledSelect
         value={value}
         onChange={onChange}
         input={<Outlined_Input {...styles.input} />}
@@ -25,7 +40,7 @@ export default function FormSelect({
           items.map(item => {
             return <MenuItem value={item.value}>{item.name}</MenuItem>;
           })}
-      </Select>
+      </StyledSelect>
     </Input_Root>
   );
 }

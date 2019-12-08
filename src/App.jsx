@@ -4,18 +4,19 @@ import { ThemeProvider } from "styled-components";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import theme from "./theme";
 import { connect } from "react-redux";
-// import PropTypes from "prop-types";
-// import Home from "./components/Home";
-// import AddOffer from "./components/WorkSearch/AddOffer";
-// import Notification from "./components/Notification";
-// import Profile from "./components/Profile";
+import PropTypes from "prop-types";
+import Home from "./components/Home";
+import Notification from "./components/Notification";
+import Profile from "./components/Profile";
 import firebase from "./config/firebase";
-// import Navigation from "./components/Navigation";
-// import MDLogin from "./components/Auth/MDLogIn";
-// import MDSignUp from "./components/Auth/MDSignUp";
-// import Auth from "./components/Auth/Auth";
+import Navigation from "./components/Navigation";
+import MDLogin from "./components/Auth/MDLogIn";
+import MDSignUp from "./components/Auth/MDSignUp";
+import Auth from "./components/Auth/Auth";
 import { setLogIn, authLogOut } from "./store/auth/authActions";
-import Form from "./components/Form/Form";
+import SearchForm from "./components/Form/Form";
+import AddForm from "./components/Form/AddOffer";
+import OfferList from "./components/Offers/OfferList";
 
 const auth = firebase.auth();
 
@@ -45,39 +46,36 @@ function App(props) {
       <StylesProvider injectFirst>
         <ThemeProvider theme={theme}>
           <div className={classes.app}>
-            <Form />
-            {/* <Navigation
-          loggedIn={loggedIn}
-          logout={authLogOut}
-          accountType={props.user ? props.user.accountType : null}
-        />
-        <Notification />
-        <Switch>
-          <Route path="/search">
-            <WorkSearch />
-          </Route>
-          <Route path="/profile">
-            <Profile />
-          </Route>
-          <Route path="/addOffer">
-            <AddOffer />
-          </Route>
-          <Route path="/auth/employer">
-            <Auth />
-          </Route>
-          <Route path="/auth/employee">
-            <Auth />
-          </Route>
-          <Route path="/signup">
-            <MDSignUp />
-          </Route>
-          <Route path="/login">
-            <MDLogin />
-          </Route>
-          <Route path="/">
-            <Home />
-          </Route>
-        </Switch> */}
+            <Navigation
+              loggedIn={loggedIn}
+              logout={authLogOut}
+              accountType={props.user ? props.user.accountType : null}
+            />
+            <Notification />
+            <Switch>
+              <Route path="/search">
+                <SearchForm />
+                <OfferList offers={props.searchResults} title="Oferty" />
+              </Route>
+              <Route path="/profile">
+                <Profile />
+              </Route>
+              <Route path="/addOffer">
+                <AddForm />
+              </Route>
+              <Route path="/auth/employer">
+                <Auth />
+              </Route>
+              <Route path="/signup">
+                <MDSignUp />
+              </Route>
+              <Route path="/login">
+                <MDLogin />
+              </Route>
+              <Route path="/">
+                <Home />
+              </Route>
+            </Switch>
           </div>
         </ThemeProvider>
       </StylesProvider>

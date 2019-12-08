@@ -74,9 +74,9 @@ function Profile(props) {
             <ListItem name="Rodzaj konta: " value={accountType} />
           </ul>
         </Paper>
-        {props.user.offers && (
+        {/* {props.user.offers && (
           <OfferList title="Twoje oferty pracy" offers={props.user.offers} />
-        )}
+        )} */}
       </div>
     );
   };
