@@ -30,7 +30,6 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: "#2479a3",
     color: "white",
     fontSize: "1rem",
-    width: 200,
     height: "50px",
     margin: "0 5px",
     padding: 10,
@@ -67,9 +66,16 @@ export default function Navigation({ loggedIn, logout, accountType }) {
               <Button className={classes.button}>Strona główna</Button>
             </Link>
           )}
-          {loggedIn && (
+          {loggedIn && accountType === "employee" && (
             <Link to="/search" className={classes.link}>
               <Button className={classes.button}>Szukaj pracy</Button>
+            </Link>
+          )}
+          {loggedIn && accountType === "employer" && (
+            <Link to="/similarOffers" className={classes.link}>
+              <Button className={classes.button}>
+                Znajdź oferty podobne do twoich
+              </Button>
             </Link>
           )}
           {loggedIn && accountType === "employer" && (

@@ -1,8 +1,8 @@
-import { Paper, Typography } from "@material-ui/core";
+import { Paper, Typography, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { connect } from "react-redux";
-import { Redirect } from "react-router-dom";
+import styled from "styled-components";
 import { authLogOut } from "../store/auth/authActions";
 import OfferList from "./Offers/OfferList";
 
@@ -39,6 +39,22 @@ const useStyles = makeStyles(() => ({
   infoValue: {}
 }));
 
+const ProfileInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const Container = styled.div`
+  display: flex;
+`;
+const Actions = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 100px 20px;
+`;
+const ActionButton = styled(Button)`
+  height: 50px;
+  margin-bottom: 10px;
+`;
 function Profile(props) {
   const classes = useStyles();
   let accountType;
@@ -57,31 +73,43 @@ function Profile(props) {
       <span className={classes.infoValue}>{props.value}</span>
     </li>
   );
+  const handlePasswordReset = () => {
+    return null;
+  };
+  const handleChangeInfo = () => {
+    return null;
+  };
   return (
     <div className={classes.container}>
       <Paper className={classes.paper}>
-        <h3 className={classes.profileHeader}>
-          <Typography variant="body1" className={classes.profileHeaderText}>
-            {props.user.name} {props.user.surname}
-          </Typography>
-        </h3>
-        <ul className={classes.list}>
-          <ListItem name="Imię: " value={props.user.name} />
-          <ListItem name="Nazwisko: " value={props.user.surname} />
-          <ListItem name="Email: " value={props.user.email} />
-          <ListItem name="Rodzaj konta: " value={accountType} />
-        </ul>
+        <Container>
+          <ProfileInfo>
+            <h3 className={classes.profileHeader}>
+              <Typography variant="body1" className={classes.profileHeaderText}>
+                {props.user.name}
+              </Typography>
+            </h3>
+            <ul className={classes.list}>
+              <ListItem name="Imię: " value={props.user.name} />
+              <ListItem name="Email: " value={props.user.email} />
+              <ListItem name="Rodzaj konta: " value={accountType} />
+            </ul>
+          </ProfileInfo>
+          <Actions>
+            <ActionButton variant="outlined" onClick={handleChangeInfo}>
+              Zmień dane
+            </ActionButton>
+            <ActionButton variant="outlined" onClick={handlePasswordReset}>
+              Zresetuj hasło
+            </ActionButton>
+          </Actions>
+        </Container>
       </Paper>
-      {props.user.offers && (
-        <OfferList offers={props.user.offers} title="Offers" />
-      )}
+      {props.user.offers && props.user.offers.length ? (
+        <OfferList offers={props.user.offers} title="Offers" loggedIn />
+      ) : null}
     </div>
   );
-  // };
-  // if (props.loggedIn && props.user) {
-  //   return <ProfileContent />;
-  // }
-  // return <Redirect to="/home" />;
 }
 
 const mapStateToProps = state => state.auth;

@@ -61,17 +61,44 @@ export const search = inputs => {
       });
   };
 };
+function createTimestamp() {
+  const date = new Date();
+  const year = date.getFullYear().toString();
+  const month = (date.getMonth() + 1).toString();
+  const day = date.getDate().toString();
+  const hours = date.getHours().toString();
+  const minutes = date.getMinutes().toString();
+  const seconds = date.getSeconds().toString();
+  return { year, month, day, hours, minutes, seconds };
+}
 export const addJobOffer = inputs => {
-  console.log(inputs);
-  const { job, jobTypes, countries, cities, experience, salary } = inputs;
+  const {
+    job,
+    jobTypes,
+    countries,
+    cities,
+    experience,
+    salary,
+    owner
+  } = inputs;
+  const date = createTimestamp();
+  const data = {
+    job,
+    jobTypes,
+    countries,
+    cities,
+    experience,
+    salary,
+    date,
+    owner
+  };
   return dispatch => {
-    const data = { job, jobTypes, countries, cities, experience, salary };
     db.collection(`users/${auth.currentUser.uid}/offers`)
       .add(data)
       .then(doc => {
         db.collection("offers")
           .doc(doc.id)
-          .set(data)
+          .set({ id: doc.id, ...data })
           .then(() => {
             dispatch(
               setNotification(true, "Twoja oferta została dodana", "success")
@@ -79,4 +106,86 @@ export const addJobOffer = inputs => {
           });
       });
   };
+};
+
+export const applyToOffer = offerId => {
+  db.collection("offers")
+    .doc(offerId)
+    .get()
+    .then(doc => {
+      const offer = doc.data();
+      db.collection("users")
+        .doc(auth.currentUser.uid)
+        .update({
+          appliedOffers: firebase.firestore.FieldValue.arrayUnion(offer)
+        })
+        .then(() => {
+          return { type: types.APPLY_TO_OFFER };
+        });
+    });
+};
+export const saveOffer = offerId => {
+  db.collection("offers")
+    .doc(offerId)
+    .get()
+    .then(doc => {
+      const offer = doc.data();
+      db.collection("users")
+        .doc(auth.currentUser.uid)
+        .update({
+          savedOffers: firebase.firestore.FieldValue.arrayUnion(offer)
+        })
+        .then(() => {
+          return { type: types.SAVE_OFFER };
+        });
+    });
+};
+export const editOffer = (offer, offerId) => {
+  const updatedOffer = { id: offerId, ...offer };
+  db.collection("offers")
+    .doc(offerId)
+    .set(updatedOffer)
+    .then(() => {
+      db.collection(`users/${auth.currentUser.uid}/offers`)
+        .doc(offerId)
+        .set(updatedOffer)
+        .then(() => {
+          return { type: types.EDIT_OFFER };
+        });
+    });
+};
+export const closeOffer = offerId => {
+  // Add offer to closedOffers array
+  db.collection("offers")
+    .doc(offerId)
+    .get()
+    .then(doc => {
+      const offer = { id: offerId, ...doc.data() };
+      db.collection("users")
+        .doc(auth.currentUser.uid)
+        .update({
+          closedOffers: firebase.firestore.FieldValue.arrayUnion(offer)
+        })
+        .then(() => {
+          // Delete offer from offers
+          db.collection("offers")
+            .doc(offerId)
+            .delete()
+            .then(() => {
+              // Delete offer from user/offers
+              db.collection(`users/${auth.currentUser.uid}/offers`)
+                .doc(offerId)
+                .delete()
+                .then(() => {
+                  return { type: types.EDIT_OFFER };
+                });
+            });
+        });
+    });
+
+  // Remove offer from offers collection
+  // Remove offer from user/offers collection
+  // Add offer to user/closedOffers collection
+  console.log("Close offer", offerId);
+  return { type: types.CLOSE_OFFER };
 };

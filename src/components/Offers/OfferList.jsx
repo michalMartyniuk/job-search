@@ -1,9 +1,16 @@
 import React from "react";
+import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import { Paper } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import Offer from "./Offer";
+import {
+  applyToOffer,
+  saveOffer,
+  editOffer,
+  closeOffer
+} from "../../store/app/appActions";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -30,7 +37,16 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function OfferList({ offers, title }) {
+function OfferList({
+  offers,
+  title,
+  loggedIn = false,
+  accountType,
+  applyToOffer,
+  saveOffer,
+  editOffer,
+  closeOffer
+}) {
   const classes = useStyles();
   return (
     <Paper className={classes.root}>
@@ -40,24 +56,25 @@ export default function OfferList({ offers, title }) {
             {title}
           </Typography>
         </div>
-        <Offer
-          job="Zawód"
-          jobTypes={["Branża"]}
-          countries={["Kraj"]}
-          cities={["Miasto"]}
-          experience="Doświadczenie"
-          salary={["Wynagrodzenie"]}
-        />
         {offers.map(offer => {
           return (
             <Offer
               key={offer.id}
+              id={offer.id}
               job={offer.job}
               jobTypes={offer.jobTypes}
               countries={offer.countries}
               cities={offer.cities}
               experience={offer.experience}
               salary={offer.salary}
+              date={offer.date}
+              owner={offer.owner}
+              loggedIn={loggedIn}
+              accountType={accountType}
+              apply={() => applyToOffer(offer.id)}
+              save={() => saveOffer(offer.id)}
+              edit={() => editOffer(offer.id)}
+              close={() => closeOffer(offer.id)}
             />
           );
         })}
@@ -65,3 +82,16 @@ export default function OfferList({ offers, title }) {
     </Paper>
   );
 }
+
+const mapStateToProps = state => ({ ...state.auth, ...state.app });
+const mapDispatchToProps = dispatch => ({
+  applyToOffer: offerId => dispatch(applyToOffer(offerId)),
+  saveOffer: offerId => dispatch(saveOffer(offerId)),
+  editOffer: offerId => dispatch(editOffer(offerId)),
+  closeOffer: offerId => dispatch(closeOffer(offerId))
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(OfferList);

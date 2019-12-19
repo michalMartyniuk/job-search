@@ -14,13 +14,12 @@ import Notification from "./components/Notification";
 import Profile from "./components/Profile";
 import firebase from "./config/firebase";
 import Navigation from "./components/Navigation";
-import MDLogin from "./components/Auth/MDLogIn";
-import MDSignUp from "./components/Auth/MDSignUp";
 import Auth from "./components/Auth/Auth";
 import { setLogIn, authLogOut } from "./store/auth/authActions";
 import SearchForm from "./components/Form/Search";
 import AddForm from "./components/Form/AddOffer";
 import OfferList from "./components/Offers/OfferList";
+import SimilarOffers from "./components/Offers/SimilarOffers";
 
 const auth = firebase.auth();
 
@@ -44,7 +43,6 @@ function App(props) {
     });
     return () => unsubscribe();
   }, [auth.onAuthStateChanged]);
-
   return (
     <Router>
       <StylesProvider injectFirst>
@@ -64,22 +62,26 @@ function App(props) {
                 ) : null}
               </Route>
               <Route path="/profile">
-                {props.loggedIn ? <Profile /> : <Redirect to="/auth" />}
+                {props.loggedIn ? <Profile /> : <Redirect to="/" />}
               </Route>
               <Route path="/addOffer">
                 <AddForm />
               </Route>
+              <Route path="/similarOffers">
+                <SimilarOffers />
+              </Route>
               <Route path="/auth">
-                <Auth />
+                {props.loggedIn ? <Redirect to="/profile" /> : <Auth />}
               </Route>
-              <Route path="/signup">
-                <MDSignUp />
-              </Route>
-              <Route path="/login">
-                <MDLogin />
-              </Route>
-              <Route path="/">
+              <Route path="/" exact>
                 {props.loggedIn ? <Redirect to="/profile" /> : <Home />}
+              </Route>
+              <Route path="*">
+                {props.loggedIn ? (
+                  <Redirect to="/profile" />
+                ) : (
+                  <Redirect to="/" />
+                )}
               </Route>
             </Switch>
           </div>

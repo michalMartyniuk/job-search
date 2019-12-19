@@ -3,7 +3,6 @@ import { MDBContainer, MDBInput, MDBBtn, MDBCard, MDBCardBody } from "mdbreact";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { makeStyles } from "@material-ui/styles";
-import PropTypes from "prop-types";
 import {
   setLogInPassword,
   setLogInEmail,
@@ -13,9 +12,7 @@ import {
 
 const useStyles = makeStyles(() => ({
   container: {
-    width: 500,
-    margin: "auto",
-    marginTop: 150
+    width: 500
   },
   error: {
     display: "flex"
@@ -28,6 +25,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 function MDLogIn({
+  accountType,
   loggedIn,
   authLogIn,
   setLogInState,
@@ -40,7 +38,7 @@ function MDLogIn({
   const classes = useStyles();
   const handleLogIn = event => {
     event.preventDefault();
-    authLogIn(logInEmail, logInPassword);
+    authLogIn(logInEmail, logInPassword, accountType);
     setLogInState(false);
   };
   return (
@@ -98,7 +96,9 @@ function MDLogIn({
 
 const mapStateToProps = state => ({ ...state.auth });
 const mapDispatchToProps = dispatch => ({
-  authLogIn: (email, password) => dispatch(authLogIn(email, password)),
+  authLogIn: (email, password, accountType) => {
+    return dispatch(authLogIn(email, password, accountType));
+  },
   setLogInEmail: event => dispatch(setLogInEmail(event.target.value)),
   setLogInPassword: event => dispatch(setLogInPassword(event.target.value)),
   setLogInState: state => dispatch(setLogInState(state))

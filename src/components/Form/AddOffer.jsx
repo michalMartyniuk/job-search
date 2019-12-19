@@ -82,16 +82,19 @@ function Form({
   experience,
   setExperience,
   addJobOffer,
-  loggedIn
+  loggedIn,
+  user
 }) {
   const handleAddOffer = () => {
+    if (!job.trim()) return;
     const inputs = {
       job,
       jobTypes: Object.keys(jobTypes).filter(key => jobTypes[key]),
       countries: Object.keys(countries).filter(key => countries[key]),
       cities: Object.keys(cities).filter(key => cities[key]),
       experience,
-      salary
+      salary,
+      owner: { id: user.id, displayName: user.email }
     };
     addJobOffer(inputs);
   };
@@ -115,6 +118,7 @@ function Form({
       {loggedIn ? null : <Redirect to="/login" />}
       <Heading>Dodaj ofertę</Heading>
       <StyledForm>
+        <Category header="Branża" names={jobTypes} set={setJobTypes} />
         <FormFieldContainer>
           <FormField
             variant="outlined"
@@ -167,11 +171,14 @@ function Form({
           />
         </FormFieldContainer>
         <Filters>
-          <Category header="Branża" names={jobTypes} set={setJobTypes} />
           <Category header="Miasta" names={cities} set={setCities} />
           <Category header="Kraje" names={countries} set={setCountries} />
         </Filters>
-        <SalarySlider values={salary} onChange={setSalary} name="Zarobki" />
+        <SalarySlider
+          values={salary}
+          onChange={setSalary}
+          name="Wynagrodzenie"
+        />
         <Buttons>
           <Btn onClick={resetForm}>Zresetuj</Btn>
           <Btn onClick={handleAddOffer}>Dodaj ofertę</Btn>

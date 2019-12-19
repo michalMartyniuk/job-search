@@ -1,12 +1,10 @@
 import React from "react";
 import { makeStyles } from "@material-ui/styles";
 import { Button, Paper } from "@material-ui/core";
-
-import { Link, Redirect, useHistory } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-import { setAccountType } from "../store/auth/authActions";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   homeContainer: {
     display: "flex",
     margin: "auto",
@@ -29,32 +27,21 @@ const useStyles = makeStyles(theme => ({
       backgroundColor: "#008c9e"
     }
   }
-}));
+});
 
 function Home(props) {
   const classes = useStyles();
-  const history = useHistory();
   return (
     <Paper className={classes.homeContainer}>
-      {props.employer && props.loggedIn && <Redirect to="/addOffer" />}
-      {props.employee && props.loggedIn && <Redirect to="/search" />}
       <div>
         <h1 className={classes.header}>Wyszukiwarka pracy</h1>
-        <Link to="/auth">
-          <Button
-            variant="contained"
-            className={classes.button}
-            onClick={() => props.setAccountType("employee")}
-          >
+        <Link to="/auth/employee">
+          <Button variant="contained" className={classes.button}>
             Szukam pracy
           </Button>
         </Link>
-        <Link to="/auth">
-          <Button
-            variant="contained"
-            className={classes.button}
-            onClick={() => props.setAccountType("employer")}
-          >
+        <Link to="/auth/employer">
+          <Button variant="contained" className={classes.button}>
             Jestem pracodawcą
           </Button>
         </Link>
@@ -64,10 +51,4 @@ function Home(props) {
 }
 
 const mapStateToProps = state => state.auth;
-const mapDispatchToProps = dispatch => ({
-  setAccountType: accountType => dispatch(setAccountType(accountType))
-});
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Home);
+export default connect(mapStateToProps)(Home);

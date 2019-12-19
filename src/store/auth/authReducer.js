@@ -2,13 +2,14 @@ import types from "./authTypes";
 
 const initialState = {
   signUpName: "",
-  signUpSurname: "",
   signUpEmail: "",
   signUpPassword: "",
   logInName: "",
   logInEmail: "",
   logInPassword: "",
   user: {
+    id: null,
+    accountType: "",
     name: "",
     email: "",
     offers: null,
@@ -58,11 +59,6 @@ export default function authReducer(state = initialState, action) {
         ...state,
         signUpName: action.name
       };
-    case types.SET_SIGNUP_SURNAME:
-      return {
-        ...state,
-        signUpSurname: action.surname
-      };
     case types.SET_SIGNUP_EMAIL:
       return {
         ...state,
@@ -94,7 +90,6 @@ export default function authReducer(state = initialState, action) {
         loggedIn: true,
         user: action.user,
         signUpName: "",
-        signUpSurname: "",
         signUpEmail: "",
         signUpPassword: "",
         logInName: "",

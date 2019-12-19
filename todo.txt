@@ -1,0 +1,14 @@
+- W profilu pracownika trzeba dodać możliwość zapisywania poszczególnych ofert pracy.
+- W profilu pracownika dodać zakładkę „Aplikuj”
+- W profilu pracownika dodać zakładkę „Wysłane oferty”
+- W profilu pracownika dodać zakładkę „Ustaw alert” na razie pustą.
+- W polu „Kraj” zlikwidować drop down menu i umożliwić wpisywanie.
+- W profilu pracodawcy trzeba dodać zakładkę „Pakiet ogłoszeń” na razie pustą.
+- W polu „Wynagrodzenie” trzeba dodać opcje/przelicznik pln/godzinę dzielący całość wynagrodzenia na 160.
+- Przenieść oferty pracy na pierwszą stronę (na dole) i posegregować je po wynagrodzeniach (oferty z wynagrodzeniem 2-3 tys., 3-4 itd. + przelicznik na pln/godzine). Podobne pogrupowanie jest na pierwszej stronie Nofluffjobs ale akurat nie po wynagrodzeniach. Zobacz sobie jak to u nich wygląda.
+- Nad spisem ofert na pierwszej stronie trzeba stworzyć wyszukiwarkę.
+- Na liście ogłoszeń powinien być tylko zawód i miejsce pracy, potem klikamy w ogłoszenie i pojawia się cała reszta informacji.
+- Przy dodawaniu ogłoszeń w profilu pracodawcy powinno być jeszcze duże pole „Dodatkowe informacje” gdzie można wpisać co się chce.
+- Do każdego ogłoszenia pracodawca powinien móc dodać logo firmy, które będzie widoczne na ogólnej liście ogłoszeń.
+- Przy rejestracji pracodawców powinno być jeszcze pole „NIP"
+- Weryfikacja kont za pośrednictwem maili + alerty o pracach na maila

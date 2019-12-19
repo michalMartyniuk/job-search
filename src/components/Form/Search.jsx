@@ -116,6 +116,7 @@ function Search({
       {loggedIn ? null : <Redirect to="/login" />}
       <Heading>Szukaj pracy</Heading>
       <StyledForm>
+        <Category header="Branża" names={jobTypes} set={setJobTypes} />
         <FormFieldContainer>
           <FormField
             variant="outlined"
@@ -168,11 +169,14 @@ function Search({
           />
         </FormFieldContainer>
         <Filters>
-          <Category header="Branża" names={jobTypes} set={setJobTypes} />
           <Category header="Miasta" names={cities} set={setCities} />
           <Category header="Kraje" names={countries} set={setCountries} />
         </Filters>
-        <SalarySlider values={salary} onChange={setSalary} name="Zarobki" />
+        <SalarySlider
+          values={salary}
+          onChange={setSalary}
+          name="Wynagrodzenie"
+        />
         <Buttons>
           <Btn onClick={resetForm}>Zresetuj</Btn>
           <Btn onClick={handleSearch}>Szukaj</Btn>

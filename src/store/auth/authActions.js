@@ -6,10 +6,6 @@ const db = firebase.firestore();
 const auth = firebase.auth();
 
 export const setSignUpName = name => ({ type: types.SET_SIGNUP_NAME, name });
-export const setSignUpsurname = surname => ({
-  type: types.SET_SIGNUP_SURNAME,
-  surname
-});
 export const setSignUpEmail = email => ({
   type: types.SET_SIGNUP_EMAIL,
   email
@@ -48,7 +44,6 @@ export const logInErrorReset = () => {
   return { type: types.LOG_IN_ERROR_RESET };
 };
 export const setAccountType = accountType => {
-  console.log(accountType);
   return { type: types.SET_ACCOUNT_TYPE, accountType };
 };
 export const setLogIn = user => {
@@ -57,6 +52,7 @@ export const setLogIn = user => {
       .doc(user.uid)
       .get()
       .then(doc => {
+        const { accountType } = doc.data();
         const offers = [];
         db.collection(`users/${auth.currentUser.uid}/offers`)
           .get()
@@ -66,27 +62,30 @@ export const setLogIn = user => {
             );
             dispatch({
               type: types.LOGIN,
-              user: { ...doc.data(), offers }
+              user: { ...doc.data(), id: user.uid, offers }
             });
+            dispatch(setAccountType(accountType));
             dispatch({ type: types.SIGNUP_ERROR_RESET });
             dispatch({ type: types.LOG_IN_ERROR_RESET });
           });
       });
   };
 };
-export const authSignUp = (name, surname, email, password, accountType) => {
+export const authSignUp = (name, email, password, accountType) => {
+  let accountData = { name, email, accountType };
+  if (accountType === "employee") {
+    accountData.savedOffers = [];
+    accountData.appliedOffers = [];
+  } else if (accountType === "employer") {
+    accountData.closedOffers = [];
+  }
   return dispatch => {
     auth
       .createUserWithEmailAndPassword(email, password)
       .then(user => {
         db.collection("users")
           .doc(user.user.uid)
-          .set({
-            name,
-            surname,
-            email,
-            accountType
-          })
+          .set(accountData)
           .then(() => {
             dispatch(
               setNotification(true, "Zostałeś pomyślnie zalogowany", "success")
@@ -99,24 +98,46 @@ export const authSignUp = (name, surname, email, password, accountType) => {
       });
   };
 };
-
-export const authLogIn = (email, password) => {
-  return dispatch => {
-    auth
-      .signInWithEmailAndPassword(email, password)
-      .then(user => {
-        if (user) {
-          dispatch(
-            setNotification(true, "Zostałeś pomyślnie zalogowany", "success")
-          );
-          dispatch(setLogIn(user.user));
-        } else {
-          dispatch(logInError("User not found"));
+const checkAccountTypeMatch = (email, accountType) => {
+  return db
+    .collection("users")
+    .where("email", "==", email)
+    .get()
+    .then(snapshot => {
+      let match;
+      snapshot.forEach(doc => {
+        if (accountType === doc.data().accountType) {
+          match = true;
+          return true;
         }
-      })
-      .catch(error => {
-        dispatch(logInError(error.message));
+        match = false;
       });
+      return match;
+    });
+};
+
+export const authLogIn = (email, password, accountType) => {
+  return dispatch => {
+    checkAccountTypeMatch(email, accountType).then(result => {
+      if (!result) {
+        return { type: "" };
+      }
+      auth
+        .signInWithEmailAndPassword(email, password)
+        .then(user => {
+          if (user) {
+            dispatch(
+              setNotification(true, "Zostałeś pomyślnie zalogowany", "success")
+            );
+            dispatch(setLogIn(user.user));
+          } else {
+            dispatch(logInError("User not found"));
+          }
+        })
+        .catch(error => {
+          dispatch(logInError(error.message));
+        });
+    });
   };
 };
 export const authLogOut = () => {

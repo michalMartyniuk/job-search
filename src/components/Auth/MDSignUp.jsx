@@ -5,7 +5,6 @@ import { makeStyles } from "@material-ui/styles";
 import { Redirect } from "react-router-dom";
 import {
   setSignUpName,
-  setSignUpsurname,
   setSignUpPassword,
   setSignUpEmail,
   setSignUpState,
@@ -15,8 +14,6 @@ import {
 const useStyles = makeStyles(() => ({
   container: {
     width: 500,
-    margin: "auto",
-    marginTop: 150
   },
   error: {
     display: "flex"
@@ -33,7 +30,6 @@ const MDSignUp = props => {
     event.preventDefault();
     props.authSignUp(
       props.signUpName,
-      props.signUpSurname,
       props.signUpEmail,
       props.signUpPassword,
       props.accountType
@@ -50,25 +46,13 @@ const MDSignUp = props => {
             <div className="grey-text">
               <MDBInput
                 size="lg"
-                label="Imię"
+                label="Nazwa"
                 icon="user"
                 group
                 type="text"
                 validate
                 onChange={props.setSignUpName}
                 value={props.signUpName}
-                error="wrong"
-                success="right"
-              />
-              <MDBInput
-                size="lg"
-                label="Nazwisko"
-                icon="user"
-                group
-                type="text"
-                validate
-                onChange={props.setSignUpsurname}
-                value={props.signUpSurname}
                 error="wrong"
                 success="right"
               />
@@ -86,7 +70,7 @@ const MDSignUp = props => {
               />
               <MDBInput
                 size="lg"
-                label="Hasło"
+                label="Nowe hasło"
                 icon="lock"
                 group
                 onChange={props.setSignUpPassword}
@@ -119,10 +103,9 @@ const MDSignUp = props => {
 
 const mapStateToProps = state => ({ ...state.auth });
 const mapDispatchToProps = dispatch => ({
-  authSignUp: (name, surname, email, password, accountType) =>
-    dispatch(authSignUp(name, surname, email, password, accountType)),
+  authSignUp: (name, email, password, accountType) =>
+    dispatch(authSignUp(name, email, password, accountType)),
   setSignUpName: event => dispatch(setSignUpName(event.target.value)),
-  setSignUpsurname: event => dispatch(setSignUpsurname(event.target.value)),
   setSignUpPassword: event => dispatch(setSignUpPassword(event.target.value)),
   setSignUpEmail: event => dispatch(setSignUpEmail(event.target.value)),
   setSignUpState: state => dispatch(setSignUpState(state))

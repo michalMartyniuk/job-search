@@ -25,12 +25,28 @@ export default function appReducer(state = initialState, action) {
     case types.GET_ALL_OFFERS:
       return {
         ...state,
-        searchResults: action.results,
+        searchResults: action.results
       };
     case types.SEARCH:
       return {
         ...state,
-        searchResults: action.results,
+        searchResults: action.results
+      };
+    case types.APPLY_TO_OFFER:
+      return {
+        ...state
+      };
+    case types.SAVE_OFFER:
+      return {
+        ...state
+      };
+    case types.EDIT_OFFER:
+      return {
+        ...state
+      };
+    case types.CLOSE_OFFER:
+      return {
+        ...state
       };
     default:
       return state;
