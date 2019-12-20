@@ -9,8 +9,10 @@ import {
   applyToOffer,
   saveOffer,
   editOffer,
-  closeOffer
-} from "../../store/app/appActions";
+  closeOffer,
+  removeOffer,
+  reactivateOffer
+} from "../../store/auth/authActions";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -38,6 +40,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function OfferList({
+  offersType,
   offers,
   title,
   loggedIn = false,
@@ -45,7 +48,9 @@ function OfferList({
   applyToOffer,
   saveOffer,
   editOffer,
-  closeOffer
+  closeOffer,
+  removeOffer,
+  reactivateOffer
 }) {
   const classes = useStyles();
   return (
@@ -61,6 +66,8 @@ function OfferList({
             <Offer
               key={offer.id}
               id={offer.id}
+              offer={offer}
+              offersType={offersType}
               job={offer.job}
               jobTypes={offer.jobTypes}
               countries={offer.countries}
@@ -75,6 +82,8 @@ function OfferList({
               save={() => saveOffer(offer.id)}
               edit={() => editOffer(offer.id)}
               close={() => closeOffer(offer.id)}
+              remove={() => removeOffer(offer, offersType)}
+              reactivate={() => reactivateOffer(offer.id)}
             />
           );
         })}
@@ -88,7 +97,9 @@ const mapDispatchToProps = dispatch => ({
   applyToOffer: offerId => dispatch(applyToOffer(offerId)),
   saveOffer: offerId => dispatch(saveOffer(offerId)),
   editOffer: offerId => dispatch(editOffer(offerId)),
-  closeOffer: offerId => dispatch(closeOffer(offerId))
+  closeOffer: offerId => dispatch(closeOffer(offerId)),
+  removeOffer: (offerId, offersType) => dispatch(removeOffer(offerId, offersType)),
+  reactivateOffer: offerId => dispatch(reactivateOffer(offerId))
 });
 
 export default connect(

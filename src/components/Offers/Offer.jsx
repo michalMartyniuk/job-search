@@ -57,8 +57,68 @@ const InfoTitle = styled.span`
 const ButtonsContainer = styled.div`
   display: flex;
 `;
-
+const EmployeeButtons = ({ offer, offersType, apply, save, remove }) => {
+  switch (offersType) {
+    case "appliedOffers":
+      return (
+        <ButtonsContainer>
+          <Button variant="outlined" onClick={remove}>
+            Usuń
+          </Button>
+        </ButtonsContainer>
+      );
+    case "savedOffers":
+      return (
+        <ButtonsContainer>
+          <Button variant="outlined" onClick={remove}>
+            Usuń
+          </Button>
+        </ButtonsContainer>
+      );
+    default:
+      return (
+        <ButtonsContainer>
+          <Button variant="outlined" onClick={apply}>
+            Aplikuj
+          </Button>
+          <Button variant="outlined" onClick={save}>
+            Zapisz
+          </Button>
+        </ButtonsContainer>
+      );
+  }
+};
+const EmployerButtons = ({ offer, offersType, edit, close, remove, reactivate }) => {
+  switch (offersType) {
+    case "activeOffers":
+      return (
+        <ButtonsContainer>
+          <Button variant="outlined" onClick={edit}>
+            Edytuj
+          </Button>
+          <Button variant="outlined" onClick={close}>
+            Zamknij
+          </Button>
+        </ButtonsContainer>
+      );
+    case "closedOffers":
+      return (
+        <ButtonsContainer>
+          <Button variant="outlined" onClick={reactivate}>
+            Wznów
+          </Button>
+          <Button variant="outlined" onClick={remove}>
+            Usuń
+          </Button>
+        </ButtonsContainer>
+      );
+    default:
+      return null;
+  }
+};
 export default function Offer({
+  offer,
+  offersType,
   job,
   countries,
   cities,
@@ -70,7 +130,9 @@ export default function Offer({
   apply,
   save,
   edit,
-  close
+  close,
+  remove,
+  reactivate
 }) {
   return (
     <Root>
@@ -101,24 +163,23 @@ export default function Offer({
         ) : null}
       </Informations>
       {accountType === "employee" ? (
-        <ButtonsContainer>
-          <Button variant="outlined" onClick={apply}>
-            Aplikuj
-          </Button>
-          <Button variant="outlined" onClick={save}>
-            Zapisz
-          </Button>
-        </ButtonsContainer>
+        <EmployeeButtons
+          offer={offer}
+          offersType={offersType}
+          apply={apply}
+          save={save}
+          remove={remove}
+        />
       ) : null}
       {accountType === "employer" ? (
-        <ButtonsContainer>
-          <Button variant="outlined" onClick={edit}>
-            Edytuj
-          </Button>
-          <Button variant="outlined" onClick={close}>
-            Zamknij
-          </Button>
-        </ButtonsContainer>
+        <EmployerButtons
+          offer={offer}
+          offersType={offersType}
+          edit={edit}
+          close={close}
+          reactivate={reactivate}
+          remove={remove}
+        />
       ) : null}
       <Divider component="span" />
     </Root>

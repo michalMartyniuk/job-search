@@ -147,3 +147,208 @@ export const authLogOut = () => {
     });
   };
 };
+function createTimestamp() {
+  const date = new Date();
+  const year = date.getFullYear().toString();
+  const month = (date.getMonth() + 1).toString();
+  const day = date.getDate().toString();
+  const hours = date.getHours().toString();
+  const minutes = date.getMinutes().toString();
+  const seconds = date.getSeconds().toString();
+  return { year, month, day, hours, minutes, seconds };
+}
+
+export const addOffer = inputs => {
+  const {
+    job,
+    jobTypes,
+    countries,
+    cities,
+    experience,
+    salary,
+    owner
+  } = inputs;
+  const date = createTimestamp();
+  const data = {
+    job,
+    jobTypes,
+    countries,
+    cities,
+    experience,
+    salary,
+    date,
+    owner
+  };
+  return dispatch => {
+    db.collection(`users/${auth.currentUser.uid}/offers`)
+      .add(data)
+      .then(doc =>
+        doc.get().then(doc => {
+          const offer = { id: doc.id, ...doc.data() };
+          db.collection(`users/${auth.currentUser.uid}/offers`)
+            .doc(doc.id)
+            .set(offer)
+            .then(() => {
+              db.collection("offers")
+                .doc(doc.id)
+                .set(offer)
+                .then(() => {
+                  dispatch({ type: types.ADD_OFFER, offer });
+                  // dispatch(
+                  //     setNotification(
+                  //       true,
+                  //       "Twoja oferta została dodana",
+                  //       "success"
+                  //     )
+                  // );
+                });
+            });
+        })
+      );
+  };
+};
+export const applyToOffer = offerId => {
+  return dispatch => {
+    db.collection("offers")
+      .doc(offerId)
+      .get()
+      .then(doc => {
+        const offer = { id: offerId, ...doc.data() };
+        db.collection("users")
+          .doc(auth.currentUser.uid)
+          .update({
+            appliedOffers: firebase.firestore.FieldValue.arrayUnion(offer)
+          })
+          .then(() => {
+            dispatch({ type: types.APPLY_TO_OFFER, offer });
+          });
+      });
+  };
+};
+export const saveOffer = offerId => {
+  return dispatch => {
+    db.collection("offers")
+      .doc(offerId)
+      .get()
+      .then(doc => {
+        const offer = { id: offerId, ...doc.data() };
+        db.collection("users")
+          .doc(auth.currentUser.uid)
+          .update({
+            savedOffers: firebase.firestore.FieldValue.arrayUnion(offer)
+          })
+          .then(() => {
+            dispatch({ type: types.SAVE_OFFER, offer });
+          });
+      });
+  };
+};
+export const editOffer = (offer, offerId) => {
+  const updatedOffer = { id: offerId, ...offer };
+  return dispatch => {
+    db.collection("offers")
+      .doc(offerId)
+      .set(updatedOffer)
+      .then(() => {
+        db.collection(`users/${auth.currentUser.uid}/offers`)
+          .doc(offerId)
+          .set(updatedOffer)
+          .then(() => {
+            dispatch({ type: types.EDIT_OFFER });
+          });
+      });
+  };
+};
+export const closeOffer = offerId => {
+  // Add offer to closedOffers array
+  return dispatch => {
+    db.collection("offers")
+      .doc(offerId)
+      .get()
+      .then(doc => {
+        const offer = { id: offerId, ...doc.data() };
+        db.collection("users")
+          .doc(auth.currentUser.uid)
+          .update({
+            closedOffers: firebase.firestore.FieldValue.arrayUnion(offer)
+          })
+          .then(() => {
+            dispatch({ type: types.CLOSE_OFFER, offer });
+            // Delete offer from offers
+            db.collection("offers")
+              .doc(offerId)
+              .delete()
+              .then(() => {
+                // Delete offer from user/offers
+                db.collection(`users/${auth.currentUser.uid}/offers`)
+                  .doc(offerId)
+                  .delete();
+              });
+          });
+      });
+  };
+};
+export const removeOffer = (offerId, offersType) => {
+  return dispatch => {
+    db.collection("users")
+      .doc(auth.currentUser.uid)
+      .update({
+        [offersType]: firebase.firestore.FieldValue.arrayRemove(offerId)
+      })
+      .then(() => {
+        db.collection("users")
+          .doc(auth.currentUser.uid)
+          .get()
+          .then(doc => {
+            const offers = doc.data()[offersType];
+            dispatch({ type: types.REMOVE_OFFER, offersType, offers });
+          });
+      });
+  };
+};
+export const reactivateOffer = offerId => {
+  // Get offer from closed offers
+  // Remove offer from closed offers
+  // Add offer to offers and user offers
+  return dispatch => {
+    db.collection("users")
+      .doc(auth.currentUser.uid)
+      .get()
+      .then(doc => {
+        const data = doc.data();
+        const offer = data.closedOffers.find(offer => offer.id === offerId);
+        const closedOffers = data.closedOffers.filter(
+          offer => offer.id !== offerId
+        );
+        db.collection("users")
+          .doc(auth.currentUser.uid)
+          .update({ closedOffers })
+          .then(() => {
+            db.collection("offers")
+              .doc(offerId)
+              .set(offer)
+              .then(() => {
+                db.collection(`users/${auth.currentUser.uid}/offers`)
+                  .doc(offerId)
+                  .set(offer)
+                  .then(() => {
+                    db.collection(`users/${auth.currentUser.uid}/offers`)
+                      .get()
+                      .then(snapshot => {
+                        const offers = snapshot.docs.map(doc => {
+                          const data = doc.data();
+                          const { id } = doc;
+                          return { ...data, id };
+                        });
+                        dispatch({
+                          type: types.REACTIVATE_OFFER,
+                          closedOffers,
+                          offers
+                        });
+                      });
+                  });
+              });
+          });
+      });
+  };
+};

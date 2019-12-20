@@ -12,9 +12,10 @@ const initialState = {
     accountType: "",
     name: "",
     email: "",
-    offers: null,
-    employer: false,
-    employee: false
+    offers: [],
+    closedOffers: [],
+    appliedOffers: [],
+    savedOffers: []
   },
   loggedIn: false,
   logInError: false,
@@ -108,6 +109,63 @@ export default function authReducer(state = initialState, action) {
         employer: false,
         employee: false,
         user: null
+      };
+    case types.ADD_OFFER:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          offers: [...state.user.offers, action.offer]
+        }
+      };
+    case types.APPLY_TO_OFFER:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          appliedOffers: [...state.user.appliedOffers, action.offer]
+        }
+      };
+    case types.SAVE_OFFER:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          savedOffers: [...state.user.savedOffers, action.offer]
+        }
+      };
+    case types.CLOSE_OFFER:
+      const offers = state.user.offers.filter(
+        offer => offer.id !== action.offer.id
+      );
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          offers,
+          closedOffers: [...state.user.closedOffers, action.offer]
+        }
+      };
+    case types.EDIT_OFFER:
+      return {
+        ...state
+      };
+    case types.REMOVE_OFFER:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          [action.offersType]: action.offers
+        }
+      };
+    case types.REACTIVATE_OFFER:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          offers: action.offers,
+          closedOffers: action.closedOffers
+        }
       };
     default:
       return state;

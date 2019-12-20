@@ -11,7 +11,7 @@ import { connect } from "react-redux";
 import theme from "./theme";
 import Home from "./components/Home";
 import Notification from "./components/Notification";
-import Profile from "./components/Profile";
+import Profile from "./components/Profile/Profile";
 import firebase from "./config/firebase";
 import Navigation from "./components/Navigation";
 import Auth from "./components/Auth/Auth";

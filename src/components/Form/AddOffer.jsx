@@ -12,7 +12,7 @@ import {
   setSalary,
   setExperience
 } from "../../store/form/formActions";
-import { addJobOffer } from "../../store/app/appActions";
+import { addOffer } from "../../store/auth/authActions";
 import Category from "./FiltersCategory";
 import SalarySlider from "./Slider";
 import FormField from "./FormField";
@@ -81,7 +81,7 @@ function Form({
   salary,
   experience,
   setExperience,
-  addJobOffer,
+  addOffer,
   loggedIn,
   user
 }) {
@@ -96,7 +96,7 @@ function Form({
       salary,
       owner: { id: user.id, displayName: user.email }
     };
-    addJobOffer(inputs);
+    addOffer(inputs);
   };
   const handleExperience = event => {
     setExperience(event.target.value);
@@ -189,7 +189,7 @@ function Form({
 }
 const mapStateToProps = state => ({ ...state.form, ...state.auth });
 const mapDispatchToProps = dispatch => ({
-  addJobOffer: inputs => dispatch(addJobOffer(inputs)),
+  addOffer: inputs => dispatch(addOffer(inputs)),
   resetForm: () => dispatch(resetForm()),
   setJob: event => dispatch(setJob(event.target.value)),
   setJobTypes: jobType => dispatch(setJobTypes(jobType)),

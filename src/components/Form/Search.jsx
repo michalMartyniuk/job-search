@@ -12,7 +12,7 @@ import {
   setSalary,
   setExperience
 } from "../../store/form/formActions";
-import { search, getAllOffers, addJobOffer } from "../../store/app/appActions";
+import { search, getAllOffers } from "../../store/app/appActions";
 import Category from "./FiltersCategory";
 import SalarySlider from "./Slider";
 import FormField from "./FormField";
@@ -189,7 +189,6 @@ function Search({
 const mapStateToProps = state => ({ ...state.form, ...state.auth });
 const mapDispatchToProps = dispatch => ({
   search: inputs => dispatch(search(inputs)),
-  addJobOffer: inputs => dispatch(addJobOffer(inputs)),
   getAllOffers: () => dispatch(getAllOffers()),
   resetForm: () => dispatch(resetForm()),
   setJob: event => dispatch(setJob(event.target.value)),
