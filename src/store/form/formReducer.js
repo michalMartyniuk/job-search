@@ -21,7 +21,7 @@ const initialState = {
     Poznań: false,
     Kraków: false,
     Szczecinek: false
-  }
+  },
 };
 
 export default function formReducer(state = initialState, action) {
@@ -73,6 +73,10 @@ export default function formReducer(state = initialState, action) {
       return {
         ...state,
         salary: action.values
+      };
+    case types.SET_EDIT_MODE:
+      return {
+        ...state
       };
     default:
       return state;

@@ -16,10 +16,12 @@ import firebase from "./config/firebase";
 import Navigation from "./components/Navigation";
 import Auth from "./components/Auth/Auth";
 import { setLogIn, authLogOut } from "./store/auth/authActions";
+import { getAllOffers } from "./store/app/appActions";
 import SearchForm from "./components/Form/Search";
 import AddForm from "./components/Form/AddOffer";
 import OfferList from "./components/Offers/OfferList";
 import SimilarOffers from "./components/Offers/SimilarOffers";
+import EditOffer from "./components/Form/EditOffer";
 
 const auth = firebase.auth();
 
@@ -41,6 +43,7 @@ function App(props) {
         setLogIn(auth.currentUser);
       }
     });
+    props.getAllOffers();
     return () => unsubscribe();
   }, [auth.onAuthStateChanged]);
   return (
@@ -73,8 +76,15 @@ function App(props) {
               <Route path="/auth">
                 {props.loggedIn ? <Redirect to="/profile" /> : <Auth />}
               </Route>
+              <Route path="/edit/:id">
+                <EditOffer />
+              </Route>
               <Route path="/" exact>
-                {props.loggedIn ? <Redirect to="/profile" /> : <Home />}
+                {props.loggedIn ? (
+                  <Redirect to="/profile" />
+                ) : (
+                  <Home offers={props.searchResults} />
+                )}
               </Route>
               <Route path="*">
                 {props.loggedIn ? (
@@ -98,7 +108,8 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch => ({
   setLogIn: user => dispatch(setLogIn(user)),
-  authLogOut: () => dispatch(authLogOut())
+  authLogOut: () => dispatch(authLogOut()),
+  getAllOffers: () => dispatch(getAllOffers())
 });
 export default connect(
   mapStateToProps,

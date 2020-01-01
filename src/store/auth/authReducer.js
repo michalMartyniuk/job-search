@@ -20,7 +20,8 @@ const initialState = {
   loggedIn: false,
   logInError: false,
   signUpError: false,
-  accountType: ""
+  accountType: "",
+  editedOffer: null
 };
 
 export default function authReducer(state = initialState, action) {
@@ -150,12 +151,17 @@ export default function authReducer(state = initialState, action) {
       return {
         ...state
       };
+    case types.GET_OFFER:
+      return {
+        ...state,
+        editedOffer: action.offer
+      };
     case types.REMOVE_OFFER:
       return {
         ...state,
         user: {
           ...state.user,
-          [action.offersType]: action.offers
+          [action.offerType]: action.offers
         }
       };
     case types.REACTIVATE_OFFER:

@@ -3,6 +3,7 @@ import { Paper, Button } from "@material-ui/core";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import { Redirect } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   setJob,
   resetForm,
@@ -12,7 +13,7 @@ import {
   setSalary,
   setExperience
 } from "../../store/form/formActions";
-import { addOffer } from "../../store/auth/authActions";
+import { editOffer, getOffer } from "../../store/auth/authActions";
 import Category from "./FiltersCategory";
 import SalarySlider from "./Slider";
 import FormField from "./FormField";
@@ -67,7 +68,9 @@ const Btn = styled(Button).attrs({
   }
 `;
 
-function Form({
+function EditOffer({
+  getOffer,
+  editedOffer,
   job,
   setJob,
   resetForm,
@@ -81,11 +84,28 @@ function Form({
   salary,
   experience,
   setExperience,
-  addOffer,
+  editOffer,
   loggedIn,
   user
 }) {
-  const handleAddOffer = () => {
+  const { id } = useParams();
+  React.useEffect(() => {
+    getOffer(id).then(result => console.log(result));
+    // editedOffer.countries.map(country => {
+    //   setCountries(country);
+    // });
+    // editedOffer.cities.map(city => {
+    //   setCities(city);
+    // });
+    // editedOffer.jobTypes.map(jobType => {
+    //   setCities(jobType);
+    // });
+    // setJob(editedOffer.job);
+    // setSalary(editedOffer.salary);
+    // setExperience(editedOffer.experience);
+  }, []);
+
+  const handleEditOffer = () => {
     if (!job.trim()) return;
     const inputs = {
       job,
@@ -96,7 +116,7 @@ function Form({
       salary,
       owner: { id: user.id, displayName: user.email }
     };
-    addOffer(inputs);
+    editOffer(inputs);
   };
   const handleExperience = event => {
     setExperience(event.target.value);
@@ -113,6 +133,7 @@ function Form({
     { name: "9 lat", value: 9 },
     { name: "10 lat", value: 10 }
   ];
+  console.log(editedOffer);
   return (
     <Root>
       {loggedIn ? null : <Redirect to="/login" />}
@@ -181,7 +202,7 @@ function Form({
         />
         <Buttons>
           <Btn onClick={resetForm}>Zresetuj</Btn>
-          <Btn onClick={handleAddOffer}>Dodaj ofertę</Btn>
+          <Btn>Zatwierdź</Btn>
         </Buttons>
       </StyledForm>
     </Root>
@@ -189,7 +210,8 @@ function Form({
 }
 const mapStateToProps = state => ({ ...state.form, ...state.auth });
 const mapDispatchToProps = dispatch => ({
-  addOffer: inputs => dispatch(addOffer(inputs)),
+  getOffer: id => dispatch(getOffer(id)),
+  editOffer: inputs => dispatch(editOffer(inputs)),
   resetForm: () => dispatch(resetForm()),
   setJob: job => dispatch(setJob(job)),
   setJobTypes: jobType => dispatch(setJobTypes(jobType)),
@@ -202,4 +224,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Form);
+)(EditOffer);

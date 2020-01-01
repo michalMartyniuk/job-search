@@ -10,3 +10,6 @@ export const setSalary = values => {
 };
 export const setCities = value => ({ type: types.SET_CITIES, value });
 export const setCountries = value => ({ type: types.SET_COUNTRIES, value });
+export const setEditMode = offer => {
+  return { type: types.SET_EDIT_MODE, offer };
+};

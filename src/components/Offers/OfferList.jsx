@@ -1,23 +1,13 @@
 import React from "react";
-import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import { Paper } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import Offer from "./Offer";
-import {
-  applyToOffer,
-  saveOffer,
-  editOffer,
-  closeOffer,
-  removeOffer,
-  reactivateOffer
-} from "../../store/auth/authActions";
 
 const useStyles = makeStyles(theme => ({
   root: {
     width: 1200,
-    backgroundColor: theme.palette.background.paper,
     margin: "0px auto",
     marginBottom: 50
   },
@@ -39,19 +29,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function OfferList({
-  offersType,
-  offers,
-  title,
-  loggedIn = false,
-  accountType,
-  applyToOffer,
-  saveOffer,
-  editOffer,
-  closeOffer,
-  removeOffer,
-  reactivateOffer
-}) {
+function OfferList({ offers, title, ...props }) {
   const classes = useStyles();
   return (
     <Paper className={classes.root}>
@@ -62,47 +40,10 @@ function OfferList({
           </Typography>
         </div>
         {offers.map(offer => {
-          return (
-            <Offer
-              key={offer.id}
-              id={offer.id}
-              offer={offer}
-              offersType={offersType}
-              job={offer.job}
-              jobTypes={offer.jobTypes}
-              countries={offer.countries}
-              cities={offer.cities}
-              experience={offer.experience}
-              salary={offer.salary}
-              date={offer.date}
-              owner={offer.owner}
-              loggedIn={loggedIn}
-              accountType={accountType}
-              apply={() => applyToOffer(offer.id)}
-              save={() => saveOffer(offer.id)}
-              edit={() => editOffer(offer.id)}
-              close={() => closeOffer(offer.id)}
-              remove={() => removeOffer(offer, offersType)}
-              reactivate={() => reactivateOffer(offer.id)}
-            />
-          );
+          return <Offer key={offer.id} offer={offer} {...props} />;
         })}
       </List>
     </Paper>
   );
 }
-
-const mapStateToProps = state => ({ ...state.auth, ...state.app });
-const mapDispatchToProps = dispatch => ({
-  applyToOffer: offerId => dispatch(applyToOffer(offerId)),
-  saveOffer: offerId => dispatch(saveOffer(offerId)),
-  editOffer: offerId => dispatch(editOffer(offerId)),
-  closeOffer: offerId => dispatch(closeOffer(offerId)),
-  removeOffer: (offerId, offersType) => dispatch(removeOffer(offerId, offersType)),
-  reactivateOffer: offerId => dispatch(reactivateOffer(offerId))
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(OfferList);
+export default OfferList;

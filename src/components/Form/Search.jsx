@@ -68,6 +68,7 @@ const Btn = styled(Button).attrs({
 `;
 
 function Search({
+  searchResults,
   job,
   setJob,
   resetForm,
@@ -122,7 +123,7 @@ function Search({
             variant="outlined"
             label="Zawód"
             value={job}
-            onChange={setJob}
+            onChange={event => setJob(event.target.value)}
             styles={{
               root: {
                 margin: "0px 20px 0px 0px"
@@ -186,12 +187,16 @@ function Search({
     </Root>
   );
 }
-const mapStateToProps = state => ({ ...state.form, ...state.auth });
+const mapStateToProps = state => ({
+  ...state.form,
+  ...state.auth,
+  ...state.app
+});
 const mapDispatchToProps = dispatch => ({
   search: inputs => dispatch(search(inputs)),
   getAllOffers: () => dispatch(getAllOffers()),
   resetForm: () => dispatch(resetForm()),
-  setJob: event => dispatch(setJob(event.target.value)),
+  setJob: job => dispatch(setJob(job)),
   setJobTypes: jobType => dispatch(setJobTypes(jobType)),
   setCountries: country => dispatch(setCountries(country)),
   setCities: city => dispatch(setCities(city)),

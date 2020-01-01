@@ -2,16 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
-
-const arrayToString = array => {
-  if (!array) {
-    return null;
-  }
-  if (array.length === 1) {
-    return array[1];
-  }
-  return array.join(", ");
-};
+import { useHistory } from "react-router-dom";
 
 const Root = styled.div`
   display: flex;
@@ -35,9 +26,6 @@ const Informations = styled.div`
   font-weight: 400;
   padding: 10px 0;
 `;
-const BottomBar = styled.div`
-  display: flex;
-`;
 const Salary = styled.span`
   margin-right: 20px;
 `;
@@ -53,87 +41,16 @@ const Experience = styled.span`
 const InfoTitle = styled.span`
   font-weight: 500;
 `;
-
-const ButtonsContainer = styled.div`
+const Actions = styled.div`
   display: flex;
 `;
-const EmployeeButtons = ({ offer, offersType, apply, save, remove }) => {
-  switch (offersType) {
-    case "appliedOffers":
-      return (
-        <ButtonsContainer>
-          <Button variant="outlined" onClick={remove}>
-            Usuń
-          </Button>
-        </ButtonsContainer>
-      );
-    case "savedOffers":
-      return (
-        <ButtonsContainer>
-          <Button variant="outlined" onClick={remove}>
-            Usuń
-          </Button>
-        </ButtonsContainer>
-      );
-    default:
-      return (
-        <ButtonsContainer>
-          <Button variant="outlined" onClick={apply}>
-            Aplikuj
-          </Button>
-          <Button variant="outlined" onClick={save}>
-            Zapisz
-          </Button>
-        </ButtonsContainer>
-      );
-  }
-};
-const EmployerButtons = ({ offer, offersType, edit, close, remove, reactivate }) => {
-  switch (offersType) {
-    case "activeOffers":
-      return (
-        <ButtonsContainer>
-          <Button variant="outlined" onClick={edit}>
-            Edytuj
-          </Button>
-          <Button variant="outlined" onClick={close}>
-            Zamknij
-          </Button>
-        </ButtonsContainer>
-      );
-    case "closedOffers":
-      return (
-        <ButtonsContainer>
-          <Button variant="outlined" onClick={reactivate}>
-            Wznów
-          </Button>
-          <Button variant="outlined" onClick={remove}>
-            Usuń
-          </Button>
-        </ButtonsContainer>
-      );
-    default:
-      return null;
-  }
-};
-export default function Offer({
-  offer,
-  offersType,
-  job,
-  countries,
-  cities,
-  experience,
-  salary,
-  date,
-  owner,
-  accountType,
-  apply,
-  save,
-  edit,
-  close,
-  remove,
-  reactivate
-}) {
+
+function Offer({ offer, ...props }) {
+  const history = useHistory();
+  const { job, salary, countries, cities, experience } = offer;
+  const handleEdit = offerId => {
+    history.push(`/edit/${offerId}`);
+  };
   return (
     <Root>
       <Title>{job}</Title>
@@ -162,26 +79,30 @@ export default function Offer({
           </Experience>
         ) : null}
       </Informations>
-      {accountType === "employee" ? (
-        <EmployeeButtons
-          offer={offer}
-          offersType={offersType}
-          apply={apply}
-          save={save}
-          remove={remove}
-        />
-      ) : null}
-      {accountType === "employer" ? (
-        <EmployerButtons
-          offer={offer}
-          offersType={offersType}
-          edit={edit}
-          close={close}
-          reactivate={reactivate}
-          remove={remove}
-        />
-      ) : null}
+      <Actions>
+        {props.apply ? (
+          <Button onClick={() => props.apply(offer.id)}>Aplikuj</Button>
+        ) : null}
+        {props.save ? (
+          <Button onClick={() => props.save(offer.id)}>Zapisz</Button>
+        ) : null}
+        {props.remove ? (
+          <Button onClick={() => props.remove(offer, props.offerType)}>
+            Usuń
+          </Button>
+        ) : null}
+        {props.close ? (
+          <Button onClick={() => props.close(offer.id)}>Zamknij</Button>
+        ) : null}
+        {props.reactivate ? (
+          <Button onClick={() => props.reactivate(offer.id)}>Wznów</Button>
+        ) : null}
+        {props.edit ? (
+          <Button onClick={() => handleEdit(offer.id)}>Edytuj</Button>
+        ) : null}
+      </Actions>
       <Divider component="span" />
     </Root>
   );
 }
+export default Offer;

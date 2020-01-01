@@ -52,7 +52,7 @@ const Filter = styled(({ className, name, onClick }) => (
     outline: none;
   }
 `;
-export default function FiltersCategory({ header, names, set }) {
+function FiltersCategory({ header, names, set, ...props }) {
   const filters = createFilters(names, set);
   return (
     <Category>
@@ -70,3 +70,5 @@ export default function FiltersCategory({ header, names, set }) {
     </Category>
   );
 }
+
+export default FiltersCategory;

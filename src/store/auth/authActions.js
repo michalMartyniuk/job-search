@@ -243,18 +243,42 @@ export const saveOffer = offerId => {
       });
   };
 };
-export const editOffer = (offer, offerId) => {
-  const updatedOffer = { id: offerId, ...offer };
+export const getOffer = offerId => {
   return dispatch => {
+    return new Promise((resolve, reject) => {
+      db.collection(`users/${auth.currentUser.uid}/offers`)
+        // .where("id", "==", offerId)
+        .doc(offerId)
+        .get()
+        .then(doc => {
+          dispatch({ type: types.GET_OFFER, offer: doc.data() });
+          resolve(doc.data());
+        });
+    });
+  };
+};
+export const editOffer = offer => {
+  return dispatch => {
+    // Change offer with edited offer id in /offers to edited offer
     db.collection("offers")
-      .doc(offerId)
-      .set(updatedOffer)
+      .doc(offer.id)
+      .set(offer)
       .then(() => {
+        // Change offer to edited offer in user /offers
         db.collection(`users/${auth.currentUser.uid}/offers`)
-          .doc(offerId)
-          .set(updatedOffer)
+          .doc(offer.id)
+          .set(offer)
           .then(() => {
-            dispatch({ type: types.EDIT_OFFER });
+            // Get updated user offers
+            db.collection(`users/${auth.currentUser.uid}/offers`)
+              .get()
+              .then(snapshot => {
+                const updatedOffers = snapshot.docs.map(doc => {
+                  return doc.data();
+                });
+                console.log(updatedOffers);
+              });
+            // dispatch({ type: types.EDIT_OFFER });
           });
       });
   };
@@ -288,20 +312,20 @@ export const closeOffer = offerId => {
       });
   };
 };
-export const removeOffer = (offerId, offersType) => {
+export const removeOffer = (offer, offerType) => {
   return dispatch => {
     db.collection("users")
       .doc(auth.currentUser.uid)
       .update({
-        [offersType]: firebase.firestore.FieldValue.arrayRemove(offerId)
+        [offerType]: firebase.firestore.FieldValue.arrayRemove(offer)
       })
       .then(() => {
         db.collection("users")
           .doc(auth.currentUser.uid)
           .get()
           .then(doc => {
-            const offers = doc.data()[offersType];
-            dispatch({ type: types.REMOVE_OFFER, offersType, offers });
+            const offers = doc.data()[offerType];
+            dispatch({ type: types.REMOVE_OFFER, offerType, offers });
           });
       });
   };
