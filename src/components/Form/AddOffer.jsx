@@ -85,6 +85,9 @@ function Form({
   loggedIn,
   user
 }) {
+  React.useEffect(() => {
+    resetForm();
+  }, [])
   const handleAddOffer = () => {
     if (!job.trim()) return;
     const inputs = {

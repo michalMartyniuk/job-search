@@ -90,24 +90,27 @@ function EditOffer({
 }) {
   const { id } = useParams();
   React.useEffect(() => {
-    getOffer(id).then(result => console.log(result));
-    // editedOffer.countries.map(country => {
-    //   setCountries(country);
-    // });
-    // editedOffer.cities.map(city => {
-    //   setCities(city);
-    // });
-    // editedOffer.jobTypes.map(jobType => {
-    //   setCities(jobType);
-    // });
-    // setJob(editedOffer.job);
-    // setSalary(editedOffer.salary);
-    // setExperience(editedOffer.experience);
+    getOffer(id).then(offer => {
+      console.log(offer.salary)
+      offer.countries.map(country => {
+        setCountries(country);
+      });
+      offer.cities.map(city => {
+        setCities(city);
+      });
+      offer.jobTypes.map(jobType => {
+        setCities(jobType);
+      });
+      setJob(offer.job);
+      setSalary(offer.salary);
+      setExperience(offer.experience);
+    });
   }, []);
 
   const handleEditOffer = () => {
     if (!job.trim()) return;
     const inputs = {
+      id,
       job,
       jobTypes: Object.keys(jobTypes).filter(key => jobTypes[key]),
       countries: Object.keys(countries).filter(key => countries[key]),
@@ -202,7 +205,7 @@ function EditOffer({
         />
         <Buttons>
           <Btn onClick={resetForm}>Zresetuj</Btn>
-          <Btn>Zatwierdź</Btn>
+          <Btn onClick={handleEditOffer}>Zatwierdź</Btn>
         </Buttons>
       </StyledForm>
     </Root>

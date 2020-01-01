@@ -247,7 +247,6 @@ export const getOffer = offerId => {
   return dispatch => {
     return new Promise((resolve, reject) => {
       db.collection(`users/${auth.currentUser.uid}/offers`)
-        // .where("id", "==", offerId)
         .doc(offerId)
         .get()
         .then(doc => {
@@ -257,16 +256,18 @@ export const getOffer = offerId => {
     });
   };
 };
-export const editOffer = offer => {
+export const editOffer = inputs => {
+  const date = createTimestamp();
+  const offer = { ...inputs, date };
   return dispatch => {
     // Change offer with edited offer id in /offers to edited offer
     db.collection("offers")
-      .doc(offer.id)
+      .doc(inputs.id)
       .set(offer)
       .then(() => {
         // Change offer to edited offer in user /offers
         db.collection(`users/${auth.currentUser.uid}/offers`)
-          .doc(offer.id)
+          .doc(inputs.id)
           .set(offer)
           .then(() => {
             // Get updated user offers

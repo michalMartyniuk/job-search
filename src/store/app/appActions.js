@@ -62,6 +62,5 @@ export const search = inputs => {
 };
 
 export const setSearchResults = results => {
-  console.log(results);
   return { type: types.SET_SEARCH_RESULTS, results };
 };

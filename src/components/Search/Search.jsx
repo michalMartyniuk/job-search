@@ -66,7 +66,6 @@ function Search({ searchResults, setSearchResults }) {
     const results = searchState(searchResults, value);
     setFoundMatches(results);
   };
-  console.log(foundMatches);
   return (
     <Container>
       <SearchInput value={searchValue} onChange={handleSearch} />
