@@ -91,7 +91,6 @@ function EditOffer({
   const { id } = useParams();
   React.useEffect(() => {
     getOffer(id).then(offer => {
-      console.log(offer.salary)
       offer.countries.map(country => {
         setCountries(country);
       });
@@ -136,7 +135,6 @@ function EditOffer({
     { name: "9 lat", value: 9 },
     { name: "10 lat", value: 10 }
   ];
-  console.log(editedOffer);
   return (
     <Root>
       {loggedIn ? null : <Redirect to="/login" />}
