@@ -1,24 +1,25 @@
 import React from "react";
 import { makeStyles } from "@material-ui/styles";
 import { Button, Paper } from "@material-ui/core";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import styled from 'styled-components';
+import styled from "styled-components";
 import OfferList from "./Offers/OfferList";
 import Search from "./Search/Search";
 
 const useStyles = makeStyles({
   homeContainer: {
     display: "flex",
+    width: 1200,
+    flexDirection: "column",
+    alignItems: "center",
     margin: "auto",
     marginBottom: "50px",
     padding: 50,
-    justifyContent: "center",
     border: "2px solid mediumturquoise"
   },
   header: {
-    textAlign: "center",
-    marginBottom: "4rem"
+    textAlign: "center"
   },
   button: {
     backgroundColor: "#00bcd4",
@@ -35,14 +36,19 @@ const Container = styled.div`
   background-color: inherit;
   margin-top: 70px;
 `;
+const ButtonsContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 550px;
+`;
 function Home(props) {
   const classes = useStyles();
   return (
     <Container>
       <Paper className={classes.homeContainer}>
-        <div>
-          <h1 className={classes.header}>Wyszukiwarka pracy</h1>
-          <Search />
+        <h1 className={classes.header}>Wyszukiwarka pracy</h1>
+        <Search />
+        <ButtonsContainer>
           <Link to="/auth/employee">
             <Button variant="contained" className={classes.button}>
               Szukam pracy
@@ -53,7 +59,7 @@ function Home(props) {
               Jestem pracodawcą
             </Button>
           </Link>
-        </div>
+        </ButtonsContainer>
       </Paper>
       {props.offers.length ? (
         <OfferList offers={props.offers} title="Aktualne oferty" />

@@ -1,46 +1,42 @@
 import React from "react";
 import { connect } from "react-redux";
-import { makeStyles } from "@material-ui/styles";
+import styled from "styled-components";
+import Button from "@material-ui/core/Button";
+import { setSearchResults } from "../../store/app/appActions";
 
-const useStyles = makeStyles({
-  container: {
-    display: "flex"
-  },
-  input: {
-    height: "50px",
-    width: "500px",
-    fontSize: "1.5rem",
-    margin: "10rem auto"
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 50px 0px;
+  width: 600px;
+`;
+const InputContainer = styled.div`
+  display: flex;
+`;
+const SearchButton = styled(Button)`
+  background-color: #00bcd4;
+  font-size: 1.2rem;
+  color: white;
+  border: none;
+  border-radius: unset;
+  &:focus {
+    outline: none;
   }
-});
-
-function Search(props) {
-  const classes = useStyles();
+  &:hover {
+    background-color: #008c9e;
+  }
+`;
+const SearchInput = styled.input`
+  flex: 1;
+  padding: 27px 15px;
+  height: 50px;
+  font-size: 1.5rem;
+  border: 2px solid #00bcd4;
+  border-right: none;
+`;
+function Search({ searchResults, setSearchResults }) {
   const [searchValue, setSearchValue] = React.useState("");
-  const [searchResults, setSearchResults] = React.useState([]);
-  const state = [
-    {
-      job: "lekarz",
-      countries: ["Polska", "Niemcy"],
-      cities: ["Szczecinek", "Poznań"],
-      salary: [4000, 7000],
-      experience: 2
-    },
-    {
-      job: "stolarz",
-      countries: ["Francja", "Niemcy"],
-      cities: ["Paryż", "Berlin"],
-      salary: [2000, 3000],
-      experience: 2
-    },
-    {
-      job: "murarz",
-      countries: ["Polska"],
-      cities: ["Warszawa"],
-      salary: [2000, 3000],
-      experience: 2
-    }
-  ];
+  const [foundMatches, setFoundMatches] = React.useState([]);
   const checkArray = (propValue, value) => {
     const filteredArray = propValue.filter(item => item === value);
     return filteredArray.length ? true : false;
@@ -62,28 +58,31 @@ function Search(props) {
     return matchArray;
   };
   const handleSearch = event => {
-    if (!props.searchResults.length) {
+    if (!searchResults.length) {
       return;
     }
     const { value } = event.target;
     setSearchValue(value);
-    const results = searchState(props.searchResults, value);
-    setSearchResults(results);
+    const results = searchState(searchResults, value);
+    setFoundMatches(results);
   };
-  console.log(searchResults);
+  console.log(foundMatches);
   return (
-    <div className={classes.container}>
-      <h1>Search</h1>
-      <input
-        className={classes.input}
-        value={searchValue}
-        onChange={handleSearch}
-      />
-    </div>
+    <Container>
+      <SearchInput value={searchValue} onChange={handleSearch} />
+      <SearchButton
+        variant="outlined"
+        onClick={() => setSearchResults(foundMatches)}
+      >
+        Search
+      </SearchButton>
+    </Container>
   );
 }
 const mapStateToProps = state => ({ ...state.auth, ...state.app });
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+  setSearchResults: results => dispatch(setSearchResults(results))
+});
 
 export default connect(
   mapStateToProps,

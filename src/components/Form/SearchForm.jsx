@@ -17,6 +17,7 @@ import Category from "./FiltersCategory";
 import SalarySlider from "./Slider";
 import FormField from "./FormField";
 import FormSelect from "./Select";
+import Search from "../Search/Search";
 
 const Filters = styled.div`
   display: flex;
@@ -67,7 +68,7 @@ const Btn = styled(Button).attrs({
   }
 `;
 
-function Search({
+function SearchForm({
   searchResults,
   job,
   setJob,
@@ -116,6 +117,7 @@ function Search({
     <Root>
       {loggedIn ? null : <Redirect to="/login" />}
       <Heading>Szukaj pracy</Heading>
+      <Search />
       <StyledForm>
         <Category header="Branża" names={jobTypes} set={setJobTypes} />
         <FormFieldContainer>
@@ -207,4 +209,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Search);
+)(SearchForm);

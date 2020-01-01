@@ -32,6 +32,11 @@ export default function appReducer(state = initialState, action) {
         ...state,
         searchResults: action.results
       };
+    case types.SET_SEARCH_RESULTS:
+      return {
+        ...state,
+        searchResults: action.results
+      }
     default:
       return state;
   }

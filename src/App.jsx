@@ -17,7 +17,7 @@ import Navigation from "./components/Navigation";
 import Auth from "./components/Auth/Auth";
 import { setLogIn, authLogOut } from "./store/auth/authActions";
 import { getAllOffers } from "./store/app/appActions";
-import SearchForm from "./components/Form/Search";
+import SearchForm from "./components/Form/SearchForm";
 import AddForm from "./components/Form/AddOffer";
 import OfferList from "./components/Offers/OfferList";
 import SimilarOffers from "./components/Offers/SimilarOffers";
