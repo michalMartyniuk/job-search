@@ -2,8 +2,7 @@ import React from "react";
 import { Paper, Button } from "@material-ui/core";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { Redirect } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { Redirect, useParams } from "react-router-dom";
 import {
   setJob,
   resetForm,
