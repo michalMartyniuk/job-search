@@ -3,25 +3,24 @@ import { types } from "./formTypes";
 const initialState = {
   job: "",
   jobTypes: {
-    Medycyna: false,
-    IT: false,
-    Edukacja: false,
-    Rolnictwo: false
+    Bankowość: false,
+    Finanse: false,
+    Consulting: false,
+    Prawo: false
   },
   salary: [1000, 5000],
   experience: "",
-  countries: {
-    Polska: false,
-    Niemcy: false,
-    Francja: false,
-    "Wielka Brytania": false
-  },
   cities: {
     Warszawa: false,
     Poznań: false,
     Kraków: false,
     Szczecinek: false
   },
+  keySkills: {
+    Word: false,
+    Excel: false,
+    PowerPoint: false
+  }
 };
 
 export default function formReducer(state = initialState, action) {
@@ -68,6 +67,15 @@ export default function formReducer(state = initialState, action) {
       return {
         ...state,
         experience: action.value
+      };
+    case types.SET_KEY_SKILLS:
+      console.log(state.keySkills);
+      return {
+        ...state,
+        keySkills: {
+          ...state.keySkills,
+          [action.value]: !state.keySkills[action.value]
+        }
       };
     case types.SET_SALARY:
       return {

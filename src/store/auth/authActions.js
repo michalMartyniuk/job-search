@@ -131,7 +131,7 @@ export const authLogIn = (email, password, accountType) => {
             );
             dispatch(setLogIn(user.user));
           } else {
-            dispatch(logInError("User not found"));
+            dispatch(logInError("Nie znaleziono użytkownika"));
           }
         })
         .catch(error => {
@@ -162,7 +162,7 @@ export const addOffer = inputs => {
   const {
     job,
     jobTypes,
-    countries,
+    keySkills,
     cities,
     experience,
     salary,
@@ -172,7 +172,7 @@ export const addOffer = inputs => {
   const data = {
     job,
     jobTypes,
-    countries,
+    keySkills,
     cities,
     experience,
     salary,

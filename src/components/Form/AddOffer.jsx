@@ -9,6 +9,7 @@ import {
   setJobTypes,
   setCountries,
   setCities,
+  setKeySkills,
   setSalary,
   setExperience
 } from "../../store/form/formActions";
@@ -75,8 +76,8 @@ function Form({
   setJobTypes,
   cities,
   setCities,
-  countries,
-  setCountries,
+  setKeySkills,
+  keySkills,
   setSalary,
   salary,
   experience,
@@ -87,14 +88,14 @@ function Form({
 }) {
   React.useEffect(() => {
     resetForm();
-  }, [])
+  }, []);
   const handleAddOffer = () => {
     if (!job.trim()) return;
     const inputs = {
       job,
       jobTypes: Object.keys(jobTypes).filter(key => jobTypes[key]),
-      countries: Object.keys(countries).filter(key => countries[key]),
       cities: Object.keys(cities).filter(key => cities[key]),
+      keySkills: Object.keys(keySkills).filter(key => keySkills[key]),
       experience,
       salary,
       owner: { id: user.id, displayName: user.email }
@@ -174,8 +175,12 @@ function Form({
           />
         </FormFieldContainer>
         <Filters>
-          <Category header="Miasta" names={cities} set={setCities} />
-          <Category header="Kraje" names={countries} set={setCountries} />
+          <Category title="Miasta" names={cities} set={setCities} />
+          <Category
+            title="Kluczowe umiejętności"
+            names={keySkills}
+            set={setKeySkills}
+          />
         </Filters>
         <SalarySlider
           values={salary}
@@ -198,6 +203,7 @@ const mapDispatchToProps = dispatch => ({
   setJobTypes: jobType => dispatch(setJobTypes(jobType)),
   setCountries: country => dispatch(setCountries(country)),
   setCities: city => dispatch(setCities(city)),
+  setKeySkills: skill => dispatch(setKeySkills(skill)),
   setSalary: (event, values) => dispatch(setSalary(values)),
   setExperience: value => dispatch(setExperience(value))
 });

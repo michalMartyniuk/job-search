@@ -64,7 +64,7 @@ function ProfileInfo(props) {
         <InfoItem name="Rodzaj konta: " value={accountType} />
         <Actions>
           <ActionButton variant="outlined" onClick={handleChangeInfo}>
-            Zmień dane
+            Uzupełnij profil
           </ActionButton>
           <ActionButton variant="outlined" onClick={handlePasswordReset}>
             Zresetuj hasło

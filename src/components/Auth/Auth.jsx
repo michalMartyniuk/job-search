@@ -61,9 +61,6 @@ function Auth({ setAccountType }) {
             accountTypeFunc={() => setAccountType("employee")}
           />
         </Route>
-        {/* <Route path="*">
-          <Redirect to="/" />
-        </Route> */}
       </Switch>
     </div>
   );

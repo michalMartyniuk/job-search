@@ -52,11 +52,11 @@ const Filter = styled(({ className, name, onClick }) => (
     outline: none;
   }
 `;
-function FiltersCategory({ header, names, set, ...props }) {
+function FiltersCategory({ title, names, set, ...props }) {
   const filters = createFilters(names, set);
   return (
     <Category>
-      <Header>{header}</Header>
+      <Header>{title}</Header>
       <Filters>
         {filters.map(filter => (
           <Filter

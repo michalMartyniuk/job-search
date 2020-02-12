@@ -56,7 +56,7 @@ function Home(props) {
           </Link>
           <Link to="/auth/employer">
             <Button variant="contained" className={classes.button}>
-              Jestem pracodawcą
+              Strefa klienta
             </Button>
           </Link>
         </ButtonsContainer>

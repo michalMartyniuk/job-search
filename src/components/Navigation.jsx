@@ -73,9 +73,7 @@ export default function Navigation({ loggedIn, logout, accountType }) {
           )}
           {loggedIn && accountType === "employer" && (
             <Link to="/similarOffers" className={classes.link}>
-              <Button className={classes.button}>
-                Znajdź oferty podobne do twoich
-              </Button>
+              <Button className={classes.button}>Znajdź kandydata</Button>
             </Link>
           )}
           {loggedIn && accountType === "employer" && (
