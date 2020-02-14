@@ -159,51 +159,50 @@ function createTimestamp() {
 }
 
 export const addOffer = inputs => {
-  const {
-    job,
-    jobTypes,
-    keySkills,
-    cities,
-    experience,
-    salary,
-    owner
-  } = inputs;
   const date = createTimestamp();
-  const data = {
-    job,
-    jobTypes,
-    keySkills,
-    cities,
-    experience,
-    salary,
-    date,
-    owner
-  };
+  const data = { ...inputs, date };
   return dispatch => {
+    // Create offer with inputs data
     db.collection(`users/${auth.currentUser.uid}/offers`)
       .add(data)
       .then(doc =>
-        doc.get().then(doc => {
-          const offer = { id: doc.id, ...doc.data() };
-          db.collection(`users/${auth.currentUser.uid}/offers`)
-            .doc(doc.id)
-            .set(offer)
-            .then(() => {
-              db.collection("offers")
+        // Get current user name from users collection
+        db
+          .collection("users")
+          .doc(auth.currentUser.uid)
+          .get()
+          .then(user => user.data())
+          // Save in variable "offer" created document id, owner id, owner name and offer data
+          .then(userData => {
+            doc.get().then(doc => {
+              const offer = {
+                id: doc.id,
+                ownerId: auth.currentUser.uid,
+                ownerName: userData.name,
+                ...doc.data()
+              };
+              // Save offer in user offers collection
+              db.collection(`users/${auth.currentUser.uid}/offers`)
                 .doc(doc.id)
                 .set(offer)
                 .then(() => {
-                  dispatch({ type: types.ADD_OFFER, offer });
-                  // dispatch(
-                  //     setNotification(
-                  //       true,
-                  //       "Twoja oferta została dodana",
-                  //       "success"
-                  //     )
-                  // );
+                  // Save offer in offers collection
+                  db.collection("offers")
+                    .doc(doc.id)
+                    .set(offer)
+                    .then(() => {
+                      dispatch({ type: types.ADD_OFFER, offer });
+                      // dispatch(
+                      //     setNotification(
+                      //       true,
+                      //       "Twoja oferta została dodana",
+                      //       "success"
+                      //     )
+                      // );
+                    });
                 });
             });
-        })
+          })
       );
   };
 };

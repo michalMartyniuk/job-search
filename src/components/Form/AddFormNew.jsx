@@ -1,21 +1,9 @@
 import React from "react";
 import { Paper, Button } from "@material-ui/core";
-import { connect } from "react-redux";
 import styled from "styled-components";
 import { Redirect } from "react-router-dom";
 import { JobInput } from "./Input";
 import { ExperienceSelect } from "./Select";
-import {
-  setJob,
-  resetForm,
-  setJobTypes,
-  setCountries,
-  setCities,
-  setKeySkills,
-  setSalary,
-  setExperience
-} from "../../store/form/formActions";
-import { addOffer } from "../../store/auth/authActions";
 import Category from "./FiltersCategory";
 import SalarySlider from "./Slider";
 
@@ -61,7 +49,7 @@ const Btn = styled(Button).attrs({
     background-color: #008c9e;
   }
 `;
-function Form({
+export default function AddFormNew({
   job,
   setJob,
   resetForm,
@@ -76,8 +64,7 @@ function Form({
   experience,
   setExperience,
   addOffer,
-  loggedIn,
-  user
+  loggedIn
 }) {
   React.useEffect(() => {
     resetForm();
@@ -90,8 +77,7 @@ function Form({
       cities: Object.keys(cities).filter(key => cities[key]),
       keySkills: Object.keys(keySkills).filter(key => keySkills[key]),
       experience,
-      salary,
-      owner: { id: user.id, displayName: user.email }
+      salary
     };
     addOffer(inputs);
   };
@@ -132,20 +118,3 @@ function Form({
     </Root>
   );
 }
-const mapStateToProps = state => ({ ...state.form, ...state.auth });
-const mapDispatchToProps = dispatch => ({
-  addOffer: inputs => dispatch(addOffer(inputs)),
-  resetForm: () => dispatch(resetForm()),
-  setJob: job => dispatch(setJob(job)),
-  setJobTypes: jobType => dispatch(setJobTypes(jobType)),
-  setCountries: country => dispatch(setCountries(country)),
-  setCities: city => dispatch(setCities(city)),
-  setKeySkills: skill => dispatch(setKeySkills(skill)),
-  setSalary: (event, values) => dispatch(setSalary(values)),
-  setExperience: value => dispatch(setExperience(value))
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Form);

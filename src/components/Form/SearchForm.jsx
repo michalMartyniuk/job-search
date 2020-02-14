@@ -3,20 +3,20 @@ import { Paper, Button } from "@material-ui/core";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import { Redirect } from "react-router-dom";
+import { ExperienceSelect } from "./Select";
+import { JobInput } from "./Input";
 import {
   setJob,
   resetForm,
   setJobTypes,
-  setCountries,
   setCities,
+  setKeySkills,
   setSalary,
   setExperience
 } from "../../store/form/formActions";
 import { search, getAllOffers } from "../../store/app/appActions";
 import Category from "./FiltersCategory";
 import SalarySlider from "./Slider";
-import FormField from "./FormField";
-import FormSelect from "./Select";
 import Search from "../Search/Search";
 
 const Filters = styled.div`
@@ -33,12 +33,6 @@ const Root = styled(Paper)`
   padding: 50px;
   margin: 50px auto;
   border: 2px solid #00bcd4;
-`;
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 600px;
-  margin: auto;
 `;
 const FormFieldContainer = styled.div`
   display: flex;
@@ -67,9 +61,7 @@ const Btn = styled(Button).attrs({
     background-color: #008c9e;
   }
 `;
-
 function SearchForm({
-  searchResults,
   job,
   setJob,
   resetForm,
@@ -79,8 +71,8 @@ function SearchForm({
   setJobTypes,
   cities,
   setCities,
-  countries,
-  setCountries,
+  keySkills,
+  setKeySkills,
   setSalary,
   salary,
   experience,
@@ -91,8 +83,8 @@ function SearchForm({
     const inputs = {
       job,
       jobTypes: Object.keys(jobTypes).filter(key => jobTypes[key]),
-      countries: Object.keys(countries).filter(key => countries[key]),
       cities: Object.keys(cities).filter(key => cities[key]),
+      keySkills: Object.keys(keySkills).filter(key => keySkills[key]),
       experience,
       salary
     };
@@ -101,18 +93,6 @@ function SearchForm({
   const handleExperience = event => {
     setExperience(event.target.value);
   };
-  const expSelectItems = [
-    { name: "1 rok", value: 1 },
-    { name: "2 lata", value: 2 },
-    { name: "3 lata", value: 3 },
-    { name: "4 lata", value: 4 },
-    { name: "5 lat", value: 5 },
-    { name: "6 lat", value: 6 },
-    { name: "7 lat", value: 7 },
-    { name: "8 lat", value: 8 },
-    { name: "9 lat", value: 9 },
-    { name: "10 lat", value: 10 }
-  ];
   return (
     <Root>
       {loggedIn ? null : <Redirect to="/login" />}
@@ -121,59 +101,19 @@ function SearchForm({
       <StyledForm>
         <Category header="Branża" names={jobTypes} set={setJobTypes} />
         <FormFieldContainer>
-          <FormField
-            variant="outlined"
-            label="Zawód"
+          <JobInput
             value={job}
             onChange={event => setJob(event.target.value)}
-            styles={{
-              root: {
-                margin: "0px 20px 0px 0px"
-              },
-              label: {
-                shrinkedTransform: "translate(20px, -10px) scale(1)",
-                transform: "translate(60px, 22px) scale(1)"
-              },
-              input: {
-                fontSize: "1.3rem",
-                topBorderGapWidth: "58px",
-                animateGapWidth: "80px",
-                border: "5px solid #686c78",
-                borderHover: "5px solid #686c78"
-              }
-            }}
           />
-          <FormSelect
-            name="Doświadczenie"
-            margin="0px"
-            width="200px"
-            value={experience}
-            onChange={handleExperience}
-            items={expSelectItems}
-            topBorderGapWidth="118px"
-            styles={{
-              root: {
-                width: "200px",
-                margin: "0px"
-              },
-              label: {
-                shrinkedTransform: "translate(20px, -10px) scale(1)",
-                shrinkedFocusedTransform: "translate(18px, -6px) scale(1)"
-              },
-              input: {
-                fontSize: "1.3rem",
-                topBorderGapWidth: "125px",
-                animateGapWidth: "145px",
-                height: "62px",
-                border: "5px solid #686c78",
-                borderHover: "5px solid #686c78"
-              }
-            }}
-          />
+          <ExperienceSelect value={experience} onChange={handleExperience} />
         </FormFieldContainer>
         <Filters>
           <Category header="Miasta" names={cities} set={setCities} />
-          <Category header="Kraje" names={countries} set={setCountries} />
+          <Category
+            title="Kluczowe umiejętności"
+            names={keySkills}
+            set={setKeySkills}
+          />
         </Filters>
         <SalarySlider
           values={salary}
@@ -200,8 +140,8 @@ const mapDispatchToProps = dispatch => ({
   resetForm: () => dispatch(resetForm()),
   setJob: job => dispatch(setJob(job)),
   setJobTypes: jobType => dispatch(setJobTypes(jobType)),
-  setCountries: country => dispatch(setCountries(country)),
   setCities: city => dispatch(setCities(city)),
+  setKeySkills: skill => dispatch(setKeySkills(skill)),
   setSalary: (event, values) => dispatch(setSalary(values)),
   setExperience: value => dispatch(setExperience(value))
 });

@@ -1,21 +1,9 @@
 import React from "react";
 import { Paper, Button } from "@material-ui/core";
-import { connect } from "react-redux";
 import styled from "styled-components";
-import { Redirect } from "react-router-dom";
+import { Redirect, useParams } from "react-router-dom";
 import { JobInput } from "./Input";
 import { ExperienceSelect } from "./Select";
-import {
-  setJob,
-  resetForm,
-  setJobTypes,
-  setCountries,
-  setCities,
-  setKeySkills,
-  setSalary,
-  setExperience
-} from "../../store/form/formActions";
-import { addOffer } from "../../store/auth/authActions";
 import Category from "./FiltersCategory";
 import SalarySlider from "./Slider";
 
@@ -61,7 +49,8 @@ const Btn = styled(Button).attrs({
     background-color: #008c9e;
   }
 `;
-function Form({
+export default function EditFormNew({
+  getOffer,
   job,
   setJob,
   resetForm,
@@ -69,31 +58,46 @@ function Form({
   setJobTypes,
   cities,
   setCities,
-  setKeySkills,
   keySkills,
+  setKeySkills,
   setSalary,
   salary,
   experience,
   setExperience,
-  addOffer,
+  editOffer,
   loggedIn,
-  user
 }) {
+  const { id } = useParams();
   React.useEffect(() => {
-    resetForm();
+    getOffer(id).then(offer => {
+      offer.cities.map(city => {
+        setCities(city);
+        return 1;
+      });
+      offer.jobTypes.map(jobType => {
+        setCities(jobType);
+        return 1;
+      });
+      offer.keySkills.map(keySkill => {
+        setKeySkills(keySkill);
+        return 1;
+      });
+      setJob(offer.job);
+      setSalary(offer.salary);
+      setExperience(offer.experience);
+    });
   }, []);
-  const handleAddOffer = () => {
+  const handleEditOffer = () => {
     if (!job.trim()) return;
     const inputs = {
+      id,
       job,
       jobTypes: Object.keys(jobTypes).filter(key => jobTypes[key]),
       cities: Object.keys(cities).filter(key => cities[key]),
-      keySkills: Object.keys(keySkills).filter(key => keySkills[key]),
       experience,
-      salary,
-      owner: { id: user.id, displayName: user.email }
+      salary
     };
-    addOffer(inputs);
+    editOffer(inputs);
   };
   const handleExperience = event => {
     setExperience(event.target.value);
@@ -101,9 +105,9 @@ function Form({
   return (
     <Root>
       {loggedIn ? null : <Redirect to="/login" />}
-      <Heading>Dodaj ofertę</Heading>
+      <Heading>Edytuj ofertę</Heading>
       <StyledForm>
-        <Category title="Branża" names={jobTypes} set={setJobTypes} />
+        <Category header="Branża" names={jobTypes} set={setJobTypes} />
         <FormFieldContainer>
           <JobInput
             value={job}
@@ -112,7 +116,7 @@ function Form({
           <ExperienceSelect value={experience} onChange={handleExperience} />
         </FormFieldContainer>
         <Filters>
-          <Category title="Miasta" names={cities} set={setCities} />
+          <Category header="Miasta" names={cities} set={setCities} />
           <Category
             title="Kluczowe umiejętności"
             names={keySkills}
@@ -126,26 +130,9 @@ function Form({
         />
         <Buttons>
           <Btn onClick={resetForm}>Zresetuj</Btn>
-          <Btn onClick={handleAddOffer}>Dodaj ofertę</Btn>
+          <Btn onClick={handleEditOffer}>Zatwierdź</Btn>
         </Buttons>
       </StyledForm>
     </Root>
   );
 }
-const mapStateToProps = state => ({ ...state.form, ...state.auth });
-const mapDispatchToProps = dispatch => ({
-  addOffer: inputs => dispatch(addOffer(inputs)),
-  resetForm: () => dispatch(resetForm()),
-  setJob: job => dispatch(setJob(job)),
-  setJobTypes: jobType => dispatch(setJobTypes(jobType)),
-  setCountries: country => dispatch(setCountries(country)),
-  setCities: city => dispatch(setCities(city)),
-  setKeySkills: skill => dispatch(setKeySkills(skill)),
-  setSalary: (event, values) => dispatch(setSalary(values)),
-  setExperience: value => dispatch(setExperience(value))
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Form);

@@ -17,11 +17,9 @@ import Navigation from "./components/Navigation";
 import Auth from "./components/Auth/Auth";
 import { setLogIn, authLogOut } from "./store/auth/authActions";
 import { getAllOffers } from "./store/app/appActions";
-import SearchForm from "./components/Form/SearchForm";
-import AddForm from "./components/Form/AddOffer";
+import Form from "./components/Form/Form";
 import OfferList from "./components/Offers/OfferList";
 import SimilarOffers from "./components/Offers/SimilarOffers";
-import EditOffer from "./components/Form/EditOffer";
 
 const auth = firebase.auth();
 
@@ -59,7 +57,7 @@ function App(props) {
             <Notification />
             <Switch>
               <Route path="/search">
-                <SearchForm />
+                <Form formType="search" />
                 {props.searchResults.length ? (
                   <OfferList offers={props.searchResults} title="Oferty" />
                 ) : null}
@@ -68,7 +66,7 @@ function App(props) {
                 {props.loggedIn ? <Profile /> : <Redirect to="/" />}
               </Route>
               <Route path="/addOffer">
-                <AddForm />
+                <Form formType="add" />
               </Route>
               <Route path="/similarOffers">
                 <SimilarOffers />
@@ -77,7 +75,7 @@ function App(props) {
                 {props.loggedIn ? <Redirect to="/profile" /> : <Auth />}
               </Route>
               <Route path="/edit/:id">
-                <EditOffer />
+                <Form formType="edit" />
               </Route>
               <Route path="/" exact>
                 {props.loggedIn ? (

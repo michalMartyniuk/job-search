@@ -47,25 +47,20 @@ const Actions = styled.div`
 
 function Offer({ offer, ...props }) {
   const history = useHistory();
-  const { job, salary, countries, cities, experience } = offer;
+  const { job, salary, cities, experience, ownerName } = offer;
   const handleEdit = offerId => {
     history.push(`/edit/${offerId}`);
   };
   return (
     <Root>
       <Title>{job}</Title>
-      {/* <Owner>{owner}</Owner> */}
+      <Owner>{ownerName}</Owner>
       <Divider component="span" />
       <Informations>
-        {salary ? (
+        {salary.length ? (
           <Salary>
             <InfoTitle>Wynagrodzenie:</InfoTitle> {salary[0]} - {salary[1]}
           </Salary>
-        ) : null}
-        {countries.length ? (
-          <Countries>
-            <InfoTitle>Kraje:</InfoTitle> {countries.join(", ")}
-          </Countries>
         ) : null}
         {cities.length ? (
           <Cities>

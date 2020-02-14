@@ -1,23 +1,12 @@
 import React from "react";
 import { Paper, Button } from "@material-ui/core";
-import { connect } from "react-redux";
 import styled from "styled-components";
 import { Redirect } from "react-router-dom";
-import { JobInput } from "./Input";
 import { ExperienceSelect } from "./Select";
-import {
-  setJob,
-  resetForm,
-  setJobTypes,
-  setCountries,
-  setCities,
-  setKeySkills,
-  setSalary,
-  setExperience
-} from "../../store/form/formActions";
-import { addOffer } from "../../store/auth/authActions";
+import { JobInput } from "./Input";
 import Category from "./FiltersCategory";
 import SalarySlider from "./Slider";
+import Search from "../Search/Search";
 
 const Filters = styled.div`
   display: flex;
@@ -61,39 +50,34 @@ const Btn = styled(Button).attrs({
     background-color: #008c9e;
   }
 `;
-function Form({
+export default function SearchForm({
   job,
   setJob,
   resetForm,
+  search,
+  getAllOffers,
   jobTypes,
   setJobTypes,
   cities,
   setCities,
-  setKeySkills,
   keySkills,
+  setKeySkills,
   setSalary,
   salary,
   experience,
   setExperience,
-  addOffer,
-  loggedIn,
-  user
+  loggedIn
 }) {
-  React.useEffect(() => {
-    resetForm();
-  }, []);
-  const handleAddOffer = () => {
-    if (!job.trim()) return;
+  const handleSearch = () => {
     const inputs = {
       job,
       jobTypes: Object.keys(jobTypes).filter(key => jobTypes[key]),
       cities: Object.keys(cities).filter(key => cities[key]),
       keySkills: Object.keys(keySkills).filter(key => keySkills[key]),
       experience,
-      salary,
-      owner: { id: user.id, displayName: user.email }
+      salary
     };
-    addOffer(inputs);
+    search(inputs);
   };
   const handleExperience = event => {
     setExperience(event.target.value);
@@ -101,9 +85,10 @@ function Form({
   return (
     <Root>
       {loggedIn ? null : <Redirect to="/login" />}
-      <Heading>Dodaj ofertę</Heading>
+      <Heading>Szukaj pracy</Heading>
+      <Search />
       <StyledForm>
-        <Category title="Branża" names={jobTypes} set={setJobTypes} />
+        <Category header="Branża" names={jobTypes} set={setJobTypes} />
         <FormFieldContainer>
           <JobInput
             value={job}
@@ -112,7 +97,7 @@ function Form({
           <ExperienceSelect value={experience} onChange={handleExperience} />
         </FormFieldContainer>
         <Filters>
-          <Category title="Miasta" names={cities} set={setCities} />
+          <Category header="Miasta" names={cities} set={setCities} />
           <Category
             title="Kluczowe umiejętności"
             names={keySkills}
@@ -126,26 +111,10 @@ function Form({
         />
         <Buttons>
           <Btn onClick={resetForm}>Zresetuj</Btn>
-          <Btn onClick={handleAddOffer}>Dodaj ofertę</Btn>
+          <Btn onClick={handleSearch}>Szukaj</Btn>
+          <Btn onClick={getAllOffers}>Pokaż wszystkie</Btn>
         </Buttons>
       </StyledForm>
     </Root>
   );
 }
-const mapStateToProps = state => ({ ...state.form, ...state.auth });
-const mapDispatchToProps = dispatch => ({
-  addOffer: inputs => dispatch(addOffer(inputs)),
-  resetForm: () => dispatch(resetForm()),
-  setJob: job => dispatch(setJob(job)),
-  setJobTypes: jobType => dispatch(setJobTypes(jobType)),
-  setCountries: country => dispatch(setCountries(country)),
-  setCities: city => dispatch(setCities(city)),
-  setKeySkills: skill => dispatch(setKeySkills(skill)),
-  setSalary: (event, values) => dispatch(setSalary(values)),
-  setExperience: value => dispatch(setExperience(value))
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Form);
