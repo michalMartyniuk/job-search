@@ -1,20 +1,9 @@
 import React from "react";
 import { Paper, Button } from "@material-ui/core";
-import { connect } from "react-redux";
 import styled from "styled-components";
 import { Redirect } from "react-router-dom";
 import { ExperienceSelect } from "./Select";
 import { JobInput } from "./Input";
-import {
-  setJob,
-  resetForm,
-  setJobTypes,
-  setCities,
-  setKeySkills,
-  setSalary,
-  setExperience
-} from "../../store/form/formActions";
-import { search, getAllOffers } from "../../store/app/appActions";
 import Category from "./FiltersCategory";
 import SalarySlider from "./Slider";
 import Search from "../Search/Search";
@@ -61,7 +50,7 @@ const Btn = styled(Button).attrs({
     background-color: #008c9e;
   }
 `;
-function SearchForm({
+export default function SearchForm({
   job,
   setJob,
   resetForm,
@@ -129,24 +118,3 @@ function SearchForm({
     </Root>
   );
 }
-const mapStateToProps = state => ({
-  ...state.form,
-  ...state.auth,
-  ...state.app
-});
-const mapDispatchToProps = dispatch => ({
-  search: inputs => dispatch(search(inputs)),
-  getAllOffers: () => dispatch(getAllOffers()),
-  resetForm: () => dispatch(resetForm()),
-  setJob: job => dispatch(setJob(job)),
-  setJobTypes: jobType => dispatch(setJobTypes(jobType)),
-  setCities: city => dispatch(setCities(city)),
-  setKeySkills: skill => dispatch(setKeySkills(skill)),
-  setSalary: (event, values) => dispatch(setSalary(values)),
-  setExperience: value => dispatch(setExperience(value))
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SearchForm);

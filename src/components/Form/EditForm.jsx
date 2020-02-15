@@ -1,12 +1,11 @@
 import React from "react";
 import { Paper, Button } from "@material-ui/core";
 import styled from "styled-components";
-import { Redirect } from "react-router-dom";
-import { ExperienceSelect } from "./Select";
+import { Redirect, useParams } from "react-router-dom";
 import { JobInput } from "./Input";
+import { ExperienceSelect } from "./Select";
 import Category from "./FiltersCategory";
 import SalarySlider from "./Slider";
-import Search from "../Search/Search";
 
 const Filters = styled.div`
   display: flex;
@@ -50,12 +49,11 @@ const Btn = styled(Button).attrs({
     background-color: #008c9e;
   }
 `;
-export default function SearchForm({
+export default function EditFormNew({
+  getOffer,
   job,
   setJob,
   resetForm,
-  search,
-  getAllOffers,
   jobTypes,
   setJobTypes,
   cities,
@@ -66,18 +64,40 @@ export default function SearchForm({
   salary,
   experience,
   setExperience,
+  editOffer,
   loggedIn
 }) {
-  const handleSearch = () => {
+  const { id } = useParams();
+  React.useEffect(() => {
+    getOffer(id).then(offer => {
+      offer.cities.map(city => {
+        setCities(city);
+        return 1;
+      });
+      offer.jobTypes.map(jobType => {
+        setCities(jobType);
+        return 1;
+      });
+      offer.keySkills.map(keySkill => {
+        setKeySkills(keySkill);
+        return 1;
+      });
+      setJob(offer.job);
+      setSalary(offer.salary);
+      setExperience(offer.experience);
+    });
+  }, []);
+  const handleEditOffer = () => {
+    if (!job.trim()) return;
     const inputs = {
+      id,
       job,
       jobTypes: Object.keys(jobTypes).filter(key => jobTypes[key]),
       cities: Object.keys(cities).filter(key => cities[key]),
-      keySkills: Object.keys(keySkills).filter(key => keySkills[key]),
       experience,
       salary
     };
-    search(inputs);
+    editOffer(inputs);
   };
   const handleExperience = event => {
     setExperience(event.target.value);
@@ -85,8 +105,7 @@ export default function SearchForm({
   return (
     <Root>
       {loggedIn ? null : <Redirect to="/login" />}
-      <Heading>Szukaj pracy</Heading>
-      <Search />
+      <Heading>Edytuj ofertę</Heading>
       <StyledForm>
         <Category header="Branża" names={jobTypes} set={setJobTypes} />
         <FormFieldContainer>
@@ -111,8 +130,7 @@ export default function SearchForm({
         />
         <Buttons>
           <Btn onClick={resetForm}>Zresetuj</Btn>
-          <Btn onClick={handleSearch}>Szukaj</Btn>
-          <Btn onClick={getAllOffers}>Pokaż wszystkie</Btn>
+          <Btn onClick={handleEditOffer}>Zatwierdź</Btn>
         </Buttons>
       </StyledForm>
     </Root>

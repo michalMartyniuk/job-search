@@ -11,9 +11,9 @@ import {
 } from "../../store/form/formActions";
 import { search, getAllOffers } from "../../store/app/appActions";
 import { editOffer, getOffer, addOffer } from "../../store/auth/authActions";
-import AddFormNew from "./AddFormNew";
-import EditFormNew from "./EditFormNew";
-import SearchFormNew from "./SearchFormNew";
+import AddForm from "./AddForm";
+import EditForm from "./EditForm";
+import SearchForm from "./SearchForm";
 
 function Form({ formType, ...props }) {
   React.useEffect(() => {
@@ -22,9 +22,9 @@ function Form({ formType, ...props }) {
 
   return (
     <>
-      {formType === "add" && <AddFormNew {...props} />}
-      {formType === "edit" && <EditFormNew {...props} />}
-      {formType === "search" && <SearchFormNew {...props} />}
+      {formType === "add" && <AddForm {...props} />}
+      {formType === "edit" && <EditForm {...props} />}
+      {formType === "search" && <SearchForm {...props} />}
     </>
   );
 }

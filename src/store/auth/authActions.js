@@ -157,18 +157,29 @@ function createTimestamp() {
   const seconds = date.getSeconds().toString();
   return { year, month, day, hours, minutes, seconds };
 }
-
+// export const addOffer = inputs => {
+//   const userId = auth.currentUser.uid;
+//   return dispatch => {
+//     console.log("sldfkjsdl");
+//     db.collection(`users/${userId}`)
+//       .get()
+//       .then(doc => {
+//         console.log(doc);
+//         return dispatch({ type: "" });
+//       });
+//   };
+// };
 export const addOffer = inputs => {
   const date = createTimestamp();
   const data = { ...inputs, date };
   return dispatch => {
+    console.log("sldkfj");
     // Create offer with inputs data
     db.collection(`users/${auth.currentUser.uid}/offers`)
       .add(data)
-      .then(doc =>
+      .then(doc => {
         // Get current user name from users collection
-        db
-          .collection("users")
+        db.collection("users")
           .doc(auth.currentUser.uid)
           .get()
           .then(user => user.data())
@@ -202,8 +213,8 @@ export const addOffer = inputs => {
                     });
                 });
             });
-          })
-      );
+          });
+      });
   };
 };
 export const applyToOffer = offerId => {

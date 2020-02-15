@@ -54,7 +54,7 @@ function Offer({ offer, ...props }) {
   return (
     <Root>
       <Title>{job}</Title>
-      <Owner>{ownerName}</Owner>
+      {/* <Owner>{ownerName}</Owner>
       <Divider component="span" />
       <Informations>
         {salary.length ? (
@@ -73,7 +73,7 @@ function Offer({ offer, ...props }) {
             {experience}
           </Experience>
         ) : null}
-      </Informations>
+      </Informations> */}
       <Actions>
         {props.apply ? (
           <Button onClick={() => props.apply(offer.id)}>Aplikuj</Button>
