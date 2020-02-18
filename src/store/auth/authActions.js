@@ -5,6 +5,10 @@ import { setNotification } from "../app/appActions";
 const db = firebase.firestore();
 const auth = firebase.auth();
 
+export const setUserKeySkills = value => ({
+  type: types.SET_USER_KEY_SKILLS,
+  value
+});
 export const setSignUpName = name => ({ type: types.SET_SIGNUP_NAME, name });
 export const setSignUpEmail = email => ({
   type: types.SET_SIGNUP_EMAIL,
@@ -54,19 +58,27 @@ export const setLogIn = user => {
       .then(doc => {
         const { accountType } = doc.data();
         const offers = [];
+        const ivents = [];
         db.collection(`users/${auth.currentUser.uid}/offers`)
           .get()
           .then(querySnapshot => {
             querySnapshot.forEach(offer =>
               offers.push({ id: offer.id, ...offer.data() })
             );
-            dispatch({
-              type: types.LOGIN,
-              user: { ...doc.data(), id: user.uid, offers }
-            });
-            dispatch(setAccountType(accountType));
-            dispatch({ type: types.SIGNUP_ERROR_RESET });
-            dispatch({ type: types.LOG_IN_ERROR_RESET });
+            db.collection(`users/${auth.currentUser.uid}/events`)
+              .get()
+              .then(querySnapshot => {
+                querySnapshot.forEach(ivent =>
+                  ivents.push({ id: ivent.id, ...ivent.data() })
+                );
+                dispatch({
+                  type: types.LOGIN,
+                  user: { ...doc.data(), id: user.uid, offers, ivents }
+                });
+                dispatch(setAccountType(accountType));
+                dispatch({ type: types.SIGNUP_ERROR_RESET });
+                dispatch({ type: types.LOG_IN_ERROR_RESET });
+              });
           });
       });
   };
@@ -74,10 +86,24 @@ export const setLogIn = user => {
 export const authSignUp = (name, email, password, accountType) => {
   let accountData = { name, email, accountType };
   if (accountType === "employee") {
-    accountData.savedOffers = [];
-    accountData.appliedOffers = [];
+    accountData = {
+      ...accountData,
+      savedOffers: [],
+      appliedOffers: [],
+      savedIvents: [],
+      appliedIvents: [],
+      userKeySkills: {
+        Word: false,
+        Excel: false,
+        PowerPoint: false
+      }
+    };
   } else if (accountType === "employer") {
-    accountData.closedOffers = [];
+    accountData = {
+      ...accountData,
+      closedOffers: [],
+      closedIvents: []
+    };
   }
   return dispatch => {
     auth
@@ -147,6 +173,25 @@ export const authLogOut = () => {
     });
   };
 };
+
+export const updateProfile = updateData => {
+  return dispatch => {
+    db.collection("users")
+      .doc(auth.currentUser.uid)
+      .get()
+      .then(doc => console.log(doc.data()))
+      // .then(() => {
+    //     dispatch({ type: types.UPDATE_PROFILE });
+    //   });
+    // .set(accountData)
+    // .then(() => {
+    //   dispatch(
+    //     setNotification(true, "Zostałeś pomyślnie zalogowany", "success")
+    //   );
+    //   dispatch(setLogIn(user.user));
+    // });
+  };
+};
 function createTimestamp() {
   const date = new Date();
   const year = date.getFullYear().toString();
@@ -157,18 +202,6 @@ function createTimestamp() {
   const seconds = date.getSeconds().toString();
   return { year, month, day, hours, minutes, seconds };
 }
-// export const addOffer = inputs => {
-//   const userId = auth.currentUser.uid;
-//   return dispatch => {
-//     console.log("sldfkjsdl");
-//     db.collection(`users/${userId}`)
-//       .get()
-//       .then(doc => {
-//         console.log(doc);
-//         return dispatch({ type: "" });
-//       });
-//   };
-// };
 export const addOffer = inputs => {
   const date = createTimestamp();
   const data = { ...inputs, date };
@@ -323,6 +356,7 @@ export const closeOffer = offerId => {
       });
   };
 };
+
 export const removeOffer = (offer, offerType) => {
   return dispatch => {
     db.collection("users")
@@ -341,6 +375,7 @@ export const removeOffer = (offer, offerType) => {
       });
   };
 };
+
 export const reactivateOffer = offerId => {
   // Get offer from closed offers
   // Remove offer from closed offers
@@ -379,6 +414,190 @@ export const reactivateOffer = offerId => {
                           type: types.REACTIVATE_OFFER,
                           closedOffers,
                           offers
+                        });
+                      });
+                  });
+              });
+          });
+      });
+  };
+};
+export const addIvent = inputs => {
+  const date = createTimestamp();
+  const data = { ...inputs, date };
+  return dispatch => {
+    console.log("sldkfj");
+    // Create offer with inputs data
+    db.collection(`users/${auth.currentUser.uid}/events`)
+      .add(data)
+      .then(doc => {
+        // Get current user name from users collection
+        db.collection("users")
+          .doc(auth.currentUser.uid)
+          .get()
+          .then(user => user.data())
+          // Save in variable "offer" created document id, owner id, owner name and offer data
+          .then(userData => {
+            doc.get().then(doc => {
+              const ivent = {
+                id: doc.id,
+                ownerId: auth.currentUser.uid,
+                ownerName: userData.name,
+                ...doc.data()
+              };
+              // Save offer in user offers collection
+              db.collection(`users/${auth.currentUser.uid}/events`)
+                .doc(doc.id)
+                .set(ivent)
+                .then(() => {
+                  // Save offer in offers collection
+                  db.collection("events")
+                    .doc(doc.id)
+                    .set(ivent)
+                    .then(() => {
+                      dispatch({ type: types.ADD_IVENT, ivent });
+                      // dispatch(
+                      //     setNotification(
+                      //       true,
+                      //       "Twoja oferta została dodana",
+                      //       "success"
+                      //     )
+                      // );
+                    });
+                });
+            });
+          });
+      });
+  };
+};
+export const applyToIvent = iventId => {
+  return dispatch => {
+    db.collection("events")
+      .doc(iventId)
+      .get()
+      .then(doc => {
+        const ivent = { id: iventId, ...doc.data() };
+        db.collection("users")
+          .doc(auth.currentUser.uid)
+          .update({
+            appliedIvents: firebase.firestore.FieldValue.arrayUnion(ivent)
+          })
+          .then(() => {
+            console.log(ivent);
+            dispatch({ type: types.APPLY_TO_IVENT, ivent });
+          });
+      });
+  };
+};
+export const saveIvent = iventId => {
+  return dispatch => {
+    db.collection("events")
+      .doc(iventId)
+      .get()
+      .then(doc => {
+        const ivent = {
+          id: iventId,
+          ...doc.data()
+        };
+        db.collection("users")
+          .doc(auth.currentUser.uid)
+          .update({
+            savedIvents: firebase.firestore.FieldValue.arrayUnion(ivent)
+          })
+          .then(() => {
+            dispatch({ type: types.SAVE_IVENT, ivent });
+          });
+      });
+  };
+};
+
+export const closeIvent = iventId => {
+  // Add offer to closedIvents array
+  return dispatch => {
+    db.collection("events")
+      .doc(iventId)
+      .get()
+      .then(doc => {
+        const ivent = { id: iventId, ...doc.data() };
+        db.collection("users")
+          .doc(auth.currentUser.uid)
+          .update({
+            closedIvents: firebase.firestore.FieldValue.arrayUnion(ivent)
+          })
+          .then(() => {
+            dispatch({ type: types.CLOSE_IVENT, ivent });
+            // Delete offer from Ivents
+            db.collection("events")
+              .doc(iventId)
+              .delete()
+              .then(() => {
+                // Delete offer from user/Ivents
+                db.collection(`users/${auth.currentUser.uid}/events`)
+                  .doc(iventId)
+                  .delete();
+              });
+          });
+      });
+  };
+};
+
+export const removeIvent = (ivent, iventType) => {
+  return dispatch => {
+    db.collection("users")
+      .doc(auth.currentUser.uid)
+      .update({
+        [iventType]: firebase.firestore.FieldValue.arrayRemove(ivent)
+      })
+      .then(() => {
+        db.collection("users")
+          .doc(auth.currentUser.uid)
+          .get()
+          .then(doc => {
+            const ivents = doc.data()[iventType];
+            dispatch({ type: types.REMOVE_IVENT, iventType, ivents });
+          });
+      });
+  };
+};
+
+export const reactivateIvent = iventId => {
+  // Get offer from closed ivents
+  // Remove offer from closed ivents
+  // Add offer to ivents and user ivents
+  return dispatch => {
+    db.collection("users")
+      .doc(auth.currentUser.uid)
+      .get()
+      .then(doc => {
+        const data = doc.data();
+        const ivent = data.closedIvents.find(ivent => ivent.id === iventId);
+        const closedIvents = data.closedIvents.filter(
+          ivent => ivent.id !== iventId
+        );
+        db.collection("users")
+          .doc(auth.currentUser.uid)
+          .update({ closedIvents })
+          .then(() => {
+            db.collection("events")
+              .doc(iventId)
+              .set(ivent)
+              .then(() => {
+                db.collection(`users/${auth.currentUser.uid}/events`)
+                  .doc(iventId)
+                  .set(ivent)
+                  .then(() => {
+                    db.collection(`users/${auth.currentUser.uid}/events`)
+                      .get()
+                      .then(snapshot => {
+                        const ivents = snapshot.docs.map(doc => {
+                          const data = doc.data();
+                          const { id } = doc;
+                          return { ...data, id };
+                        });
+                        dispatch({
+                          type: types.REACTIVATE_IVENT,
+                          closedIvents,
+                          ivents
                         });
                       });
                   });

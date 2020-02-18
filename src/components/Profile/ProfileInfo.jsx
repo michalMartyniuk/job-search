@@ -3,6 +3,7 @@ import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import { authLogOut } from "../../store/auth/authActions";
+import UpdateProfile from "./Employee/UpdateProfile";
 
 const Container = styled.div`
   display: flex;
@@ -53,24 +54,31 @@ function ProfileInfo(props) {
     return null;
   };
   const handleChangeInfo = () => {
-    return null;
+    props.toggleUpdateProfile();
   };
+  console.log(props);
   return (
     <Container>
-      <StyledProfileInfo>
-        <InfoHeader>{props.user.name}</InfoHeader>
-        <InfoItem name="Imię: " value={props.user.name} />
-        <InfoItem name="Email: " value={props.user.email} />
-        <InfoItem name="Rodzaj konta: " value={accountType} />
-        <Actions>
-          <ActionButton variant="outlined" onClick={handleChangeInfo}>
-            Uzupełnij profil
-          </ActionButton>
-          <ActionButton variant="outlined" onClick={handlePasswordReset}>
-            Zresetuj hasło
-          </ActionButton>
-        </Actions>
-      </StyledProfileInfo>
+      {!props.updateProfileActive ? (
+        <StyledProfileInfo>
+          <InfoHeader>{props.user.name}</InfoHeader>
+          <InfoItem name="Imię: " value={props.user.name} />
+          <InfoItem name="Email: " value={props.user.email} />
+          <InfoItem name="Rodzaj konta: " value={accountType} />
+          <Actions>
+            <ActionButton variant="outlined" onClick={handleChangeInfo}>
+              Uzupełnij profil
+            </ActionButton>
+            <ActionButton variant="outlined" onClick={handlePasswordReset}>
+              Zresetuj hasło
+            </ActionButton>
+          </Actions>
+        </StyledProfileInfo>
+      ) : (
+        <StyledProfileInfo>
+          <UpdateProfile />
+        </StyledProfileInfo>
+      )}
     </Container>
   );
 }
@@ -80,7 +88,4 @@ const mapDispatchToProps = dispatch => ({
   log_out: () => dispatch(authLogOut())
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ProfileInfo);
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileInfo);

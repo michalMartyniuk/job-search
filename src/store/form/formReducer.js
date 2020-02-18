@@ -69,7 +69,6 @@ export default function formReducer(state = initialState, action) {
         experience: action.value
       };
     case types.SET_KEY_SKILLS:
-      console.log(state.keySkills);
       return {
         ...state,
         keySkills: {

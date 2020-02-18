@@ -15,10 +15,18 @@ import Profile from "./components/Profile/Profile";
 import firebase from "./config/firebase";
 import Navigation from "./components/Navigation";
 import Auth from "./components/Auth/Auth";
-import { setLogIn, authLogOut } from "./store/auth/authActions";
-import { getAllOffers } from "./store/app/appActions";
+import {
+  setLogIn,
+  authLogOut,
+  applyToOffer,
+  applyToIvent,
+  saveOffer,
+  saveIvent
+} from "./store/auth/authActions";
+import { getAllOffers, getAllIvents } from "./store/app/appActions";
 import Form from "./components/Form/Form";
 import OfferList from "./components/Offers/OfferList";
+import IventList from "./components/Offers/IventList";
 import SimilarOffers from "./components/Offers/SimilarOffers";
 
 const auth = firebase.auth();
@@ -42,6 +50,7 @@ function App(props) {
       }
     });
     props.getAllOffers();
+    props.getAllIvents();
     return () => unsubscribe();
   }, [auth.onAuthStateChanged]);
   return (
@@ -59,7 +68,23 @@ function App(props) {
               <Route path="/search">
                 <Form formType="search" />
                 {props.searchResults.length ? (
-                  <OfferList offers={props.searchResults} title="Oferty" />
+                  <OfferList
+                    offers={props.searchResults}
+                    title="Oferty"
+                    apply={props.apply}
+                    save={props.save}
+                  />
+                ) : null}
+              </Route>
+              <Route path="/searchForIvent">
+                <Form formType="searchForIvent" />
+                {props.searchIventResults.length ? (
+                  <IventList
+                    ivents={props.searchIventResults}
+                    title="Wydarzenia"
+                    apply={props.applyToIvent}
+                    save={props.saveIvent}
+                  />
                 ) : null}
               </Route>
               <Route path="/profile">
@@ -68,8 +93,14 @@ function App(props) {
               <Route path="/addOffer">
                 <Form formType="add" />
               </Route>
+              <Route path="/addTraining">
+                <Form formType="addTraining" />
+              </Route>
+              <Route path="/addEvent">
+                <Form formType="addEvent" />
+              </Route>
               <Route path="/similarOffers">
-                <SimilarOffers />
+                {props.loggedIn ? <SimilarOffers /> : <Redirect to="/" />}
               </Route>
               <Route path="/auth">
                 {props.loggedIn ? <Redirect to="/profile" /> : <Auth />}
@@ -81,7 +112,10 @@ function App(props) {
                 {props.loggedIn ? (
                   <Redirect to="/profile" />
                 ) : (
-                  <Home offers={props.searchResults} />
+                  <Home
+                    offers={props.searchResults}
+                    ivents={props.searchIventResults}
+                  />
                 )}
               </Route>
               <Route path="*">
@@ -107,9 +141,13 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   setLogIn: user => dispatch(setLogIn(user)),
   authLogOut: () => dispatch(authLogOut()),
-  getAllOffers: () => dispatch(getAllOffers())
+  getAllOffers: () => dispatch(getAllOffers()),
+  getAllIvents: () => dispatch(getAllIvents()),
+
+  apply: offerId => dispatch(applyToOffer(offerId)),
+  save: offerId => dispatch(saveOffer(offerId)),
+
+  applyToIvent: iventId => dispatch(applyToIvent(iventId)),
+  saveIvent: iventId => dispatch(saveIvent(iventId))
 });
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

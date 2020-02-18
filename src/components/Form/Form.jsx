@@ -9,11 +9,24 @@ import {
   setSalary,
   setExperience
 } from "../../store/form/formActions";
-import { search, getAllOffers } from "../../store/app/appActions";
-import { editOffer, getOffer, addOffer } from "../../store/auth/authActions";
+import {
+  search,
+  getAllOffers,
+  searchIvent,
+  getAllIvents
+} from "../../store/app/appActions";
+import {
+  editOffer,
+  getOffer,
+  addOffer,
+  addIvent
+} from "../../store/auth/authActions";
 import AddForm from "./AddForm";
+import AddTraining from "./AddTraining";
+import AddEvent from "./AddEvent";
 import EditForm from "./EditForm";
 import SearchForm from "./SearchForm";
+import SearchForIvent from "./SearchForIvent";
 
 function Form({ formType, ...props }) {
   React.useEffect(() => {
@@ -23,8 +36,11 @@ function Form({ formType, ...props }) {
   return (
     <>
       {formType === "add" && <AddForm {...props} />}
+      {formType === "addTraining" && <AddTraining {...props} />}
+      {formType === "addEvent" && <AddEvent {...props} />}
       {formType === "edit" && <EditForm {...props} />}
       {formType === "search" && <SearchForm {...props} />}
+      {formType === "searchForIvent" && <SearchForIvent {...props} />}
     </>
   );
 }
@@ -35,10 +51,13 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch => ({
   search: inputs => dispatch(search(inputs)),
+  searchIvent: inputs => dispatch(searchIvent(inputs)),
   getAllOffers: () => dispatch(getAllOffers()),
+  getAllIvents: () => dispatch(getAllIvents()),
   getOffer: id => dispatch(getOffer(id)),
   editOffer: inputs => dispatch(editOffer(inputs)),
   addOffer: inputs => dispatch(addOffer(inputs)),
+  addIvent: inputs => dispatch(addIvent(inputs)),
   resetForm: () => dispatch(resetForm()),
   setJob: job => dispatch(setJob(job)),
   setJobTypes: jobType => dispatch(setJobTypes(jobType)),
@@ -48,7 +67,4 @@ const mapDispatchToProps = dispatch => ({
   setExperience: value => dispatch(setExperience(value))
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Form);
+export default connect(mapStateToProps, mapDispatchToProps)(Form);

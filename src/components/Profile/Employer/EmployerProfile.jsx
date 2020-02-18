@@ -6,6 +6,8 @@ import Typography from "@material-ui/core/Typography";
 import ProfileInfo from "../ProfileInfo";
 import ActiveOffers from "./ActiveOffers";
 import ClosedOffers from "./ClosedOffers";
+import ActiveIvents from "./ActiveIvents";
+import ClosedIvents from "./ClosedIvents";
 
 function TabPanel({ children, value, index, className }) {
   return (
@@ -35,9 +37,18 @@ const StyledTab = styled(Tab)`
   font-size: 1rem;
 `;
 
-function EmployerProfile({ user, edit, close, remove, reactivate }) {
+function EmployerProfile({
+  user,
+  edit,
+  close,
+  closeIvent,
+  remove,
+  removeIvent,
+  reactivate,
+  reactivateIvent
+}) {
   const [value, setValue] = React.useState(0);
-  const { offers, closedOffers } = user;
+  const { offers, closedOffers, ivents, closedIvents } = user;
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -47,6 +58,8 @@ function EmployerProfile({ user, edit, close, remove, reactivate }) {
         <StyledTab label="Informacje" />
         <StyledTab label="Aktywne oferty" />
         <StyledTab label="Zamknięte oferty" />
+        <StyledTab label="Aktywne wydarzenia" />
+        <StyledTab label="Zamknięte wydarzenia" />
       </Tabs>
 
       <StyledTabPanel value={value} index={0}>
@@ -62,6 +75,17 @@ function EmployerProfile({ user, edit, close, remove, reactivate }) {
           offers={closedOffers}
           remove={remove}
           reactivate={reactivate}
+        />
+      </StyledTabPanel>
+      <StyledTabPanel value={value} index={3}>
+        <ActiveIvents ivents={ivents} closeIvent={closeIvent} />
+      </StyledTabPanel>
+
+      <StyledTabPanel value={value} index={4}>
+        <ClosedIvents
+          ivents={closedIvents}
+          removeIvent={removeIvent}
+          reactivateIvent={reactivateIvent}
         />
       </StyledTabPanel>
     </Container>

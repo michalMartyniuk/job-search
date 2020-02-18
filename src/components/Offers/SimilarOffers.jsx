@@ -3,7 +3,7 @@ import React from "react";
 function SimilarOffers (props) {
   return (
     <div>
-      <h1>Similar offers</h1>
+      <h1>Znajdź kandydata</h1>
     </div>
   )
 }

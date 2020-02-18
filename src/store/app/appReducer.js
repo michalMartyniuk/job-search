@@ -6,11 +6,18 @@ const initialState = {
     message: "",
     variant: "success"
   },
-  searchResults: []
+  updateProfileActive: false,
+  searchResults: [],
+  searchIventResults: []
 };
 
 export default function appReducer(state = initialState, action) {
   switch (action.type) {
+    case types.TOGGLE_UPDATE_PROFILE:
+      return {
+        ...state,
+        updateProfileActive: !state.updateProfileActive
+      };
     case types.SET_NOTIFICATION:
       return {
         ...state,
@@ -22,6 +29,7 @@ export default function appReducer(state = initialState, action) {
       };
     case types.ADD_JOB:
       return state;
+
     case types.GET_ALL_OFFERS:
       return {
         ...state,
@@ -36,7 +44,23 @@ export default function appReducer(state = initialState, action) {
       return {
         ...state,
         searchResults: action.results
-      }
+      };
+
+    case types.GET_ALL_IVENTS:
+      return {
+        ...state,
+        searchIventResults: action.results
+      };
+    case types.SEARCH_IVENT:
+      return {
+        ...state,
+        searchIventResults: action.results
+      };
+    case types.SET_SEARCH_IVENT_RESULTS:
+      return {
+        ...state,
+        searchIventResults: action.results
+      };
     default:
       return state;
   }

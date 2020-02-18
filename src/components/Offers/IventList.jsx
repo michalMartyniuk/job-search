@@ -3,12 +3,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import { Paper } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
-import Offer from "./Offer";
+import Ivent from "./Ivent";
 
 const useStyles = makeStyles(theme => ({
   root: {
     display: "flex",
     flexDirection: "column",
+    // margin: "0px auto",
     marginBottom: 50
   },
   inline: {
@@ -23,14 +24,15 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: "#424653",
     borderTopLeftRadius: 4,
     borderTopRightRadius: 4,
-    paddingLeft: 50
+    paddingLeft: 50,
+    minWidth: 400
   },
   listHeaderText: {
     fontSize: "1.6rem"
   }
 }));
 
-function OfferList({ offers, title, ...props }) {
+function IventList({ ivents, title, ...props }) {
   const classes = useStyles();
   return (
     <Paper className={classes.root}>
@@ -40,11 +42,11 @@ function OfferList({ offers, title, ...props }) {
             {title}
           </Typography>
         </div>
-        {offers.map(offer => {
-          return <Offer key={offer.id} offer={offer} {...props} />;
+        {ivents.map(ivent => {
+          return <Ivent key={ivent.id} ivent={ivent} {...props} />;
         })}
       </List>
     </Paper>
   );
 }
-export default OfferList;
+export default IventList;

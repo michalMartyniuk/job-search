@@ -5,7 +5,9 @@ import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import ProfileInfo from "../ProfileInfo";
 import AppliedOffers from "./AppliedOffers";
+import AppliedIvents from "./AppliedIvents";
 import SavedOffers from "./SavedOffers";
+import SavedIvents from "./SavedIvents";
 
 function TabPanel({ children, value, index, className }) {
   return (
@@ -30,23 +32,21 @@ const Container = styled.div`
   margin: 70px 100px;
   padding: 50px;
 `;
-const StyledTabs = styled(props => (
-  <Tabs classes={{ flexContainer: "flexContainer" }} {...props}>
-    {props.children}
-  </Tabs>
-))`
-  & .flexContainer {
-    display: flex;
-    flex-direction: column;
-  }
-`;
 const StyledTab = styled(Tab)`
   font-size: 1rem;
 `;
 
-function EmployeeProfile({ user, remove }) {
+function EmployeeProfile({
+  user,
+  remove,
+  removeIvent,
+  setUserKeySkills,
+  updateProfile,
+  updateProfileActive,
+  toggleUpdateProfile
+}) {
   const [value, setValue] = React.useState(0);
-  const { appliedOffers, savedOffers } = user;
+  const { appliedOffers, savedOffers, appliedIvents, savedIvents } = user;
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -55,11 +55,18 @@ function EmployeeProfile({ user, remove }) {
       <Tabs orientation="vertical" value={value} onChange={handleChange}>
         <StyledTab label="Informacje" />
         <StyledTab label="Aplikowane oferty" />
+        <StyledTab label="Zapisane oferty szkoleń i konferencji" />
         <StyledTab label="Zapisane oferty" />
       </Tabs>
 
       <StyledTabPanel value={value} index={0}>
-        <ProfileInfo />
+        <ProfileInfo
+          updateProfile={updateProfile}
+          updateProfileActive={updateProfileActive}
+          toggleUpdateProfile={toggleUpdateProfile}
+          userKeySkills={user.userKeySkills}
+          setUserKeySkills={setUserKeySkills}
+        />
       </StyledTabPanel>
 
       <StyledTabPanel value={value} index={1}>
@@ -67,8 +74,13 @@ function EmployeeProfile({ user, remove }) {
       </StyledTabPanel>
 
       <StyledTabPanel value={value} index={2}>
+        <SavedIvents ivents={savedIvents} remove={removeIvent} />
+      </StyledTabPanel>
+
+      <StyledTabPanel value={value} index={3}>
         <SavedOffers offers={savedOffers} remove={remove} />
       </StyledTabPanel>
+
     </Container>
   );
 }

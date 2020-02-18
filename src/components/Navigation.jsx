@@ -71,6 +71,11 @@ export default function Navigation({ loggedIn, logout, accountType }) {
               <Button className={classes.button}>Szukaj pracy</Button>
             </Link>
           )}
+          {loggedIn && accountType === "employee" && (
+            <Link to="/searchForIvent" className={classes.link}>
+              <Button className={classes.button}>Szukaj szkolenia</Button>
+            </Link>
+          )}
           {loggedIn && accountType === "employer" && (
             <Link to="/similarOffers" className={classes.link}>
               <Button className={classes.button}>Znajdź kandydata</Button>
@@ -79,6 +84,16 @@ export default function Navigation({ loggedIn, logout, accountType }) {
           {loggedIn && accountType === "employer" && (
             <Link to="/addOffer" className={classes.link}>
               <Button className={classes.button}>Dodaj ofertę</Button>
+            </Link>
+          )}
+          {loggedIn && accountType === "employer" && (
+            <Link to="/addTraining" className={classes.link}>
+              <Button className={classes.button}>Dodaj szkolenie</Button>
+            </Link>
+          )}
+          {loggedIn && accountType === "employer" && (
+            <Link to="/addEvent" className={classes.link}>
+              <Button className={classes.button}>Dodaj wydarzenie</Button>
             </Link>
           )}
           {loggedIn && (

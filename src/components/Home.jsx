@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import styled from "styled-components";
 import OfferList from "./Offers/OfferList";
 import Search from "./Search/Search";
+import IventList from "./Offers/IventList";
 
 const useStyles = makeStyles({
   homeContainer: {
@@ -36,6 +37,16 @@ const Container = styled.div`
   background-color: inherit;
   margin-top: 70px;
 `;
+const OffersAndEventsContainer = styled.div`
+  display: flex;
+  // margin-left: 50px;
+`;
+const OffersContainer = styled.div`
+  display: flex;
+`;
+const EventsContainer = styled.div`
+  display: flex;
+`;
 const ButtonsContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -51,7 +62,7 @@ function Home(props) {
         <ButtonsContainer>
           <Link to="/auth/employee">
             <Button variant="contained" className={classes.button}>
-              Szukam pracy
+              Strefa użytkownika
             </Button>
           </Link>
           <Link to="/auth/employer">
@@ -61,9 +72,18 @@ function Home(props) {
           </Link>
         </ButtonsContainer>
       </Paper>
-      {props.offers.length ? (
-        <OfferList offers={props.offers} title="Aktualne oferty" />
-      ) : null}
+      <OffersAndEventsContainer>
+        <EventsContainer>
+          {props.ivents.length ? (
+            <IventList ivents={props.ivents} title="Aktualne wydarzenia" />
+          ) : null}
+        </EventsContainer>
+        <OffersContainer>
+          {props.offers.length ? (
+            <OfferList offers={props.offers} title="Aktualne oferty" />
+          ) : null}
+        </OffersContainer>
+      </OffersAndEventsContainer>
     </Container>
   );
 }

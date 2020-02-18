@@ -7,10 +7,10 @@ import { useHistory } from "react-router-dom";
 const Root = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100vw;
   padding: 20px;
   padding-left: 50px;
   padding-right: 50px;
+  min-width: 400px;
 `;
 const Title = styled.h2`
   font-size: 1.5rem;
@@ -48,16 +48,17 @@ const Actions = styled.div`
   display: flex;
 `;
 
-function Offer({ offer, ...props }) {
+function Ivent({ ivent, ...props }) {
   const history = useHistory();
-  const { job, salary, cities, experience, ownerName } = offer;
-  const handleEdit = offerId => {
-    history.push(`/edit/${offerId}`);
+  const { job, salary, cities, experience, ownerName } = ivent;
+  const handleEdit = iventId => {
+    history.push(`/edit/${iventId}`);
   };
+  console.log(props)
   return (
     <Root>
       <Title>{job}</Title>
-      <Owner>Oferta użytkownika: {ownerName}</Owner>
+      <Owner>Wydarzenie użytkownika: {ownerName}</Owner>
       <Divider component="span" />
       <Informations>
         {salary.length ? (
@@ -79,28 +80,25 @@ function Offer({ offer, ...props }) {
       </Informations>
       <Actions>
         {props.apply ? (
-          <Button onClick={() => props.apply(offer.id)}>Aplikuj</Button>
+          <Button onClick={() => props.apply(ivent.id)}>Aplikuj</Button>
         ) : null}
         {props.save ? (
-          <Button onClick={() => props.save(offer.id)}>Zapisz</Button>
+          <Button onClick={() => props.save(ivent.id)}>Zapisz</Button>
         ) : null}
         {props.remove ? (
-          <Button onClick={() => props.remove(offer, props.offerType)}>
+          <Button onClick={() => props.remove(ivent, props.iventType)}>
             Usuń
           </Button>
         ) : null}
         {props.close ? (
-          <Button onClick={() => props.close(offer.id)}>Zamknij</Button>
+          <Button onClick={() => props.close(ivent.id)}>Zamknij</Button>
         ) : null}
         {props.reactivate ? (
-          <Button onClick={() => props.reactivate(offer.id)}>Wznów</Button>
-        ) : null}
-        {props.edit ? (
-          <Button onClick={() => handleEdit(offer.id)}>Edytuj</Button>
+          <Button onClick={() => props.reactivate(ivent.id)}>Wznów</Button>
         ) : null}
       </Actions>
       <Divider component="span" />
     </Root>
   );
 }
-export default Offer;
+export default Ivent;

@@ -46,7 +46,7 @@ const MDSignUp = props => {
             <div className="grey-text">
               <MDBInput
                 size="lg"
-                label="Nazwa"
+                label="Imię i nazwisko"
                 icon="user"
                 group
                 type="text"

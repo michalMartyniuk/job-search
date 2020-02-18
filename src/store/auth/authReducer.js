@@ -13,9 +13,20 @@ const initialState = {
     name: "",
     email: "",
     offers: [],
-    closedOffers: [],
+    savedOffers: [],
     appliedOffers: [],
-    savedOffers: []
+    closedOffers: [],
+
+    ivents: [],
+    savedIvents: [],
+    appliedIvents: [],
+    closedIvents: [],
+
+    userKeySkills: {
+      Word: false,
+      Excel: false,
+      PowerPoint: false
+    }
   },
   loggedIn: false,
   logInError: false,
@@ -111,6 +122,11 @@ export default function authReducer(state = initialState, action) {
         employee: false,
         user: null
       };
+    case types.GET_OFFER:
+      return {
+        ...state,
+        editedOffer: action.offer
+      };
     case types.ADD_OFFER:
       return {
         ...state,
@@ -118,6 +134,10 @@ export default function authReducer(state = initialState, action) {
           ...state.user,
           offers: [...state.user.offers, action.offer]
         }
+      };
+    case types.EDIT_OFFER:
+      return {
+        ...state
       };
     case types.APPLY_TO_OFFER:
       return {
@@ -147,15 +167,6 @@ export default function authReducer(state = initialState, action) {
           closedOffers: [...state.user.closedOffers, action.offer]
         }
       };
-    case types.EDIT_OFFER:
-      return {
-        ...state
-      };
-    case types.GET_OFFER:
-      return {
-        ...state,
-        editedOffer: action.offer
-      };
     case types.REMOVE_OFFER:
       return {
         ...state,
@@ -171,6 +182,83 @@ export default function authReducer(state = initialState, action) {
           ...state.user,
           offers: action.offers,
           closedOffers: action.closedOffers
+        }
+      };
+    case types.ADD_IVENT:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          ivents: [...state.user.ivents, action.ivent]
+        }
+      };
+    case types.EDIT_IVENT:
+      return {
+        ...state
+      };
+    case types.APPLY_TO_IVENT:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          appliedIvents: [...state.user.appliedIvents, action.ivent]
+        }
+      };
+    case types.SAVE_IVENT:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          savedIvents: [...state.user.savedIvents, action.ivent]
+        }
+      };
+    case types.CLOSE_IVENT:
+      const ivents = state.user.ivents.filter(
+        ivent => ivent.id !== action.ivent.id
+      );
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          ivents,
+          closedIvents: [...state.user.closedIvents, action.ivent]
+        }
+      };
+    case types.REMOVE_IVENT:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          [action.iventType]: action.ivents
+        }
+      };
+    case types.REACTIVATE_IVENT:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          ivents: action.ivents,
+          closedIvents: action.closedIvents
+        }
+      };
+    case types.UPDATE_PROFILE:
+      console.log("update profile");
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          ...action.updateData
+        }
+      };
+    case types.SET_USER_KEY_SKILLS:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          userKeySkills: {
+            ...state.user.userKeySkills,
+            [action.value]: !state.user.userKeySkills[action.value]
+          }
         }
       };
     default:
