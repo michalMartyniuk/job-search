@@ -37,7 +37,11 @@ export default function appReducer(state = initialState, action) {
         ...state,
         offers: action.offers
       };
-
+    case types.SET_IVENTS:
+      return {
+        ...state,
+        ivents: action.ivents
+      };
     case types.SET_SEARCH_RESULTS:
       return {
         ...state,

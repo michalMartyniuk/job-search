@@ -7,6 +7,7 @@ import styled from "styled-components";
 import OfferList from "./Offers/OfferList";
 import Search from "./Search/Search";
 import IventList from "./Offers/IventList";
+import { setSearchIventResults } from "../store/app/appActions";
 
 const useStyles = makeStyles({
   homeContainer: {
@@ -53,7 +54,23 @@ const ButtonsContainer = styled.div`
   width: 550px;
   margin-top: 30px;
 `;
-function Home({ offers, ivents, searchResults }) {
+const resultsNotification = num => {
+  let offer = "";
+  let ivent = "";
+  if (num >= 2 && num <= 4) {
+    offer = "oferty";
+    ivent = "wydarzenia";
+  } else if (num === 1) {
+    offer = "ofertę";
+    ivent = "wydarzenie";
+  } else {
+    offer = "ofert";
+    ivent = "wydarzeń";
+  }
+  return { offer, ivent };
+};
+
+function Home({ offers, ivents, searchResults, searchIventResults }) {
   const classes = useStyles();
 
   const displayOffers = offers.length ? (
@@ -63,7 +80,22 @@ function Home({ offers, ivents, searchResults }) {
   const displaySearchResults = searchResults.length ? (
     <OfferList
       offers={searchResults}
-      title={`Znaleziono ${searchResults.length} wyników`}
+      title={`Znaleziono ${searchResults.length} ${
+        resultsNotification(searchResults.length).offer
+      } `}
+      width="100vw"
+    />
+  ) : null;
+  const displayIvents = ivents.length ? (
+    <IventList ivents={ivents} title="Aktualne wydarzenia" width="100vw" />
+  ) : null;
+
+  const displayIventsSearchResults = searchIventResults.length ? (
+    <IventList
+      ivents={searchIventResults}
+      title={`Znaleziono ${searchIventResults.length} ${
+        resultsNotification(searchIventResults.length).ivent
+      } `}
       width="100vw"
     />
   ) : null;
@@ -88,9 +120,7 @@ function Home({ offers, ivents, searchResults }) {
       </Paper>
       <OffersAndEventsContainer>
         <EventsContainer>
-          {ivents.length ? (
-            <IventList ivents={ivents} title="Aktualne wydarzenia" />
-          ) : null}
+          {displayIventsSearchResults || displayIvents}
         </EventsContainer>
         <OffersContainer>
           {displaySearchResults || displayOffers}
@@ -100,5 +130,5 @@ function Home({ offers, ivents, searchResults }) {
   );
 }
 
-const mapStateToProps = state => state.auth;
-export default connect(mapStateToProps)(Home);
+const mapStateToProps = state => ({ ...state.auth, ...state.app });
+export default connect(mapStateToProps, null)(Home);

@@ -2,7 +2,11 @@ import React from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
-import { setSearchResults, setNotification } from "../../store/app/appActions";
+import {
+  setSearchResults,
+  setSearchIventResults,
+  setNotification
+} from "../../store/app/appActions";
 
 const Container = styled.div`
   display: flex;
@@ -34,9 +38,16 @@ const SearchInput = styled.input`
   border: 2px solid #00bcd4;
   border-right: none;
 `;
-function Search({ offers, setSearchResults, setNotification }) {
+function Search({
+  offers,
+  ivents,
+  setSearchResults,
+  setSearchIventResults,
+  setNotification
+}) {
   const [searchValue, setSearchValue] = React.useState("");
-  const [foundMatches, setFoundMatches] = React.useState([]);
+  const [foundOffers, setFoundOffers] = React.useState([]);
+  const [foundIvents, setFoundIvents] = React.useState([]);
 
   const isString = value => typeof value === "string";
 
@@ -69,26 +80,33 @@ function Search({ offers, setSearchResults, setNotification }) {
     return matchArray;
   };
   const resultsNotification = num => {
-    let str = "";
+    let offer = "";
+    let ivent = "";
     if (num >= 2 && num <= 4) {
-      str = "wyniki";
+      offer = "oferty";
+      ivent = "wydarzenia";
     } else if (num === 1) {
-      str = "wynik";
+      offer = "ofertę";
+      ivent = "wydarzenie";
     } else {
-      str = "wyników";
+      offer = "ofert";
+      ivent = "wydarzeń";
     }
-    return str;
+    return { offer, ivent };
   };
   const handleSearch = () => {
-    if (!foundMatches.length) {
-      setNotification(`Nie znaleziono wyników dla "${searchValue}"`);
-    }
     setNotification(
-      `Znaleziono ${foundMatches.length} ${resultsNotification(
-        foundMatches.length
-      )} dla "${searchValue}"`
+      `Znaleziono ${foundOffers.length} ${
+        resultsNotification(foundOffers.length).offer
+      } i  ${foundIvents.length} ${
+        resultsNotification(foundIvents.length).ivent
+      }
+      dla "${searchValue}"`
     );
-    setSearchResults(foundMatches);
+    setSearchResults(foundOffers);
+    setSearchIventResults(foundIvents);
+    console.log(`found offers ${foundOffers}`);
+    console.log(`found ivents ${foundIvents}`);
   };
   const onEnterDetected = event => {
     if (event.which == 13 || event.keyCode == 13) {
@@ -98,14 +116,21 @@ function Search({ offers, setSearchResults, setNotification }) {
     return 0;
   };
 
-  const handleInput = event => {
-    if (!offers.length) {
-      return;
+  function search(value, items) {
+    if (!items.length) {
+      return false;
     }
-    const { value } = event.target;
     setSearchValue(value);
-    const results = searchState(offers, value);
-    setFoundMatches(results);
+    const results = searchState(items, value);
+    return results;
+  }
+
+  const handleInput = event => {
+    const { value } = event.target;
+    const offersFound = search(value, offers);
+    const iventsFound = search(value, ivents);
+    setFoundOffers(offersFound);
+    setFoundIvents(iventsFound);
   };
   return (
     <Container>
@@ -123,7 +148,8 @@ function Search({ offers, setSearchResults, setNotification }) {
 const mapStateToProps = state => ({ ...state.auth, ...state.app });
 const mapDispatchToProps = dispatch => ({
   setNotification: message => dispatch(setNotification(true, message, "info")),
-  setSearchResults: results => dispatch(setSearchResults(results))
+  setSearchResults: results => dispatch(setSearchResults(results)),
+  setSearchIventResults: results => dispatch(setSearchIventResults(results))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Search);

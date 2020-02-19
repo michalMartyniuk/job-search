@@ -5,6 +5,12 @@ import { isDocMatching, removeFalsyProps } from "../../utility";
 const db = firebase.firestore();
 const auth = firebase.auth();
 
+function createDocWithId(doc) {
+  const data = doc.data();
+  const { id } = doc;
+  return { ...data, id };
+}
+
 export const setNotification = (state = false, message = "", variant = "") => {
   return {
     type: types.SET_NOTIFICATION,
@@ -17,14 +23,45 @@ export const toggleUpdateProfile = () => ({
   type: types.TOGGLE_UPDATE_PROFILE
 });
 export const getAllOffers = async () => {
-  function mapOffers(doc) {
-    const data = doc.data();
-    const { id } = doc;
-    return { ...data, id };
-  }
   const snapshot = await db.collection("offers").get();
-  const offers = snapshot.docs.map(mapOffers);
+  const offers = snapshot.docs.map(createDocWithId);
   return offers;
+};
+
+export const setOffers = () => {
+  return dispatch => {
+    getAllOffers().then(offers => {
+      dispatch({ type: types.SET_OFFERS, offers });
+    });
+  };
+};
+export const setSearchResults = results => {
+  return dispatch => {
+    getAllOffers().then(offers => {
+      dispatch({ type: types.SET_SEARCH_RESULTS, results, offers });
+    });
+  };
+};
+
+export const getAllIvents = async () => {
+  const snapshot = await db.collection("events").get();
+  const offers = snapshot.docs.map(createDocWithId);
+  return offers;
+};
+
+export const setIvents = () => {
+  return dispatch => {
+    getAllIvents().then(ivents => {
+      dispatch({ type: types.SET_IVENTS, ivents });
+    });
+  };
+};
+export const setSearchIventResults = results => {
+  return dispatch => {
+    getAllIvents().then(ivents => {
+      dispatch({ type: types.SET_SEARCH_IVENT_RESULTS, results, ivents });
+    });
+  };
 };
 
 export const search = inputs => {
@@ -54,41 +91,6 @@ export const search = inputs => {
       });
   };
 };
-export const setOffers = () => {
-  return dispatch => {
-    getAllOffers().then(offers => {
-      dispatch({ type: types.SET_OFFERS, offers });
-    });
-  };
-};
-export const setSearchResults = results => {
-  return dispatch => {
-    getAllOffers().then(offers => {
-      dispatch({ type: types.SET_SEARCH_RESULTS, results, offers });
-    });
-  };
-};
-
-export const getAllIvents = () => {
-  return dispatch => {
-    db.collection("events")
-      .get()
-      .then(snapshot => {
-        return snapshot.docs.map(doc => {
-          const data = doc.data();
-          const { id } = doc;
-          return { ...data, id };
-        });
-      })
-      .then(results => {
-        dispatch({
-          type: types.SET_SEARCH_IVENT_RESULTS,
-          results
-        });
-      });
-  };
-};
-
 export const searchIvent = inputs => {
   const iventsRef = db.collection("events");
   const filteredInputs = removeFalsyProps(inputs);
@@ -115,8 +117,4 @@ export const searchIvent = inputs => {
         dispatch({ type: types.SET_SEARCH_IVENT_RESULTS, results: docs });
       });
   };
-};
-
-export const setSearchIventResults = results => {
-  return { type: types.SET_SEARCH_IVENT_RESULTS, results };
 };

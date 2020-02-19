@@ -23,7 +23,7 @@ import {
   saveOffer,
   saveIvent
 } from "./store/auth/authActions";
-import { setOffers, getAllIvents } from "./store/app/appActions";
+import { setOffers, setIvents } from "./store/app/appActions";
 import Form from "./components/Form/Form";
 import OfferList from "./components/Offers/OfferList";
 import IventList from "./components/Offers/IventList";
@@ -50,7 +50,7 @@ function App(props) {
       }
     });
     props.setOffers();
-    props.getAllIvents();
+    props.setIvents();
     return () => unsubscribe();
   }, [auth.onAuthStateChanged]);
   return (
@@ -109,15 +109,7 @@ function App(props) {
                 <Form formType="edit" />
               </Route>
               <Route path="/" exact>
-                {props.loggedIn ? (
-                  <Redirect to="/profile" />
-                ) : (
-                  <Home
-                    searchResults={props.searchResults}
-                    offers={props.offers}
-                    ivents={props.searchIventResults}
-                  />
-                )}
+                {props.loggedIn ? <Redirect to="/profile" /> : <Home />}
               </Route>
               <Route path="*">
                 {props.loggedIn ? (
@@ -143,7 +135,7 @@ const mapDispatchToProps = dispatch => ({
   setLogIn: user => dispatch(setLogIn(user)),
   authLogOut: () => dispatch(authLogOut()),
   setOffers: () => dispatch(setOffers()),
-  getAllIvents: () => dispatch(getAllIvents()),
+  setIvents: () => dispatch(setIvents()),
 
   apply: offerId => dispatch(applyToOffer(offerId)),
   save: offerId => dispatch(saveOffer(offerId)),
