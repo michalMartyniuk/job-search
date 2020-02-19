@@ -3,12 +3,21 @@ import styled from "styled-components";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
+import { connect } from "react-redux";
 import ProfileInfo from "../ProfileInfo";
 import ActiveOffers from "./ActiveOffers";
 import ClosedOffers from "./ClosedOffers";
 import ActiveIvents from "./ActiveIvents";
 import ClosedIvents from "./ClosedIvents";
-
+import {
+  removeOffer,
+  closeOffer,
+  reactivateOffer,
+  editOffer,
+  closeIvent,
+  removeIvent,
+  reactivateIvent,
+} from "../../../store/auth/authActions";
 function TabPanel({ children, value, index, className }) {
   return (
     <Typography
@@ -40,7 +49,7 @@ const StyledTab = styled(Tab)`
 function EmployerProfile({
   user,
   edit,
-  close,
+  closeOffer,
   closeIvent,
   remove,
   removeIvent,
@@ -48,7 +57,6 @@ function EmployerProfile({
   reactivateIvent
 }) {
   const [value, setValue] = React.useState(0);
-  const { offers, closedOffers, ivents, closedIvents } = user;
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -67,28 +75,39 @@ function EmployerProfile({
       </StyledTabPanel>
 
       <StyledTabPanel value={value} index={1}>
-        <ActiveOffers offers={offers} edit={edit} close={close} />
+        <ActiveOffers offers={user.offers} edit={edit} close={closeOffer} />
       </StyledTabPanel>
 
       <StyledTabPanel value={value} index={2}>
         <ClosedOffers
-          offers={closedOffers}
+          items={user.closedOffers}
           remove={remove}
           reactivate={reactivate}
         />
       </StyledTabPanel>
       <StyledTabPanel value={value} index={3}>
-        <ActiveIvents ivents={ivents} closeIvent={closeIvent} />
+        <ActiveIvents ivents={user.ivents} close={closeIvent} />
       </StyledTabPanel>
 
       <StyledTabPanel value={value} index={4}>
         <ClosedIvents
-          ivents={closedIvents}
-          removeIvent={removeIvent}
-          reactivateIvent={reactivateIvent}
+          items={user.closedIvents}
+          remove={removeIvent}
+          reactivate={reactivateIvent}
         />
       </StyledTabPanel>
     </Container>
   );
 }
-export default EmployerProfile;
+const mapStateToProps = state => ({ ...state.auth, ...state.app });
+const mapDispatchToProps = dispatch => ({
+  remove: (offer, offerType) => dispatch(removeOffer(offer, offerType)),
+  removeIvent: (ivent, iventType) => dispatch(removeIvent(ivent, iventType)),
+  closeOffer: offerId => dispatch(closeOffer(offerId)),
+  closeIvent: iventId => dispatch(closeIvent(iventId)),
+  reactivate: offerId => dispatch(reactivateOffer(offerId)),
+  reactivateIvent: iventId => dispatch(reactivateIvent(iventId)),
+  edit: offer => dispatch(editOffer(offer)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(EmployerProfile);

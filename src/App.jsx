@@ -23,7 +23,7 @@ import {
   saveOffer,
   saveIvent
 } from "./store/auth/authActions";
-import { getAllOffers, getAllIvents } from "./store/app/appActions";
+import { setOffers, getAllIvents } from "./store/app/appActions";
 import Form from "./components/Form/Form";
 import OfferList from "./components/Offers/OfferList";
 import IventList from "./components/Offers/IventList";
@@ -49,7 +49,7 @@ function App(props) {
         setLogIn(auth.currentUser);
       }
     });
-    props.getAllOffers();
+    props.setOffers();
     props.getAllIvents();
     return () => unsubscribe();
   }, [auth.onAuthStateChanged]);
@@ -67,9 +67,9 @@ function App(props) {
             <Switch>
               <Route path="/search">
                 <Form formType="search" />
-                {props.searchResults.length ? (
+                {props.offers.length ? (
                   <OfferList
-                    offers={props.searchResults}
+                    offers={props.offers}
                     title="Oferty"
                     apply={props.apply}
                     save={props.save}
@@ -113,7 +113,8 @@ function App(props) {
                   <Redirect to="/profile" />
                 ) : (
                   <Home
-                    offers={props.searchResults}
+                    searchResults={props.searchResults}
+                    offers={props.offers}
                     ivents={props.searchIventResults}
                   />
                 )}
@@ -141,7 +142,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   setLogIn: user => dispatch(setLogIn(user)),
   authLogOut: () => dispatch(authLogOut()),
-  getAllOffers: () => dispatch(getAllOffers()),
+  setOffers: () => dispatch(setOffers()),
   getAllIvents: () => dispatch(getAllIvents()),
 
   apply: offerId => dispatch(applyToOffer(offerId)),

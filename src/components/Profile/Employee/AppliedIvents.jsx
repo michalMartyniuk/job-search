@@ -1,7 +1,7 @@
 import React from "react";
 import IventList from "../../Offers/IventList";
 
-function AppliedIvents({ ivents, removeIvent }) {
+function AppliedIvents({ ivents, remove }) {
   if (!ivents || !ivents.length) {
     return <h2>Nie masz aplikowanych wydarzeń</h2>;
   }
@@ -10,7 +10,7 @@ function AppliedIvents({ ivents, removeIvent }) {
       ivents={ivents}
       iventType="appliedIvents"
       title="Aplikowane wydarzenia"
-      removeIvent={removeIvent}
+      remove={remove}
     />
   );
 }

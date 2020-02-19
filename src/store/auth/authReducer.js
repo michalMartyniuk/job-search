@@ -167,6 +167,18 @@ export default function authReducer(state = initialState, action) {
           closedOffers: [...state.user.closedOffers, action.offer]
         }
       };
+    case types.CLOSE_IVENT:
+      const ivents = state.user.ivents.filter(
+        ivent => ivent.id !== action.ivent.id
+      );
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          ivents,
+          closedIvents: [...state.user.closedIvents, action.ivent]
+        }
+      };
     case types.REMOVE_OFFER:
       return {
         ...state,
@@ -212,18 +224,6 @@ export default function authReducer(state = initialState, action) {
           savedIvents: [...state.user.savedIvents, action.ivent]
         }
       };
-    case types.CLOSE_IVENT:
-      const ivents = state.user.ivents.filter(
-        ivent => ivent.id !== action.ivent.id
-      );
-      return {
-        ...state,
-        user: {
-          ...state.user,
-          ivents,
-          closedIvents: [...state.user.closedIvents, action.ivent]
-        }
-      };
     case types.REMOVE_IVENT:
       return {
         ...state,
@@ -242,7 +242,6 @@ export default function authReducer(state = initialState, action) {
         }
       };
     case types.UPDATE_PROFILE:
-      console.log("update profile");
       return {
         ...state,
         user: {

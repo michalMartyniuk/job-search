@@ -38,6 +38,9 @@ const Countries = styled.span`
 const Cities = styled.span`
   margin-right: 20px;
 `;
+const JobTypes = styled.span`
+  margin-right: 20px;
+`;
 const Experience = styled.span`
   margin-right: 20px;
 `;
@@ -50,17 +53,21 @@ const Actions = styled.div`
 
 function Ivent({ ivent, ...props }) {
   const history = useHistory();
-  const { job, salary, cities, experience, ownerName } = ivent;
+  const { job, jobTypes, salary, cities, experience, ownerName } = ivent;
   const handleEdit = iventId => {
     history.push(`/edit/${iventId}`);
   };
-  console.log(props)
   return (
     <Root>
       <Title>{job}</Title>
       <Owner>Wydarzenie użytkownika: {ownerName}</Owner>
       <Divider component="span" />
       <Informations>
+        {jobTypes.length ? (
+          <JobTypes>
+            <InfoTitle>Branża:</InfoTitle> {jobTypes.join(", ")}
+          </JobTypes>
+        ) : null}
         {salary.length ? (
           <Salary>
             <InfoTitle>Wynagrodzenie:</InfoTitle> {salary[0]} - {salary[1]}

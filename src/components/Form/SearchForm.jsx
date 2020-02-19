@@ -55,7 +55,7 @@ export default function SearchForm({
   setJob,
   resetForm,
   search,
-  getAllOffers,
+  setOffers,
   jobTypes,
   setJobTypes,
   cities,
@@ -112,7 +112,7 @@ export default function SearchForm({
         <Buttons>
           <Btn onClick={resetForm}>Zresetuj</Btn>
           <Btn onClick={handleSearch}>Szukaj</Btn>
-          <Btn onClick={getAllOffers}>Pokaż wszystkie</Btn>
+          <Btn onClick={setOffers}>Pokaż wszystkie</Btn>
         </Buttons>
       </StyledForm>
     </Root>

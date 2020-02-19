@@ -1,17 +1,17 @@
 import React from "react";
 import IventList from "../../Offers/IventList";
 
-function ClosedIvents({ ivents, removeIvent, reactivateIvent }) {
-  if (!ivents || !ivents.length) {
+function ClosedIvents({ items, remove, reactivate }) {
+  if (!items || !items.length) {
     return <h2>Nie masz zamkniętych wydarzeń</h2>;
   }
   return (
     <IventList
-      ivents={ivents}
+      ivents={items}
       iventType="closedIvents"
       title="Zamknięte wydarzenia"
-      removeIvent={removeIvent}
-      reactivateIvent={reactivateIvent}
+      remove={remove}
+      reactivate={reactivate}
     />
   );
 }

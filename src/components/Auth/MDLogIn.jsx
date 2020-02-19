@@ -36,10 +36,24 @@ function MDLogIn({
   logInError
 }) {
   const classes = useStyles();
-  const handleLogIn = event => {
-    event.preventDefault();
+  const logIn = () => {
     authLogIn(logInEmail, logInPassword, accountType);
     setLogInState(false);
+  };
+  const onEnterDetected = (event, callback) => {
+    if (event.which == 13 || event.keyCode == 13) {
+      callback();
+      return 1;
+    }
+    return 0;
+  };
+  const handleInput = (event, setFunction) => {
+    onEnterDetected(event, logIn);
+    setFunction(event);
+  };
+  const handleLogIn = event => {
+    event.preventDefault();
+    logIn();
   };
   return (
     <MDBContainer className={classes.container}>
@@ -56,7 +70,7 @@ function MDLogIn({
                 group
                 type="email"
                 validate
-                onChange={setLogInEmail}
+                onChange={event => handleInput(event, setLogInEmail)}
                 value={logInEmail}
                 error="wrong"
                 success="right"
@@ -67,7 +81,7 @@ function MDLogIn({
                 icon="lock"
                 group
                 type="password"
-                onChange={setLogInPassword}
+                onChange={event => handleInput(event, setLogInPassword)}
                 value={logInPassword}
                 validate
               />
@@ -104,7 +118,4 @@ const mapDispatchToProps = dispatch => ({
   setLogInState: state => dispatch(setLogInState(state))
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(MDLogIn);
+export default connect(mapStateToProps, mapDispatchToProps)(MDLogIn);

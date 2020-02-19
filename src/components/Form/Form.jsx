@@ -11,7 +11,7 @@ import {
 } from "../../store/form/formActions";
 import {
   search,
-  getAllOffers,
+  setOffers,
   searchIvent,
   getAllIvents
 } from "../../store/app/appActions";
@@ -52,7 +52,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   search: inputs => dispatch(search(inputs)),
   searchIvent: inputs => dispatch(searchIvent(inputs)),
-  getAllOffers: () => dispatch(getAllOffers()),
+  setOffers: () => dispatch(setOffers()),
   getAllIvents: () => dispatch(getAllIvents()),
   getOffer: id => dispatch(getOffer(id)),
   editOffer: inputs => dispatch(editOffer(inputs)),

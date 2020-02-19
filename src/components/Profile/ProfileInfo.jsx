@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import styled from "styled-components";
 import { authLogOut } from "../../store/auth/authActions";
 import UpdateProfile from "./Employee/UpdateProfile";
+import { toggleUpdateProfile } from "../../store/app/appActions";
 
 const Container = styled.div`
   display: flex;
@@ -54,9 +55,17 @@ function ProfileInfo(props) {
     return null;
   };
   const handleChangeInfo = () => {
+    if (accountType === "pracodawca") {
+      return;
+    }
     props.toggleUpdateProfile();
   };
-  console.log(props);
+  const updateProfile =
+    accountType === "pracownik" ? (
+      <StyledProfileInfo>
+        <UpdateProfile />
+      </StyledProfileInfo>
+    ) : null;
   return (
     <Container>
       {!props.updateProfileActive ? (
@@ -75,17 +84,16 @@ function ProfileInfo(props) {
           </Actions>
         </StyledProfileInfo>
       ) : (
-        <StyledProfileInfo>
-          <UpdateProfile />
-        </StyledProfileInfo>
+        updateProfile
       )}
     </Container>
   );
 }
 
-const mapStateToProps = state => state.auth;
+const mapStateToProps = state => ({ ...state.auth, ...state.app });
 const mapDispatchToProps = dispatch => ({
-  log_out: () => dispatch(authLogOut())
+  log_out: () => dispatch(authLogOut()),
+  toggleUpdateProfile: () => dispatch(toggleUpdateProfile())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileInfo);

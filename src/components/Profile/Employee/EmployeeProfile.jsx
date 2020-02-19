@@ -3,11 +3,20 @@ import styled from "styled-components";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
+import { connect } from "react-redux";
 import ProfileInfo from "../ProfileInfo";
 import AppliedOffers from "./AppliedOffers";
 import AppliedIvents from "./AppliedIvents";
 import SavedOffers from "./SavedOffers";
 import SavedIvents from "./SavedIvents";
+import {
+  applyToOffer,
+  saveOffer,
+  removeOffer,
+  applyToIvent,
+  saveIvent,
+  removeIvent,
+} from "../../../store/auth/authActions";
 
 function TabPanel({ children, value, index, className }) {
   return (
@@ -36,17 +45,8 @@ const StyledTab = styled(Tab)`
   font-size: 1rem;
 `;
 
-function EmployeeProfile({
-  user,
-  remove,
-  removeIvent,
-  setUserKeySkills,
-  updateProfile,
-  updateProfileActive,
-  toggleUpdateProfile
-}) {
+function EmployeeProfile({ user, remove, removeIvent }) {
   const [value, setValue] = React.useState(0);
-  const { appliedOffers, savedOffers, appliedIvents, savedIvents } = user;
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -55,33 +55,42 @@ function EmployeeProfile({
       <Tabs orientation="vertical" value={value} onChange={handleChange}>
         <StyledTab label="Informacje" />
         <StyledTab label="Aplikowane oferty" />
-        <StyledTab label="Zapisane oferty szkoleń i konferencji" />
         <StyledTab label="Zapisane oferty" />
+        <StyledTab label="Aplikowane oferty szkoleń i konferencji" />
+        <StyledTab label="Zapisane oferty szkoleń i konferencji" />
       </Tabs>
 
       <StyledTabPanel value={value} index={0}>
-        <ProfileInfo
-          updateProfile={updateProfile}
-          updateProfileActive={updateProfileActive}
-          toggleUpdateProfile={toggleUpdateProfile}
-          userKeySkills={user.userKeySkills}
-          setUserKeySkills={setUserKeySkills}
-        />
+        <ProfileInfo />
       </StyledTabPanel>
 
       <StyledTabPanel value={value} index={1}>
-        <AppliedOffers offers={appliedOffers} remove={remove} />
+        <AppliedOffers offers={user.appliedOffers} remove={remove} />
       </StyledTabPanel>
 
       <StyledTabPanel value={value} index={2}>
-        <SavedIvents ivents={savedIvents} remove={removeIvent} />
+        <SavedOffers offers={user.savedOffers} remove={remove} />
       </StyledTabPanel>
 
       <StyledTabPanel value={value} index={3}>
-        <SavedOffers offers={savedOffers} remove={remove} />
+        <AppliedIvents ivents={user.appliedIvents} remove={removeIvent} />
       </StyledTabPanel>
 
+      <StyledTabPanel value={value} index={4}>
+        <SavedIvents ivents={user.savedIvents} remove={removeIvent} />
+      </StyledTabPanel>
     </Container>
   );
 }
-export default EmployeeProfile;
+const mapStateToProps = state => ({ ...state.auth, ...state.app });
+const mapDispatchToProps = dispatch => ({
+  apply: offerId => dispatch(applyToOffer(offerId)),
+  save: offerId => dispatch(saveOffer(offerId)),
+  remove: (offer, offerType) => dispatch(removeOffer(offer, offerType)),
+
+  applyToIvent: iventId => dispatch(applyToIvent(iventId)),
+  saveIvent: iventId => dispatch(saveIvent(iventId)),
+  removeIvent: (ivent, iventType) => dispatch(removeIvent(ivent, iventType))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(EmployeeProfile);

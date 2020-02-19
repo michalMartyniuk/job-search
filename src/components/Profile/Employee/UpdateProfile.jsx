@@ -45,15 +45,8 @@ const Btn = styled(Button).attrs({
     background-color: #008c9e;
   }
 `;
-function UpdateProfile({ userKeySkills, setUserKeySkills, updateProfile }) {
-  const handleUpdateProfile = () => {
-    const inputs = {
-      userKeySkills: Object.keys(userKeySkills).filter(
-        key => userKeySkills[key]
-      )
-    };
-    updateProfile(inputs);
-  };
+function UpdateProfile({ user, setUserKeySkills, updateProfile }) {
+  const handleUpdateProfile = () => updateProfile(user.userKeySkills);
   return (
     <Root>
       <Heading>Aktualizuj profil</Heading>
@@ -61,7 +54,7 @@ function UpdateProfile({ userKeySkills, setUserKeySkills, updateProfile }) {
         <Filters>
           <Category
             title="Kluczowe umiejętności"
-            names={userKeySkills}
+            names={user.userKeySkills}
             set={setUserKeySkills}
           />
         </Filters>

@@ -7,7 +7,7 @@ import { useHistory } from "react-router-dom";
 const Root = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100vw;
+  width: ${props => props.width || "auto"};
   padding: 20px;
   padding-left: 50px;
   padding-right: 50px;
@@ -38,6 +38,9 @@ const Countries = styled.span`
 const Cities = styled.span`
   margin-right: 20px;
 `;
+const JobTypes = styled.span`
+  margin-right: 20px;
+`;
 const Experience = styled.span`
   margin-right: 20px;
 `;
@@ -50,16 +53,21 @@ const Actions = styled.div`
 
 function Offer({ offer, ...props }) {
   const history = useHistory();
-  const { job, salary, cities, experience, ownerName } = offer;
+  const { job, jobTypes, salary, cities, experience, ownerName } = offer;
   const handleEdit = offerId => {
     history.push(`/edit/${offerId}`);
   };
   return (
-    <Root>
+    <Root width={props.width}>
       <Title>{job}</Title>
       <Owner>Oferta użytkownika: {ownerName}</Owner>
       <Divider component="span" />
       <Informations>
+        {jobTypes.length ? (
+          <JobTypes>
+            <InfoTitle>Branża:</InfoTitle> {jobTypes.join(", ")}
+          </JobTypes>
+        ) : null}
         {salary.length ? (
           <Salary>
             <InfoTitle>Wynagrodzenie:</InfoTitle> {salary[0]} - {salary[1]}

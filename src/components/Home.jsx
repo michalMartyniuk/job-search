@@ -51,14 +51,27 @@ const ButtonsContainer = styled.div`
   display: flex;
   justify-content: center;
   width: 550px;
+  margin-top: 30px;
 `;
-function Home(props) {
+function Home({ offers, ivents, searchResults }) {
   const classes = useStyles();
+
+  const displayOffers = offers.length ? (
+    <OfferList offers={offers} title="Aktualne oferty" width="100vw" />
+  ) : null;
+
+  const displaySearchResults = searchResults.length ? (
+    <OfferList
+      offers={searchResults}
+      title={`Znaleziono ${searchResults.length} wyników`}
+      width="100vw"
+    />
+  ) : null;
+
   return (
     <Container>
       <Paper className={classes.homeContainer}>
         <h1 className={classes.header}>Wyszukiwarka pracy</h1>
-        <Search />
         <ButtonsContainer>
           <Link to="/auth/employee">
             <Button variant="contained" className={classes.button}>
@@ -71,17 +84,16 @@ function Home(props) {
             </Button>
           </Link>
         </ButtonsContainer>
+        <Search />
       </Paper>
       <OffersAndEventsContainer>
         <EventsContainer>
-          {props.ivents.length ? (
-            <IventList ivents={props.ivents} title="Aktualne wydarzenia" />
+          {ivents.length ? (
+            <IventList ivents={ivents} title="Aktualne wydarzenia" />
           ) : null}
         </EventsContainer>
         <OffersContainer>
-          {props.offers.length ? (
-            <OfferList offers={props.offers} title="Aktualne oferty" />
-          ) : null}
+          {displaySearchResults || displayOffers}
         </OffersContainer>
       </OffersAndEventsContainer>
     </Container>

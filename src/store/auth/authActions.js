@@ -1,6 +1,6 @@
 import types from "./authTypes";
 import firebase from "../../config/firebase";
-import { setNotification } from "../app/appActions";
+import { setNotification, toggleUpdateProfile } from "../app/appActions";
 
 const db = firebase.firestore();
 const auth = firebase.auth();
@@ -73,7 +73,12 @@ export const setLogIn = user => {
                 );
                 dispatch({
                   type: types.LOGIN,
-                  user: { ...doc.data(), id: user.uid, offers, ivents }
+                  user: {
+                    ...doc.data(),
+                    id: user.uid,
+                    offers,
+                    ivents
+                  }
                 });
                 dispatch(setAccountType(accountType));
                 dispatch({ type: types.SIGNUP_ERROR_RESET });
@@ -179,17 +184,26 @@ export const updateProfile = updateData => {
     db.collection("users")
       .doc(auth.currentUser.uid)
       .get()
-      .then(doc => console.log(doc.data()))
-      // .then(() => {
-    //     dispatch({ type: types.UPDATE_PROFILE });
-    //   });
-    // .set(accountData)
-    // .then(() => {
-    //   dispatch(
-    //     setNotification(true, "Zostałeś pomyślnie zalogowany", "success")
-    //   );
-    //   dispatch(setLogIn(user.user));
-    // });
+      .then(doc => {
+        const userInfo = {
+          ...doc.data(),
+          ...updateData
+        };
+        db.collection("users")
+          .doc(auth.currentUser.uid)
+          .set(userInfo)
+          .then(() => {
+            dispatch({ type: types.UPDATE_PROFILE });
+            dispatch(
+              setNotification(
+                true,
+                "Twój profil został zaktualizowany",
+                "success"
+              )
+            );
+            dispatch(toggleUpdateProfile());
+          });
+      });
   };
 };
 function createTimestamp() {
@@ -236,13 +250,13 @@ export const addOffer = inputs => {
                     .set(offer)
                     .then(() => {
                       dispatch({ type: types.ADD_OFFER, offer });
-                      // dispatch(
-                      //     setNotification(
-                      //       true,
-                      //       "Twoja oferta została dodana",
-                      //       "success"
-                      //     )
-                      // );
+                      dispatch(
+                        setNotification(
+                          true,
+                          "Twoja oferta została dodana",
+                          "success"
+                        )
+                      );
                     });
                 });
             });
@@ -264,6 +278,7 @@ export const applyToOffer = offerId => {
           })
           .then(() => {
             dispatch({ type: types.APPLY_TO_OFFER, offer });
+            dispatch(setNotification(true, "Aplikowałeś ofertę", "success"));
           });
       });
   };
@@ -282,6 +297,7 @@ export const saveOffer = offerId => {
           })
           .then(() => {
             dispatch({ type: types.SAVE_OFFER, offer });
+            dispatch(setNotification(true, "Zapisałeś ofertę", "success"));
           });
       });
   };
@@ -456,13 +472,13 @@ export const addIvent = inputs => {
                     .set(ivent)
                     .then(() => {
                       dispatch({ type: types.ADD_IVENT, ivent });
-                      // dispatch(
-                      //     setNotification(
-                      //       true,
-                      //       "Twoja oferta została dodana",
-                      //       "success"
-                      //     )
-                      // );
+                      dispatch(
+                        setNotification(
+                          true,
+                          "Twoja wydarzenie zostało dodana",
+                          "success"
+                        )
+                      );
                     });
                 });
             });
@@ -483,8 +499,10 @@ export const applyToIvent = iventId => {
             appliedIvents: firebase.firestore.FieldValue.arrayUnion(ivent)
           })
           .then(() => {
-            console.log(ivent);
             dispatch({ type: types.APPLY_TO_IVENT, ivent });
+            dispatch(
+              setNotification(true, "Aplikowałeś wydarzenie", "success")
+            );
           });
       });
   };
@@ -506,6 +524,7 @@ export const saveIvent = iventId => {
           })
           .then(() => {
             dispatch({ type: types.SAVE_IVENT, ivent });
+            dispatch(setNotification(true, "Zapisałeś wydarzenie", "success"));
           });
       });
   };

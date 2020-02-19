@@ -13,7 +13,7 @@ import {
 
 const useStyles = makeStyles(() => ({
   container: {
-    width: 500,
+    width: 500
   },
   error: {
     display: "flex"
@@ -24,21 +24,43 @@ const useStyles = makeStyles(() => ({
     margin: "auto"
   }
 }));
-const MDSignUp = props => {
+
+function MDSignUp({
+  signUpName,
+  signUpEmail,
+  signUpPassword,
+  signUpError,
+  accountType,
+  setSignUpName,
+  setSignUpEmail,
+  setSignUpPassword,
+  setSignUpState,
+  authSignUp,
+  loggedIn
+}) {
   const classes = useStyles();
+  const signUp = () => {
+    authSignUp(signUpName, signUpEmail, signUpPassword, accountType);
+    setSignUpState(false);
+  };
   const handleSignUp = event => {
     event.preventDefault();
-    props.authSignUp(
-      props.signUpName,
-      props.signUpEmail,
-      props.signUpPassword,
-      props.accountType
-    );
-    props.setSignUpState(false);
+    signUp();
+  };
+  const onEnterDetected = (event, callback) => {
+    if (event.which == 13 || event.keyCode == 13) {
+      callback();
+      return 1;
+    }
+    return 0;
+  };
+  const handleInput = (event, setFunction) => {
+    onEnterDetected(event, signUp);
+    setFunction(event);
   };
   return (
     <MDBContainer className={classes.container}>
-      {props.loggedIn && <Redirect to="/profile" />}
+      {loggedIn && <Redirect to="/profile" />}
       <MDBCard className="px-4">
         <MDBCardBody>
           <form>
@@ -51,8 +73,8 @@ const MDSignUp = props => {
                 group
                 type="text"
                 validate
-                onChange={props.setSignUpName}
-                value={props.signUpName}
+                onChange={event => handleInput(event, setSignUpName)}
+                value={signUpName}
                 error="wrong"
                 success="right"
               />
@@ -63,8 +85,8 @@ const MDSignUp = props => {
                 group
                 type="email"
                 validate
-                onChange={props.setSignUpEmail}
-                value={props.signUpEmail}
+                onChange={event => handleInput(event, setSignUpEmail)}
+                value={signUpEmail}
                 error="wrong"
                 success="right"
               />
@@ -73,8 +95,8 @@ const MDSignUp = props => {
                 label="Nowe hasło"
                 icon="lock"
                 group
-                onChange={props.setSignUpPassword}
-                value={props.signUpPassword}
+                onChange={event => handleInput(event, setSignUpPassword)}
+                value={signUpPassword}
                 type="password"
                 validate
               />
@@ -89,9 +111,9 @@ const MDSignUp = props => {
                 Zarejestruj
               </MDBBtn>
             </div>
-            {props.signUpError && (
+            {signUpError && (
               <div className={classes.error}>
-                <span className={classes.errorText}>{props.signUpError}</span>
+                <span className={classes.errorText}>{signUpError}</span>
               </div>
             )}
           </form>
@@ -99,7 +121,7 @@ const MDSignUp = props => {
       </MDBCard>
     </MDBContainer>
   );
-};
+}
 
 const mapStateToProps = state => ({ ...state.auth });
 const mapDispatchToProps = dispatch => ({
@@ -111,7 +133,4 @@ const mapDispatchToProps = dispatch => ({
   setSignUpState: state => dispatch(setSignUpState(state))
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(MDSignUp);
+export default connect(mapStateToProps, mapDispatchToProps)(MDSignUp);

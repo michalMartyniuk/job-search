@@ -16,24 +16,15 @@ export const setNotification = (state = false, message = "", variant = "") => {
 export const toggleUpdateProfile = () => ({
   type: types.TOGGLE_UPDATE_PROFILE
 });
-export const getAllOffers = () => {
-  return dispatch => {
-    db.collection("offers")
-      .get()
-      .then(snapshot => {
-        return snapshot.docs.map(doc => {
-          const data = doc.data();
-          const { id } = doc;
-          return { ...data, id };
-        });
-      })
-      .then(results => {
-        dispatch({
-          type: types.GET_ALL_OFFERS,
-          results
-        });
-      });
-  };
+export const getAllOffers = async () => {
+  function mapOffers(doc) {
+    const data = doc.data();
+    const { id } = doc;
+    return { ...data, id };
+  }
+  const snapshot = await db.collection("offers").get();
+  const offers = snapshot.docs.map(mapOffers);
+  return offers;
 };
 
 export const search = inputs => {
@@ -59,13 +50,23 @@ export const search = inputs => {
         dispatch(
           setNotification(true, `Znaleziono ${docs.length} ofert`, "success")
         );
-        dispatch({ type: types.SEARCH, results: docs });
+        dispatch({ type: types.SET_SEARCH_RESULTS, results: docs });
       });
   };
 };
-
+export const setOffers = () => {
+  return dispatch => {
+    getAllOffers().then(offers => {
+      dispatch({ type: types.SET_OFFERS, offers });
+    });
+  };
+};
 export const setSearchResults = results => {
-  return { type: types.SET_SEARCH_RESULTS, results };
+  return dispatch => {
+    getAllOffers().then(offers => {
+      dispatch({ type: types.SET_SEARCH_RESULTS, results, offers });
+    });
+  };
 };
 
 export const getAllIvents = () => {
@@ -81,7 +82,7 @@ export const getAllIvents = () => {
       })
       .then(results => {
         dispatch({
-          type: types.GET_ALL_IVENTS,
+          type: types.SET_SEARCH_IVENT_RESULTS,
           results
         });
       });
@@ -111,7 +112,7 @@ export const searchIvent = inputs => {
         dispatch(
           setNotification(true, `Znaleziono ${docs.length} wydarzeń`, "success")
         );
-        dispatch({ type: types.SEARCH_IVENT, results: docs });
+        dispatch({ type: types.SET_SEARCH_IVENT_RESULTS, results: docs });
       });
   };
 };

@@ -7,6 +7,8 @@ const initialState = {
     variant: "success"
   },
   updateProfileActive: false,
+  offers: [],
+  ivents: [],
   searchResults: [],
   searchIventResults: []
 };
@@ -30,32 +32,19 @@ export default function appReducer(state = initialState, action) {
     case types.ADD_JOB:
       return state;
 
-    case types.GET_ALL_OFFERS:
+    case types.SET_OFFERS:
       return {
         ...state,
-        searchResults: action.results
+        offers: action.offers
       };
-    case types.SEARCH:
-      return {
-        ...state,
-        searchResults: action.results
-      };
+
     case types.SET_SEARCH_RESULTS:
       return {
         ...state,
+        offers: action.offers,
         searchResults: action.results
       };
 
-    case types.GET_ALL_IVENTS:
-      return {
-        ...state,
-        searchIventResults: action.results
-      };
-    case types.SEARCH_IVENT:
-      return {
-        ...state,
-        searchIventResults: action.results
-      };
     case types.SET_SEARCH_IVENT_RESULTS:
       return {
         ...state,
