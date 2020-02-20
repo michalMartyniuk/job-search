@@ -5,21 +5,23 @@ import Button from "@material-ui/core/Button";
 import {
   setSearchResults,
   setSearchIventResults,
-  setNotification
+  setNotification,
+  setOffers,
+  setIvents
 } from "../../store/app/appActions";
 
 const Container = styled.div`
   display: flex;
   justify-content: center;
   margin: 50px 0px;
-  width: 600px;
+  // width: 600px;
 `;
 const InputContainer = styled.div`
   display: flex;
 `;
 const SearchButton = styled(Button)`
   background-color: #00bcd4;
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: white;
   border: none;
   border-radius: unset;
@@ -30,6 +32,10 @@ const SearchButton = styled(Button)`
     background-color: #008c9e;
   }
 `;
+const ShowAllButton = styled(SearchButton)`
+  margin-left: 20px;
+`;
+
 const SearchInput = styled.input`
   flex: 1;
   padding: 27px 15px;
@@ -41,6 +47,8 @@ const SearchInput = styled.input`
 function Search({
   offers,
   ivents,
+  setOffers,
+  setIvents,
   setSearchResults,
   setSearchIventResults,
   setNotification
@@ -105,8 +113,6 @@ function Search({
     );
     setSearchResults(foundOffers);
     setSearchIventResults(foundIvents);
-    console.log(`found offers ${foundOffers}`);
-    console.log(`found ivents ${foundIvents}`);
   };
   const onEnterDetected = event => {
     if (event.which == 13 || event.keyCode == 13) {
@@ -132,6 +138,10 @@ function Search({
     setFoundOffers(offersFound);
     setFoundIvents(iventsFound);
   };
+  const handleShowAll = () => {
+    setOffers();
+    setIvents();
+  };
   return (
     <Container>
       <SearchInput
@@ -140,13 +150,18 @@ function Search({
         onKeyPress={onEnterDetected}
       />
       <SearchButton variant="outlined" onClick={handleSearch}>
-        Search
+        Szukaj
       </SearchButton>
+      <ShowAllButton variant="outlined" onClick={handleShowAll}>
+        Pokaż wszystkie
+      </ShowAllButton>
     </Container>
   );
 }
 const mapStateToProps = state => ({ ...state.auth, ...state.app });
 const mapDispatchToProps = dispatch => ({
+  setOffers: () => dispatch(setOffers()),
+  setIvents: () => dispatch(setIvents()),
   setNotification: message => dispatch(setNotification(true, message, "info")),
   setSearchResults: results => dispatch(setSearchResults(results)),
   setSearchIventResults: results => dispatch(setSearchIventResults(results))

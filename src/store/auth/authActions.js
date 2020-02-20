@@ -431,7 +431,6 @@ export const addIvent = inputs => {
   const date = createTimestamp();
   const data = { ...inputs, date };
   return dispatch => {
-    console.log("sldkfj");
     // Create offer with inputs data
     db.collection(`users/${auth.currentUser.uid}/events`)
       .add(data)
@@ -464,7 +463,7 @@ export const addIvent = inputs => {
                       dispatch(
                         setNotification(
                           true,
-                          "Twoja wydarzenie zostało dodana",
+                          "Twoje wydarzenie zostało dodana",
                           "success"
                         )
                       );

@@ -78,9 +78,9 @@ function App(props) {
               </Route>
               <Route path="/searchForIvent">
                 <Form formType="searchForIvent" />
-                {props.searchIventResults.length ? (
+                {props.ivents.length ? (
                   <IventList
-                    ivents={props.searchIventResults}
+                    ivents={props.ivents}
                     title="Wydarzenia"
                     apply={props.applyToIvent}
                     save={props.saveIvent}

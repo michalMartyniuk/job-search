@@ -4,6 +4,7 @@ import { Button, Paper } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import styled from "styled-components";
+import { setOffers, setIvents } from "../store/app/appActions";
 import OfferList from "./Offers/OfferList";
 import Search from "./Search/Search";
 import IventList from "./Offers/IventList";
@@ -69,7 +70,18 @@ const resultsNotification = num => {
   return { offer, ivent };
 };
 
-function Home({ offers, ivents, searchResults, searchIventResults }) {
+function Home({
+  offers,
+  ivents,
+  setOffers,
+  setIvents,
+  searchResults,
+  searchIventResults
+}) {
+  React.useEffect(() => {
+    setOffers();
+    setIvents();
+  }, []);
   const classes = useStyles();
 
   const displayOffers = offers.length ? (
@@ -130,4 +142,8 @@ function Home({ offers, ivents, searchResults, searchIventResults }) {
 }
 
 const mapStateToProps = state => ({ ...state.auth, ...state.app });
-export default connect(mapStateToProps, null)(Home);
+const mapDispatchToProps = dispatch => ({
+  setOffers: () => dispatch(setOffers()),
+  setIvents: () => dispatch(setIvents())
+});
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

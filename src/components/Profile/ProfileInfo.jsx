@@ -39,6 +39,16 @@ const ActionButton = styled(Button)`
   height: 50px;
   margin-right: 10px;
 `;
+const KeySkillsContainer = styled.div`
+  margin: 30px 0;
+`;
+const KeySkill = styled.div`
+  font-size: 1.3rem;
+`;
+const KeySkillsHeader = styled.h2`
+  font-size: 1.4rem;
+  font-weight: 500;
+`;
 
 function ProfileInfo({ user, toggleUpdateProfile, updateProfileActive }) {
   let accountType;
@@ -66,9 +76,9 @@ function ProfileInfo({ user, toggleUpdateProfile, updateProfileActive }) {
         <UpdateProfile />
       </StyledProfileInfo>
     ) : null;
-  const keySkillsArr = Object.keys(user.userKeySkills).filter(
-    key => user.userKeySkills[key]
-  );
+  const keySkillsArr =
+    user.userKeySkills &&
+    Object.keys(user.userKeySkills).filter(key => user.userKeySkills[key]);
   return (
     <Container>
       {!updateProfileActive ? (
@@ -77,6 +87,16 @@ function ProfileInfo({ user, toggleUpdateProfile, updateProfileActive }) {
           <InfoItem name="Imię: " value={user.name} />
           <InfoItem name="Email: " value={user.email} />
           <InfoItem name="Rodzaj konta: " value={accountType} />
+          {accountType === "pracownik" ? (
+            <KeySkillsContainer>
+              <KeySkillsHeader>Kluczowe umiejętności:</KeySkillsHeader>
+              {keySkillsArr.length
+                ? keySkillsArr.map(skill => (
+                    <KeySkill key={skill}>{skill}</KeySkill>
+                  ))
+                : null}
+            </KeySkillsContainer>
+          ) : null}
           <Actions>
             <ActionButton variant="outlined" onClick={handleChangeInfo}>
               Uzupełnij profil
@@ -85,9 +105,6 @@ function ProfileInfo({ user, toggleUpdateProfile, updateProfileActive }) {
               Zresetuj hasło
             </ActionButton>
           </Actions>
-          {keySkillsArr.length
-            ? keySkillsArr.map(skill => <h2>{skill}</h2>)
-            : null}
         </StyledProfileInfo>
       ) : (
         updateProfile

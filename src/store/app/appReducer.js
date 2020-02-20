@@ -35,12 +35,14 @@ export default function appReducer(state = initialState, action) {
     case types.SET_OFFERS:
       return {
         ...state,
-        offers: action.offers
+        offers: action.offers,
+        searchResults: []
       };
     case types.SET_IVENTS:
       return {
         ...state,
-        ivents: action.ivents
+        ivents: action.ivents,
+        searchIventResults: []
       };
     case types.SET_SEARCH_RESULTS:
       return {
