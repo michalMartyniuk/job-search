@@ -151,18 +151,16 @@ export const authLogIn = (email, password, accountType) => {
   return dispatch => {
     checkAccountTypeMatch(email, accountType).then(result => {
       if (!result) {
-        return { type: "" };
+        dispatch(setNotification(true, "Nie znaleziono użytkownika", "error"));
       }
       auth
         .signInWithEmailAndPassword(email, password)
         .then(user => {
           if (user) {
+            dispatch(setLogIn(user.user));
             dispatch(
               setNotification(true, "Zostałeś pomyślnie zalogowany", "success")
             );
-            dispatch(setLogIn(user.user));
-          } else {
-            dispatch(logInError("Nie znaleziono użytkownika"));
           }
         })
         .catch(error => {
@@ -180,30 +178,21 @@ export const authLogOut = () => {
 };
 
 export const updateProfile = updateData => {
-  return dispatch => {
-    db.collection("users")
-      .doc(auth.currentUser.uid)
-      .get()
-      .then(doc => {
-        const userInfo = {
-          ...doc.data(),
-          ...updateData
-        };
-        db.collection("users")
-          .doc(auth.currentUser.uid)
-          .set(userInfo)
-          .then(() => {
-            dispatch({ type: types.UPDATE_PROFILE });
-            dispatch(
-              setNotification(
-                true,
-                "Twój profil został zaktualizowany",
-                "success"
-              )
-            );
-            dispatch(toggleUpdateProfile());
-          });
-      });
+  return async dispatch => {
+    const userDoc = await db.collection("users").doc(auth.currentUser.uid);
+    const userData = await userDoc.get().then(snapshot => snapshot.data());
+    const userUpdated = {
+      ...userData,
+      userKeySkills: {
+        ...updateData
+      }
+    };
+    await userDoc.set(userUpdated);
+    dispatch({ type: types.UPDATE_PROFILE });
+    dispatch(
+      setNotification(true, "Twój profil został zaktualizowany", "success")
+    );
+    dispatch(toggleUpdateProfile());
   };
 };
 function createTimestamp() {

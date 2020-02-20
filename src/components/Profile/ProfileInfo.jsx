@@ -40,12 +40,12 @@ const ActionButton = styled(Button)`
   margin-right: 10px;
 `;
 
-function ProfileInfo(props) {
+function ProfileInfo({ user, toggleUpdateProfile, updateProfileActive }) {
   let accountType;
-  if (props.user) {
-    if (props.user.accountType === "employer") {
+  if (user) {
+    if (user.accountType === "employer") {
       accountType = "pracodawca";
-    } else if (props.user.accountType === "employee") {
+    } else if (user.accountType === "employee") {
       accountType = "pracownik";
     } else {
       accountType = null;
@@ -58,7 +58,7 @@ function ProfileInfo(props) {
     if (accountType === "pracodawca") {
       return;
     }
-    props.toggleUpdateProfile();
+    toggleUpdateProfile();
   };
   const updateProfile =
     accountType === "pracownik" ? (
@@ -66,13 +66,16 @@ function ProfileInfo(props) {
         <UpdateProfile />
       </StyledProfileInfo>
     ) : null;
+  const keySkillsArr = Object.keys(user.userKeySkills).filter(
+    key => user.userKeySkills[key]
+  );
   return (
     <Container>
-      {!props.updateProfileActive ? (
+      {!updateProfileActive ? (
         <StyledProfileInfo>
-          <InfoHeader>{props.user.name}</InfoHeader>
-          <InfoItem name="Imię: " value={props.user.name} />
-          <InfoItem name="Email: " value={props.user.email} />
+          <InfoHeader>{user.name}</InfoHeader>
+          <InfoItem name="Imię: " value={user.name} />
+          <InfoItem name="Email: " value={user.email} />
           <InfoItem name="Rodzaj konta: " value={accountType} />
           <Actions>
             <ActionButton variant="outlined" onClick={handleChangeInfo}>
@@ -82,6 +85,9 @@ function ProfileInfo(props) {
               Zresetuj hasło
             </ActionButton>
           </Actions>
+          {keySkillsArr.length
+            ? keySkillsArr.map(skill => <h2>{skill}</h2>)
+            : null}
         </StyledProfileInfo>
       ) : (
         updateProfile

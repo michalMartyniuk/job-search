@@ -7,7 +7,6 @@ import styled from "styled-components";
 import OfferList from "./Offers/OfferList";
 import Search from "./Search/Search";
 import IventList from "./Offers/IventList";
-import { setSearchIventResults } from "../store/app/appActions";
 
 const useStyles = makeStyles({
   homeContainer: {
