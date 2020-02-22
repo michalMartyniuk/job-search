@@ -95,7 +95,6 @@ export default function AddEvent({
             value={job}
             onChange={event => setJob(event.target.value)}
           />
-          <ExperienceSelect value={experience} onChange={handleExperience} />
         </FormFieldContainer>
         <Filters>
           <Category title="Miasta" names={cities} set={setCities} />
@@ -105,11 +104,6 @@ export default function AddEvent({
             set={setKeySkills}
           />
         </Filters>
-        <SalarySlider
-          values={salary}
-          onChange={setSalary}
-          name="Wynagrodzenie"
-        />
         <Buttons>
           <Btn onClick={resetForm}>Zresetuj</Btn>
           <Btn onClick={handleAddIvent}>Dodaj wydarzenie</Btn>

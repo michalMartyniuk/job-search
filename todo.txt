@@ -1,13 +1,15 @@
 Profil Klienta
-W strefie Klienta przy Dodaj Szkolenie i Dodaj Wydarzenie usunąć opcje Doświadczenie i opcje Wynagrodzenie i dodać pole Opis z miejscem na opis + dodać pole „data” gdzie póki co można manualnie wpisać datę.
-W Strefie Klienta Szkolenia i Wydarzenia które są aktywne powinny mieć opcje Edytuj tak jak mają aktywne oferty pracy.
-W profilu Pracodawcy (Klienta) w zakładkach „aktywne oferty” i „otwarte wydarzenia” każda z ofert i każde z wydarzeń powinny mieć licznik Użytkowników którzy kliknęli „aplikuj”/weź udział.
-Na chwile obecną ten licznik nie musi działać, tylko niech będzie jakaś informacja o tym, że takie dane podajemy np. „Liczba aplikacji: X„ to jest jedna z najważniejszych funkcji na chwilę obecną.
-W profilu Klienta w zakładce „Znajdź Kandydata” powinna być lista wszystkich zarejestrowanych użytkowników.
+W strefie Klienta przy Dodaj Szkolenie i Dodaj Wydarzenie usunąć opcje 
+Doświadczenie i opcje Wynagrodzenie i dodać pole Opis z miejscem na opis + 
+dodać pole „data” gdzie póki co można manualnie wpisać datę.
+W Strefie Klienta Szkolenia i Wydarzenia które są aktywne powinny mieć opcje 
+Edytuj tak jak mają aktywne oferty pracy.
 
- 
 Profil Użytkownika
-W profilu Użytkownika powinny być dwie wyszukiwarki: jedna w zakładce Szukaj Szkolenia (taka sama jak na stronie głównej) i druga w zakładce Szukaj Pracy, która powinna uwzględniać też poziom wynagrodzenia (taki sam suwak jak przy dodawaniu ofert pracy przez Klienta).
+W profilu Użytkownika powinny być dwie wyszukiwarki: jedna w zakładce 
+Szukaj Szkolenia (taka sama jak na stronie głównej) i druga w zakładce 
+Szukaj Pracy, która powinna uwzględniać też poziom wynagrodzenia 
+(taki sam suwak jak przy dodawaniu ofert pracy przez Klienta).
 
 
 

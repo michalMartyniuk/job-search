@@ -223,18 +223,35 @@ export const addOffer = inputs => {
     dispatch(setNotification(true, "Twoja oferta została dodana", "success"));
   };
 };
+async function checkIfApplied(id, type) {
+  const userDoc = await db.collection("users").doc(auth.currentUser.uid);
+  const userData = await userDoc.get().then(snapshot => snapshot.data());
+  let matchArray = [];
+  if (type === "offer") {
+    matchArray = userData.appliedOffers.filter(offer => offer.id === id);
+  } else if (type === "ivent") {
+    matchArray = userData.appliedIvents.filter(ivent => ivent.id === id);
+  }
+  return !!matchArray.length;
+}
 export const applyToOffer = offerId => {
   return async dispatch => {
+    const alreadyApplied = await checkIfApplied(offerId, "offer");
+    if (alreadyApplied) {
+      dispatch(setNotification(true, "Aplikowałeś już na tę ofertę", "info"));
+      return;
+    }
     const offerDoc = await getDoc("offers", offerId);
+    await offerDoc.update({
+      appliedCount: firebase.firestore.FieldValue.increment(1)
+    });
     const offerData = await offerDoc.get().then(snapshot => snapshot.data());
 
     const userDoc = await db.collection("users").doc(auth.currentUser.uid);
     await userDoc.update({
       appliedOffers: firebase.firestore.FieldValue.arrayUnion(offerData)
     });
-    await offerDoc.update({
-      appliedCount: firebase.firestore.FieldValue.increment(1)
-    });
+
     const offer = offerData;
     dispatch({ type: types.APPLY_TO_OFFER, offer });
     dispatch(setNotification(true, "Aplikowałeś ofertę", "success"));
@@ -301,32 +318,24 @@ export const editOffer = inputs => {
   };
 };
 export const closeOffer = offerId => {
-  // Add offer to closedOffers array
-  return dispatch => {
-    db.collection("offers")
+  // Add offer to closedIvents array
+  return async dispatch => {
+    const offerDoc = await db.collection("offers").doc(offerId);
+    const offerData = await offerDoc.get().then(snapshot => snapshot.data());
+    const userDoc = await db.collection("users").doc(auth.currentUser.uid);
+    await userDoc.update({
+      closedOffers: firebase.firestore.FieldValue.arrayUnion(offerData)
+    });
+    const offer = offerData;
+    // Delete ivent from events collection
+    await offerDoc.delete();
+    // Delete offer from user/events collection
+    await userDoc
+      .collection("offers")
       .doc(offerId)
-      .get()
-      .then(doc => {
-        const offer = { id: offerId, ...doc.data() };
-        db.collection("users")
-          .doc(auth.currentUser.uid)
-          .update({
-            closedOffers: firebase.firestore.FieldValue.arrayUnion(offer)
-          })
-          .then(() => {
-            dispatch({ type: types.CLOSE_OFFER, offer });
-            // Delete offer from offers
-            db.collection("offers")
-              .doc(offerId)
-              .delete()
-              .then(() => {
-                // Delete offer from user/offers
-                db.collection(`users/${auth.currentUser.uid}/offers`)
-                  .doc(offerId)
-                  .delete();
-              });
-          });
-      });
+      .delete();
+
+    dispatch({ type: types.CLOSE_OFFER, offer });
   };
 };
 
@@ -342,8 +351,8 @@ export const removeOffer = (offer, offerType) => {
     await userDoc.update({
       [offerType]: firebase.firestore.FieldValue.arrayRemove(offer)
     });
-    const userData = await userDoc.get();
-    const offers = userData[offerType];
+    const userData = await userDoc.get().then(snapshot => snapshot.data());
+    const offers = await userData[offerType];
     dispatch({ type: types.REMOVE_OFFER, offerType, offers });
     dispatch(setOffers());
   };
@@ -424,15 +433,22 @@ export const addIvent = inputs => {
 };
 export const applyToIvent = iventId => {
   return async dispatch => {
+    const alreadyApplied = await checkIfApplied(iventId, "ivent");
+    if (alreadyApplied) {
+      dispatch(
+        setNotification(true, "Aplikowałeś już na to wydarzenie", "info")
+      );
+      return;
+    }
     const iventDoc = await getDoc("events", iventId);
+    await iventDoc.update({
+      appliedCount: firebase.firestore.FieldValue.increment(1)
+    });
     const iventData = await iventDoc.get().then(snapshot => snapshot.data());
 
     const userDoc = await db.collection("users").doc(auth.currentUser.uid);
     await userDoc.update({
       appliedIvents: firebase.firestore.FieldValue.arrayUnion(iventData)
-    });
-    await iventDoc.update({
-      appliedCount: firebase.firestore.FieldValue.increment(1)
     });
     const ivent = iventData;
     dispatch({ type: types.APPLY_TO_IVENT, ivent });
@@ -465,31 +481,23 @@ export const saveIvent = iventId => {
 
 export const closeIvent = iventId => {
   // Add offer to closedIvents array
-  return dispatch => {
-    db.collection("events")
+  return async dispatch => {
+    const iventDoc = await db.collection("events").doc(iventId);
+    const iventData = await iventDoc.get().then(snapshot => snapshot.data());
+    const userDoc = await db.collection("users").doc(auth.currentUser.uid);
+    await userDoc.update({
+      closedIvents: firebase.firestore.FieldValue.arrayUnion(iventData)
+    });
+    const ivent = iventData;
+    // Delete ivent from events collection
+    await iventDoc.delete();
+    // Delete offer from user/events collection
+    await userDoc
+      .collection("events")
       .doc(iventId)
-      .get()
-      .then(doc => {
-        const ivent = { id: iventId, ...doc.data() };
-        db.collection("users")
-          .doc(auth.currentUser.uid)
-          .update({
-            closedIvents: firebase.firestore.FieldValue.arrayUnion(ivent)
-          })
-          .then(() => {
-            dispatch({ type: types.CLOSE_IVENT, ivent });
-            // Delete offer from Ivents
-            db.collection("events")
-              .doc(iventId)
-              .delete()
-              .then(() => {
-                // Delete offer from user/Ivents
-                db.collection(`users/${auth.currentUser.uid}/events`)
-                  .doc(iventId)
-                  .delete();
-              });
-          });
-      });
+      .delete();
+
+    dispatch({ type: types.CLOSE_IVENT, ivent });
   };
 };
 export const removeIvent = (ivent, iventType) => {
@@ -504,8 +512,8 @@ export const removeIvent = (ivent, iventType) => {
     await userDoc.update({
       [iventType]: firebase.firestore.FieldValue.arrayRemove(ivent)
     });
-    const userData = await userDoc.get();
-    const ivents = userData[iventType];
+    const userData = await userDoc.get().then(snapshot => snapshot.data());
+    const ivents = await userData[iventType];
     dispatch({ type: types.REMOVE_IVENT, iventType, ivents });
     dispatch(setIvents());
   };

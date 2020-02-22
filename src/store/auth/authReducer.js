@@ -140,7 +140,6 @@ export default function authReducer(state = initialState, action) {
         ...state
       };
     case types.APPLY_TO_OFFER:
-      console.log(action.offer);
       return {
         ...state,
         user: {
@@ -156,6 +155,7 @@ export default function authReducer(state = initialState, action) {
           savedOffers: [...state.user.savedOffers, action.offer]
         }
       };
+
     case types.CLOSE_OFFER:
       const offers = state.user.offers.filter(
         offer => offer.id !== action.offer.id

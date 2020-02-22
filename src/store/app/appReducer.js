@@ -11,7 +11,8 @@ const initialState = {
   ivents: [],
   searchActive: false,
   searchResults: [],
-  searchIventResults: []
+  searchIventResults: [],
+  users: []
 };
 
 export default function appReducer(state = initialState, action) {
@@ -25,7 +26,7 @@ export default function appReducer(state = initialState, action) {
       return {
         ...state,
         searchActive: action.boolean
-      }
+      };
     case types.SET_NOTIFICATION:
       return {
         ...state,
@@ -38,8 +39,12 @@ export default function appReducer(state = initialState, action) {
     case types.ADD_JOB:
       return state;
 
+    case types.SET_USERS:
+      return {
+        ...state,
+        users: action.users
+      };
     case types.SET_OFFERS:
-      console.log("Set offers");
       return {
         ...state,
         offers: action.offers,

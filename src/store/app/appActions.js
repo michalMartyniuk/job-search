@@ -31,7 +31,18 @@ export const getAllOffers = async () => {
   const offers = snapshot.docs.map(createDocWithId);
   return offers;
 };
-
+export const getAllUsers = async () => {
+  const snapshot = await db.collection("users").get();
+  const users = snapshot.docs.map(createDocWithId);
+  return users;
+};
+export const setUsers = () => {
+  return dispatch => {
+    getAllUsers().then(users => {
+      dispatch({ type: types.SET_USERS, users });
+    });
+  };
+};
 export const setOffers = () => {
   return dispatch => {
     getAllOffers().then(offers => {

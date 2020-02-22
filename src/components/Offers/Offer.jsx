@@ -82,7 +82,7 @@ function Offer({ offer, ...props }) {
         </Header_col>
         <Header_col_2>
           <AppliedCountContainer>
-            Ilość aplikacji: {offer.appliedCount || 0}
+            Liczba aplikacji: {offer.appliedCount || 0}
           </AppliedCountContainer>
         </Header_col_2>
       </Header>

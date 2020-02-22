@@ -82,7 +82,7 @@ function Ivent({ ivent, ...props }) {
         </Header_col>
         <Header_col_2>
           <AppliedCountContainer>
-            Ilość aplikacji: {ivent.appliedCount || 0}
+            Liczba aplikacji: {ivent.appliedCount || 0}
           </AppliedCountContainer>
         </Header_col_2>
       </Header>

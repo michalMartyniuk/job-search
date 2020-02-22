@@ -23,7 +23,7 @@ import {
   saveOffer,
   saveIvent
 } from "./store/auth/authActions";
-import { setOffers, setIvents } from "./store/app/appActions";
+import { setOffers, setIvents, setUsers } from "./store/app/appActions";
 import Form from "./components/Form/Form";
 import OfferList from "./components/Offers/OfferList";
 import IventList from "./components/Offers/IventList";
@@ -51,6 +51,7 @@ function App(props) {
     });
     props.setOffers();
     props.setIvents();
+    props.setUsers();
     return () => unsubscribe();
   }, [auth.onAuthStateChanged]);
   return (
@@ -100,7 +101,11 @@ function App(props) {
                 <Form formType="addEvent" />
               </Route>
               <Route path="/similarOffers">
-                {props.loggedIn ? <SimilarOffers /> : <Redirect to="/" />}
+                {props.loggedIn ? (
+                  <SimilarOffers users={props.users} />
+                ) : (
+                  <Redirect to="/" />
+                )}
               </Route>
               <Route path="/auth">
                 {props.loggedIn ? <Redirect to="/profile" /> : <Auth />}
@@ -136,6 +141,7 @@ const mapDispatchToProps = dispatch => ({
   authLogOut: () => dispatch(authLogOut()),
   setOffers: () => dispatch(setOffers()),
   setIvents: () => dispatch(setIvents()),
+  setUsers: () => dispatch(setUsers()),
 
   apply: offerId => dispatch(applyToOffer(offerId)),
   save: offerId => dispatch(saveOffer(offerId)),
