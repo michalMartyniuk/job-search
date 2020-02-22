@@ -42,9 +42,11 @@ function IventList({ ivents, title, ...props }) {
             {title}
           </Typography>
         </div>
-        {ivents.map(ivent => {
-          return <Ivent key={ivent.id} ivent={ivent} {...props} />;
-        })}
+        {ivents.length
+          ? ivents.map(ivent => {
+              return <Ivent key={ivent.id} ivent={ivent} {...props} />;
+            })
+          : null}
       </List>
     </Paper>
   );

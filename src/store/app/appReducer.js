@@ -9,6 +9,7 @@ const initialState = {
   updateProfileActive: false,
   offers: [],
   ivents: [],
+  searchActive: false,
   searchResults: [],
   searchIventResults: []
 };
@@ -20,6 +21,11 @@ export default function appReducer(state = initialState, action) {
         ...state,
         updateProfileActive: !state.updateProfileActive
       };
+    case types.SET_SEARCH_ACTIVE:
+      return {
+        ...state,
+        searchActive: action.boolean
+      }
     case types.SET_NOTIFICATION:
       return {
         ...state,
@@ -33,6 +39,7 @@ export default function appReducer(state = initialState, action) {
       return state;
 
     case types.SET_OFFERS:
+      console.log("Set offers");
       return {
         ...state,
         offers: action.offers,

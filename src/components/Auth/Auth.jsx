@@ -51,13 +51,13 @@ function Auth({ setAccountType }) {
       <Switch>
         <Route path="/auth/employer">
           <AuthContent
-            name="Strefa pracodawcy"
+            name="Strefa klienta"
             accountTypeFunc={() => setAccountType("employer")}
           />
         </Route>
         <Route path="/auth/employee">
           <AuthContent
-            name="Strefa pracownika"
+            name="Strefa użytkownika"
             accountTypeFunc={() => setAccountType("employee")}
           />
         </Route>

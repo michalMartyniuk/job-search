@@ -40,9 +40,11 @@ function OfferList({ offers, title, ...props }) {
             {title}
           </Typography>
         </div>
-        {offers.map(offer => {
-          return <Offer key={offer.id} offer={offer} {...props} />;
-        })}
+        {offers.length
+          ? offers.map(offer => {
+              return <Offer key={offer.id} offer={offer} {...props} />;
+            })
+          : null}
       </List>
     </Paper>
   );

@@ -54,9 +54,9 @@ function ProfileInfo({ user, toggleUpdateProfile, updateProfileActive }) {
   let accountType;
   if (user) {
     if (user.accountType === "employer") {
-      accountType = "pracodawca";
+      accountType = "klient";
     } else if (user.accountType === "employee") {
-      accountType = "pracownik";
+      accountType = "użytkownik";
     } else {
       accountType = null;
     }
@@ -65,13 +65,13 @@ function ProfileInfo({ user, toggleUpdateProfile, updateProfileActive }) {
     return null;
   };
   const handleChangeInfo = () => {
-    if (accountType === "pracodawca") {
+    if (accountType === "klient") {
       return;
     }
     toggleUpdateProfile();
   };
   const updateProfile =
-    accountType === "pracownik" ? (
+    accountType === "użytkownik" ? (
       <StyledProfileInfo>
         <UpdateProfile />
       </StyledProfileInfo>
@@ -87,7 +87,7 @@ function ProfileInfo({ user, toggleUpdateProfile, updateProfileActive }) {
           <InfoItem name="Imię: " value={user.name} />
           <InfoItem name="Email: " value={user.email} />
           <InfoItem name="Rodzaj konta: " value={accountType} />
-          {accountType === "pracownik" ? (
+          {accountType === "użytkownik" ? (
             <KeySkillsContainer>
               <KeySkillsHeader>Kluczowe umiejętności:</KeySkillsHeader>
               {keySkillsArr.length

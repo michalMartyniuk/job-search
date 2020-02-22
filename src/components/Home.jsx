@@ -75,6 +75,7 @@ function Home({
   ivents,
   setOffers,
   setIvents,
+  searchActive,
   searchResults,
   searchIventResults
 }) {
@@ -84,11 +85,11 @@ function Home({
   }, []);
   const classes = useStyles();
 
-  const displayOffers = offers.length ? (
-    <OfferList offers={offers} title="Aktualne oferty" width="100vw" />
-  ) : null;
+  const displayOffers = (
+    <OfferList offers={offers} title="Aktualne oferty pracy" width="100vw" />
+  );
 
-  const displaySearchResults = searchResults.length ? (
+  const displaySearchResults = (
     <OfferList
       offers={searchResults}
       title={`Znaleziono ${searchResults.length} ${
@@ -96,12 +97,12 @@ function Home({
       } `}
       width="100vw"
     />
-  ) : null;
-  const displayIvents = ivents.length ? (
+  );
+  const displayIvents = (
     <IventList ivents={ivents} title="Aktualne wydarzenia" width="100vw" />
-  ) : null;
+  );
 
-  const displayIventsSearchResults = searchIventResults.length ? (
+  const displayIventsSearchResults = (
     <IventList
       ivents={searchIventResults}
       title={`Znaleziono ${searchIventResults.length} ${
@@ -109,8 +110,20 @@ function Home({
       } `}
       width="100vw"
     />
-  ) : null;
-
+  );
+  const offersEventsContent = (
+    results,
+    resultsComponent,
+    allResultsComponent
+  ) => {
+    if (searchActive && !searchIventResults.length && !searchResults.length) {
+      return allResultsComponent;
+    }
+    if (searchActive) {
+      return resultsComponent;
+    }
+    return allResultsComponent;
+  };
   return (
     <Container>
       <Paper className={classes.homeContainer}>
@@ -129,14 +142,24 @@ function Home({
         </ButtonsContainer>
         <Search />
       </Paper>
-      <OffersAndEventsContainer>
-        <EventsContainer>
-          {displayIventsSearchResults || displayIvents}
-        </EventsContainer>
-        <OffersContainer>
-          {displaySearchResults || displayOffers}
-        </OffersContainer>
-      </OffersAndEventsContainer>
+      {offers.length || ivents.length ? (
+        <OffersAndEventsContainer>
+          <EventsContainer>
+            {offersEventsContent(
+              searchIventResults,
+              displayIventsSearchResults,
+              displayIvents
+            )}
+          </EventsContainer>
+          <OffersContainer>
+            {offersEventsContent(
+              searchResults,
+              displaySearchResults,
+              displayOffers
+            )}
+          </OffersContainer>
+        </OffersAndEventsContainer>
+      ) : null}
     </Container>
   );
 }

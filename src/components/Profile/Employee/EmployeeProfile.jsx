@@ -54,8 +54,8 @@ function EmployeeProfile({ user, remove, removeIvent }) {
     <Container>
       <Tabs orientation="vertical" value={value} onChange={handleChange}>
         <StyledTab label="Informacje" />
-        <StyledTab label="Aplikowane oferty" />
-        <StyledTab label="Zapisane oferty" />
+        <StyledTab label="Aplikowane oferty pracy" />
+        <StyledTab label="Zapisane oferty pracy" />
         <StyledTab label="Aplikowane oferty szkoleń i konferencji" />
         <StyledTab label="Zapisane oferty szkoleń i konferencji" />
       </Tabs>

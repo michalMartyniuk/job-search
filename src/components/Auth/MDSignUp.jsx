@@ -68,7 +68,7 @@ function MDSignUp({
             <div className="grey-text">
               <MDBInput
                 size="lg"
-                label="Imię i nazwisko"
+                label={accountType === "employer" ? "Nazwa" : "Imię i nazwisko"}
                 icon="user"
                 group
                 type="text"

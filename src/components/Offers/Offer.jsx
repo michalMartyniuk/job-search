@@ -32,9 +32,6 @@ const Informations = styled.div`
 const Salary = styled.span`
   margin-right: 20px;
 `;
-const Countries = styled.span`
-  margin-right: 20px;
-`;
 const Cities = styled.span`
   margin-right: 20px;
 `;
@@ -50,6 +47,25 @@ const InfoTitle = styled.span`
 const Actions = styled.div`
   display: flex;
 `;
+const Header = styled.div`
+  display: flex;
+`;
+const Header_col = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 400px;
+`;
+const Header_col_2 = styled(Header_col)`
+  width: auto;
+`;
+const AppliedCountContainer = styled.div`
+  font-size: 1.2rem;
+  font-weight: 400;
+  background-color: #cbcdd4;
+  padding: 10px;
+  border-radius: 0px;
+`;
 
 function Offer({ offer, ...props }) {
   const history = useHistory();
@@ -59,8 +75,17 @@ function Offer({ offer, ...props }) {
   };
   return (
     <Root width={props.width}>
-      <Title>{job}</Title>
-      <Owner>Oferta użytkownika: {ownerName}</Owner>
+      <Header>
+        <Header_col>
+          <Title>{job}</Title>
+          <Owner>Oferta użytkownika: {ownerName}</Owner>
+        </Header_col>
+        <Header_col_2>
+          <AppliedCountContainer>
+            Ilość aplikacji: {offer.appliedCount || 0}
+          </AppliedCountContainer>
+        </Header_col_2>
+      </Header>
       <Divider component="span" />
       <Informations>
         {jobTypes.length ? (

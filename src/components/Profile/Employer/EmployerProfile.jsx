@@ -64,10 +64,10 @@ function EmployerProfile({
     <Container>
       <Tabs orientation="vertical" value={value} onChange={handleChange}>
         <StyledTab label="Informacje" />
-        <StyledTab label="Aktywne oferty" />
-        <StyledTab label="Zamknięte oferty" />
-        <StyledTab label="Aktywne wydarzenia" />
-        <StyledTab label="Zamknięte wydarzenia" />
+        <StyledTab label="Aktywne Oferty" />
+        <StyledTab label="Zamknięte Oferty" />
+        <StyledTab label="Aktywne Szkolenia i Wydarzenia" />
+        <StyledTab label="Zamknięte Szkolenia i Wydarzenia" />
       </Tabs>
 
       <StyledTabPanel value={value} index={0}>

@@ -1,6 +1,11 @@
 import types from "./authTypes";
 import firebase from "../../config/firebase";
-import { setNotification, toggleUpdateProfile } from "../app/appActions";
+import {
+  setNotification,
+  toggleUpdateProfile,
+  setOffers,
+  setIvents
+} from "../app/appActions";
 
 const db = firebase.firestore();
 const auth = firebase.auth();
@@ -50,42 +55,39 @@ export const logInErrorReset = () => {
 export const setAccountType = accountType => {
   return { type: types.SET_ACCOUNT_TYPE, accountType };
 };
+
+async function getDoc(collection, id) {
+  const doc = await db.collection(collection).doc(id);
+  return doc;
+}
 export const setLogIn = user => {
-  return dispatch => {
-    db.collection("users")
-      .doc(user.uid)
-      .get()
-      .then(doc => {
-        const { accountType } = doc.data();
-        const offers = [];
-        const ivents = [];
-        db.collection(`users/${auth.currentUser.uid}/offers`)
-          .get()
-          .then(querySnapshot => {
-            querySnapshot.forEach(offer =>
-              offers.push({ id: offer.id, ...offer.data() })
-            );
-            db.collection(`users/${auth.currentUser.uid}/events`)
-              .get()
-              .then(querySnapshot => {
-                querySnapshot.forEach(ivent =>
-                  ivents.push({ id: ivent.id, ...ivent.data() })
-                );
-                dispatch({
-                  type: types.LOGIN,
-                  user: {
-                    ...doc.data(),
-                    id: user.uid,
-                    offers,
-                    ivents
-                  }
-                });
-                dispatch(setAccountType(accountType));
-                dispatch({ type: types.SIGNUP_ERROR_RESET });
-                dispatch({ type: types.LOG_IN_ERROR_RESET });
-              });
-          });
-      });
+  return async dispatch => {
+    const userDoc = await getDoc("users", user.uid);
+    const userData = await userDoc.get().then(snapshot => snapshot.data());
+    const offersSnapshot = await userDoc.collection("offers").get();
+    const eventsSnapshot = await userDoc.collection("events").get();
+    const { accountType } = userData;
+    const offers = [];
+    const ivents = [];
+
+    offersSnapshot.forEach(offer =>
+      offers.push({ id: offer.id, ...offer.data() })
+    );
+    eventsSnapshot.forEach(ivent =>
+      ivents.push({ id: ivent.id, ...ivent.data() })
+    );
+    dispatch({
+      type: types.LOGIN,
+      user: {
+        ...userData,
+        id: user.uid,
+        offers,
+        ivents
+      }
+    });
+    dispatch(setAccountType(accountType));
+    dispatch({ type: types.SIGNUP_ERROR_RESET });
+    dispatch({ type: types.LOG_IN_ERROR_RESET });
   };
 };
 export const authSignUp = (name, email, password, accountType) => {
@@ -110,63 +112,54 @@ export const authSignUp = (name, email, password, accountType) => {
       closedIvents: []
     };
   }
-  return dispatch => {
-    auth
-      .createUserWithEmailAndPassword(email, password)
-      .then(user => {
-        db.collection("users")
-          .doc(user.user.uid)
-          .set(accountData)
-          .then(() => {
-            dispatch(
-              setNotification(true, "Zostałeś pomyślnie zalogowany", "success")
-            );
-            dispatch(setLogIn(user.user));
-          });
-      })
-      .catch(error => {
-        dispatch(signUpError(error.message));
-      });
+  return async dispatch => {
+    const account = await auth.createUserWithEmailAndPassword(email, password);
+    const userDoc = await getDoc("users", account.user.uid);
+    await userDoc.set(accountData);
+    dispatch(setNotification(true, "Zostałeś pomyślnie zalogowany", "success"));
+    dispatch(setLogIn(account.user));
   };
 };
-const checkAccountTypeMatch = (email, accountType) => {
-  return db
+const checkAccountTypeMatch = async (email, accountType) => {
+  const account = await db
     .collection("users")
     .where("email", "==", email)
-    .get()
-    .then(snapshot => {
-      let match;
-      snapshot.forEach(doc => {
-        if (accountType === doc.data().accountType) {
-          match = true;
-          return true;
-        }
-        match = false;
-      });
-      return match;
-    });
+    .get();
+  let match;
+  account.forEach(doc => {
+    if (accountType === doc.data().accountType) {
+      match = true;
+      return true;
+    }
+    match = false;
+  });
+  return match;
 };
 
 export const authLogIn = (email, password, accountType) => {
-  return dispatch => {
-    checkAccountTypeMatch(email, accountType).then(result => {
-      if (!result) {
-        dispatch(setNotification(true, "Nie znaleziono użytkownika", "error"));
-      }
-      auth
-        .signInWithEmailAndPassword(email, password)
-        .then(user => {
-          if (user) {
-            dispatch(setLogIn(user.user));
-            dispatch(
-              setNotification(true, "Zostałeś pomyślnie zalogowany", "success")
-            );
-          }
-        })
-        .catch(error => {
-          dispatch(logInError(error.message));
-        });
-    });
+  return async dispatch => {
+    const accountName = accountType === "employer" ? "klienta" : "użytkownika";
+    const accountMatch = await checkAccountTypeMatch(email, accountType);
+    if (!accountMatch) {
+      dispatch(
+        setNotification(true, `Nie znaleziono konta ${accountName}`, "error")
+      );
+      return;
+    }
+    const user = await auth
+      .signInWithEmailAndPassword(email, password)
+      .catch(err => {
+        if (err.code === "auth/wrong-password") {
+          dispatch(setNotification(true, `Nieprawidłowe hasło`, "error"));
+        }
+        setNotification(true, `Nie znaleziono konta ${accountName}`, "error");
+      });
+    if (user) {
+      dispatch(setLogIn(user.user));
+      dispatch(
+        setNotification(true, "Zostałeś pomyślnie zalogowany", "success")
+      );
+    }
   };
 };
 export const authLogOut = () => {
@@ -208,68 +201,44 @@ function createTimestamp() {
 export const addOffer = inputs => {
   const date = createTimestamp();
   const data = { ...inputs, date };
-  return dispatch => {
-    console.log("sldkfj");
-    // Create offer with inputs data
-    db.collection(`users/${auth.currentUser.uid}/offers`)
-      .add(data)
-      .then(doc => {
-        // Get current user name from users collection
-        db.collection("users")
-          .doc(auth.currentUser.uid)
-          .get()
-          .then(user => user.data())
-          // Save in variable "offer" created document id, owner id, owner name and offer data
-          .then(userData => {
-            doc.get().then(doc => {
-              const offer = {
-                id: doc.id,
-                ownerId: auth.currentUser.uid,
-                ownerName: userData.name,
-                ...doc.data()
-              };
-              // Save offer in user offers collection
-              db.collection(`users/${auth.currentUser.uid}/offers`)
-                .doc(doc.id)
-                .set(offer)
-                .then(() => {
-                  // Save offer in offers collection
-                  db.collection("offers")
-                    .doc(doc.id)
-                    .set(offer)
-                    .then(() => {
-                      dispatch({ type: types.ADD_OFFER, offer });
-                      dispatch(
-                        setNotification(
-                          true,
-                          "Twoja oferta została dodana",
-                          "success"
-                        )
-                      );
-                    });
-                });
-            });
-          });
-      });
+
+  return async dispatch => {
+    const userDoc = await getDoc("users", auth.currentUser.uid);
+    const userOffers = await userDoc.collection("offers");
+    const newOffer = await (await userOffers.add(data)).get();
+    const userData = await userDoc.get().then(snapshot => snapshot.data());
+    const offer = {
+      id: newOffer.id,
+      ownerId: auth.currentUser.uid,
+      ownerName: userData.name,
+      appliedCount: 0,
+      ...newOffer.data()
+    };
+    // Save offer in user offers collection
+    await userOffers.doc(newOffer.id).set(offer);
+    // Save offer in offers collection
+    const globalNewOffer = await getDoc("offers", newOffer.id);
+    globalNewOffer.set(offer);
+    dispatch({ type: types.ADD_OFFER, offer });
+    dispatch(setNotification(true, "Twoja oferta została dodana", "success"));
   };
 };
 export const applyToOffer = offerId => {
-  return dispatch => {
-    db.collection("offers")
-      .doc(offerId)
-      .get()
-      .then(doc => {
-        const offer = { id: offerId, ...doc.data() };
-        db.collection("users")
-          .doc(auth.currentUser.uid)
-          .update({
-            appliedOffers: firebase.firestore.FieldValue.arrayUnion(offer)
-          })
-          .then(() => {
-            dispatch({ type: types.APPLY_TO_OFFER, offer });
-            dispatch(setNotification(true, "Aplikowałeś ofertę", "success"));
-          });
-      });
+  return async dispatch => {
+    const offerDoc = await getDoc("offers", offerId);
+    const offerData = await offerDoc.get().then(snapshot => snapshot.data());
+
+    const userDoc = await db.collection("users").doc(auth.currentUser.uid);
+    await userDoc.update({
+      appliedOffers: firebase.firestore.FieldValue.arrayUnion(offerData)
+    });
+    await offerDoc.update({
+      appliedCount: firebase.firestore.FieldValue.increment(1)
+    });
+    const offer = offerData;
+    dispatch({ type: types.APPLY_TO_OFFER, offer });
+    dispatch(setNotification(true, "Aplikowałeś ofertę", "success"));
+    dispatch(setOffers());
   };
 };
 export const saveOffer = offerId => {
@@ -325,7 +294,6 @@ export const editOffer = inputs => {
                 const updatedOffers = snapshot.docs.map(doc => {
                   return doc.data();
                 });
-                console.log(updatedOffers);
               });
             // dispatch({ type: types.EDIT_OFFER });
           });
@@ -363,21 +331,21 @@ export const closeOffer = offerId => {
 };
 
 export const removeOffer = (offer, offerType) => {
-  return dispatch => {
-    db.collection("users")
-      .doc(auth.currentUser.uid)
-      .update({
-        [offerType]: firebase.firestore.FieldValue.arrayRemove(offer)
-      })
-      .then(() => {
-        db.collection("users")
-          .doc(auth.currentUser.uid)
-          .get()
-          .then(doc => {
-            const offers = doc.data()[offerType];
-            dispatch({ type: types.REMOVE_OFFER, offerType, offers });
-          });
+  return async dispatch => {
+    if (offerType === "appliedOffers") {
+      const globalOfferDoc = await db.collection("offers").doc(offer.id);
+      await globalOfferDoc.update({
+        appliedCount: firebase.firestore.FieldValue.increment(-1)
       });
+    }
+    const userDoc = await db.collection("users").doc(auth.currentUser.uid);
+    await userDoc.update({
+      [offerType]: firebase.firestore.FieldValue.arrayRemove(offer)
+    });
+    const userData = await userDoc.get();
+    const offers = userData[offerType];
+    dispatch({ type: types.REMOVE_OFFER, offerType, offers });
+    dispatch(setOffers());
   };
 };
 
@@ -430,69 +398,46 @@ export const reactivateOffer = offerId => {
 export const addIvent = inputs => {
   const date = createTimestamp();
   const data = { ...inputs, date };
-  return dispatch => {
-    // Create offer with inputs data
-    db.collection(`users/${auth.currentUser.uid}/events`)
-      .add(data)
-      .then(doc => {
-        // Get current user name from users collection
-        db.collection("users")
-          .doc(auth.currentUser.uid)
-          .get()
-          .then(user => user.data())
-          // Save in variable "offer" created document id, owner id, owner name and offer data
-          .then(userData => {
-            doc.get().then(doc => {
-              const ivent = {
-                id: doc.id,
-                ownerId: auth.currentUser.uid,
-                ownerName: userData.name,
-                ...doc.data()
-              };
-              // Save offer in user offers collection
-              db.collection(`users/${auth.currentUser.uid}/events`)
-                .doc(doc.id)
-                .set(ivent)
-                .then(() => {
-                  // Save offer in offers collection
-                  db.collection("events")
-                    .doc(doc.id)
-                    .set(ivent)
-                    .then(() => {
-                      dispatch({ type: types.ADD_IVENT, ivent });
-                      dispatch(
-                        setNotification(
-                          true,
-                          "Twoje wydarzenie zostało dodana",
-                          "success"
-                        )
-                      );
-                    });
-                });
-            });
-          });
-      });
+
+  return async dispatch => {
+    const userDoc = await getDoc("users", auth.currentUser.uid);
+    const userIvents = await userDoc.collection("events");
+    const newIvent = await (await userIvents.add(data)).get();
+    const userData = await userDoc.get().then(snapshot => snapshot.data());
+    const ivent = {
+      id: newIvent.id,
+      ownerId: auth.currentUser.uid,
+      ownerName: userData.name,
+      appliedCount: 0,
+      ...newIvent.data()
+    };
+    // Save offer in user offers collection
+    await userIvents.doc(newIvent.id).set(ivent);
+    // Save offer in offers collection
+    const globalNewIvent = await getDoc("events", newIvent.id);
+    globalNewIvent.set(ivent);
+    dispatch({ type: types.ADD_IVENT, ivent });
+    dispatch(
+      setNotification(true, "Twoje wydarzenie zostało dodana", "success")
+    );
   };
 };
 export const applyToIvent = iventId => {
-  return dispatch => {
-    db.collection("events")
-      .doc(iventId)
-      .get()
-      .then(doc => {
-        const ivent = { id: iventId, ...doc.data() };
-        db.collection("users")
-          .doc(auth.currentUser.uid)
-          .update({
-            appliedIvents: firebase.firestore.FieldValue.arrayUnion(ivent)
-          })
-          .then(() => {
-            dispatch({ type: types.APPLY_TO_IVENT, ivent });
-            dispatch(
-              setNotification(true, "Aplikowałeś wydarzenie", "success")
-            );
-          });
-      });
+  return async dispatch => {
+    const iventDoc = await getDoc("events", iventId);
+    const iventData = await iventDoc.get().then(snapshot => snapshot.data());
+
+    const userDoc = await db.collection("users").doc(auth.currentUser.uid);
+    await userDoc.update({
+      appliedIvents: firebase.firestore.FieldValue.arrayUnion(iventData)
+    });
+    await iventDoc.update({
+      appliedCount: firebase.firestore.FieldValue.increment(1)
+    });
+    const ivent = iventData;
+    dispatch({ type: types.APPLY_TO_IVENT, ivent });
+    dispatch(setNotification(true, "Aplikowałeś wydarzenie", "success"));
+    dispatch(setIvents());
   };
 };
 export const saveIvent = iventId => {
@@ -547,31 +492,29 @@ export const closeIvent = iventId => {
       });
   };
 };
-
 export const removeIvent = (ivent, iventType) => {
-  return dispatch => {
-    db.collection("users")
-      .doc(auth.currentUser.uid)
-      .update({
-        [iventType]: firebase.firestore.FieldValue.arrayRemove(ivent)
-      })
-      .then(() => {
-        db.collection("users")
-          .doc(auth.currentUser.uid)
-          .get()
-          .then(doc => {
-            const ivents = doc.data()[iventType];
-            dispatch({ type: types.REMOVE_IVENT, iventType, ivents });
-          });
+  return async dispatch => {
+    if (iventType === "appliedIvents") {
+      const globalIventDoc = await db.collection("events").doc(ivent.id);
+      await globalIventDoc.update({
+        appliedCount: firebase.firestore.FieldValue.increment(-1)
       });
+    }
+    const userDoc = await db.collection("users").doc(auth.currentUser.uid);
+    await userDoc.update({
+      [iventType]: firebase.firestore.FieldValue.arrayRemove(ivent)
+    });
+    const userData = await userDoc.get();
+    const ivents = userData[iventType];
+    dispatch({ type: types.REMOVE_IVENT, iventType, ivents });
+    dispatch(setIvents());
   };
 };
-
 export const reactivateIvent = iventId => {
   // Get offer from closed ivents
   // Remove offer from closed ivents
   // Add offer to ivents and user ivents
-  return dispatch => {
+  return async dispatch => {
     db.collection("users")
       .doc(auth.currentUser.uid)
       .get()

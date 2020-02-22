@@ -11,6 +11,10 @@ function createDocWithId(doc) {
   return { ...data, id };
 }
 
+export const setSearchActive = boolean => ({
+  type: types.SET_SEARCH_ACTIVE,
+  boolean
+});
 export const setNotification = (state = false, message = "", variant = "") => {
   return {
     type: types.SET_NOTIFICATION,
@@ -31,6 +35,7 @@ export const getAllOffers = async () => {
 export const setOffers = () => {
   return dispatch => {
     getAllOffers().then(offers => {
+      dispatch(setSearchActive(false));
       dispatch({ type: types.SET_OFFERS, offers });
     });
   };
@@ -38,6 +43,7 @@ export const setOffers = () => {
 export const setSearchResults = results => {
   return dispatch => {
     getAllOffers().then(offers => {
+      dispatch(setSearchActive(true));
       dispatch({ type: types.SET_SEARCH_RESULTS, results, offers });
     });
   };
@@ -52,6 +58,7 @@ export const getAllIvents = async () => {
 export const setIvents = () => {
   return dispatch => {
     getAllIvents().then(ivents => {
+      dispatch(setSearchActive(false));
       dispatch({ type: types.SET_IVENTS, ivents });
     });
   };
@@ -74,7 +81,6 @@ export const search = inputs => {
     const snapshot = await myQuery.get();
     const offers = snapshot.docs.map(createDocWithId);
     const matches = offers.filter(offer => isDocMatching(inputs, offer));
-    console.log(matches);
     dispatch(
       setNotification(true, `Znaleziono ${matches.length} ofert`, "success")
     );

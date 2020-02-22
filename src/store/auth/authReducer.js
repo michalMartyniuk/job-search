@@ -140,6 +140,7 @@ export default function authReducer(state = initialState, action) {
         ...state
       };
     case types.APPLY_TO_OFFER:
+      console.log(action.offer);
       return {
         ...state,
         user: {

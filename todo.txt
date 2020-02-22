@@ -1,8 +1,42 @@
-- W profilu pracownika trzeba dodać możliwość zapisywania poszczególnych ofert pracy.
-- W profilu pracownika dodać zakładkę „Aplikuj”
-- W profilu pracownika dodać zakładkę „Wysłane oferty”
+Profil Klienta
+W strefie Klienta przy Dodaj Szkolenie i Dodaj Wydarzenie usunąć opcje Doświadczenie i opcje Wynagrodzenie i dodać pole Opis z miejscem na opis + dodać pole „data” gdzie póki co można manualnie wpisać datę.
+W Strefie Klienta Szkolenia i Wydarzenia które są aktywne powinny mieć opcje Edytuj tak jak mają aktywne oferty pracy.
+W profilu Pracodawcy (Klienta) w zakładkach „aktywne oferty” i „otwarte wydarzenia” każda z ofert i każde z wydarzeń powinny mieć licznik Użytkowników którzy kliknęli „aplikuj”/weź udział.
+Na chwile obecną ten licznik nie musi działać, tylko niech będzie jakaś informacja o tym, że takie dane podajemy np. „Liczba aplikacji: X„ to jest jedna z najważniejszych funkcji na chwilę obecną.
+W profilu Klienta w zakładce „Znajdź Kandydata” powinna być lista wszystkich zarejestrowanych użytkowników.
+
+ 
+Profil Użytkownika
+W profilu Użytkownika powinny być dwie wyszukiwarki: jedna w zakładce Szukaj Szkolenia (taka sama jak na stronie głównej) i druga w zakładce Szukaj Pracy, która powinna uwzględniać też poziom wynagrodzenia (taki sam suwak jak przy dodawaniu ofert pracy przez Klienta).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Stare niewprowadzone zmiany:
+
 - W profilu pracownika dodać zakładkę „Ustaw alert” na razie pustą.
-- W polu „Kraj” zlikwidować drop down menu i umożliwić wpisywanie.
 - W profilu pracodawcy trzeba dodać zakładkę „Pakiet ogłoszeń” na razie pustą.
 - W polu „Wynagrodzenie” trzeba dodać opcje/przelicznik pln/godzinę dzielący całość wynagrodzenia na 160.
 - Przenieść oferty pracy na pierwszą stronę (na dole) i posegregować je po wynagrodzeniach (oferty z wynagrodzeniem 2-3 tys., 3-4 itd. + przelicznik na pln/godzine). Podobne pogrupowanie jest na pierwszej stronie Nofluffjobs ale akurat nie po wynagrodzeniach. Zobacz sobie jak to u nich wygląda.
@@ -12,3 +46,4 @@
 - Do każdego ogłoszenia pracodawca powinien móc dodać logo firmy, które będzie widoczne na ogólnej liście ogłoszeń.
 - Przy rejestracji pracodawców powinno być jeszcze pole „NIP"
 - Weryfikacja kont za pośrednictwem maili + alerty o pracach na maila
+
