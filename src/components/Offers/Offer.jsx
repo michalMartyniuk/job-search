@@ -66,13 +66,30 @@ const AppliedCountContainer = styled.div`
   padding: 10px;
   border-radius: 0px;
 `;
+const Date = styled.div`
+  font-size: 1rem;
+`;
 
+function convertDateObject({ year, month, day, hours, minutes }) {
+  month = month.length === 1 ? `0${month}` : month;
+  day = day.length === 1 ? `0${day}` : day;
+  return `${year}-${month}-${day} ${hours}:${minutes}`;
+}
 function Offer({ offer, ...props }) {
   const history = useHistory();
-  const { job, jobTypes, salary, cities, experience, ownerName } = offer;
+  const {
+    job,
+    jobTypes,
+    salary,
+    cities,
+    experience,
+    ownerName,
+    keySkills
+  } = offer;
   const handleEdit = offerId => {
     history.push(`/edit/${offerId}`);
   };
+  const date = convertDateObject(offer.date);
   return (
     <Root width={props.width}>
       <Header>
@@ -93,6 +110,7 @@ function Offer({ offer, ...props }) {
             <InfoTitle>Branża:</InfoTitle> {jobTypes.join(", ")}
           </JobTypes>
         ) : null}
+
         {salary.length ? (
           <Salary>
             <InfoTitle>Wynagrodzenie:</InfoTitle> {salary[0]} - {salary[1]}
@@ -109,7 +127,13 @@ function Offer({ offer, ...props }) {
             {experience}
           </Experience>
         ) : null}
+        {keySkills.length ? (
+          <JobTypes>
+            <InfoTitle>Kluczowe umiejętności:</InfoTitle> {keySkills.join(", ")}
+          </JobTypes>
+        ) : null}
       </Informations>
+      {date ? <Date>Data utworzenia: {date}</Date> : null}
       <Actions>
         {props.apply ? (
           <Button onClick={() => props.apply(offer.id)}>Aplikuj</Button>

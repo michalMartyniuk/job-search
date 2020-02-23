@@ -293,28 +293,15 @@ export const getOffer = offerId => {
 export const editOffer = inputs => {
   const date = createTimestamp();
   const offer = { ...inputs, date };
-  return dispatch => {
-    // Change offer with edited offer id in /offers to edited offer
-    db.collection("offers")
-      .doc(inputs.id)
-      .set(offer)
-      .then(() => {
-        // Change offer to edited offer in user /offers
-        db.collection(`users/${auth.currentUser.uid}/offers`)
-          .doc(inputs.id)
-          .set(offer)
-          .then(() => {
-            // Get updated user offers
-            db.collection(`users/${auth.currentUser.uid}/offers`)
-              .get()
-              .then(snapshot => {
-                const updatedOffers = snapshot.docs.map(doc => {
-                  return doc.data();
-                });
-              });
-            // dispatch({ type: types.EDIT_OFFER });
-          });
-      });
+  return async dispatch => {
+    const globalOfferDoc = await db.collection("offers").doc(inputs.id);
+    await globalOfferDoc.set(offer);
+
+    const userOfferDoc = db
+      .collection(`users/${auth.currentUser.uid}/offers`)
+      .doc(inputs.id);
+    await userOfferDoc.set(offer);
+    dispatch(setOffers());
   };
 };
 export const closeOffer = offerId => {

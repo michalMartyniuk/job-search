@@ -77,6 +77,7 @@ export const setIvents = () => {
 export const setSearchIventResults = results => {
   return dispatch => {
     getAllIvents().then(ivents => {
+      dispatch(setSearchActive(true));
       dispatch({ type: types.SET_SEARCH_IVENT_RESULTS, results, ivents });
     });
   };
@@ -121,7 +122,7 @@ export const searchIvent = inputs => {
         dispatch(
           setNotification(true, `Znaleziono ${docs.length} wydarzeń`, "success")
         );
-        dispatch({ type: types.SET_SEARCH_IVENT_RESULTS, results: docs });
+        dispatch(setSearchIventResults(docs));
       });
   };
 };

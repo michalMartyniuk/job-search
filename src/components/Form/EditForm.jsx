@@ -83,7 +83,7 @@ export default function EditFormNew({
         return 1;
       });
       setJob(offer.job);
-      setSalary(offer.salary);
+      setSalary(null, offer.salary);
       setExperience(offer.experience);
     });
   }, []);
@@ -94,6 +94,7 @@ export default function EditFormNew({
       job,
       jobTypes: Object.keys(jobTypes).filter(key => jobTypes[key]),
       cities: Object.keys(cities).filter(key => cities[key]),
+      keySkills: Object.keys(keySkills).filter(key => keySkills[key]),
       experience,
       salary
     };

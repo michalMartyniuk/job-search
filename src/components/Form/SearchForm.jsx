@@ -82,40 +82,39 @@ export default function SearchForm({
   const handleExperience = event => {
     setExperience(event.target.value);
   };
-  return null;
-  // return (
-  //   <Root>
-  //     {loggedIn ? null : <Redirect to="/login" />}
-  //     <Heading>Szukaj pracy</Heading>
-  //     <Search />
-  //     <StyledForm>
-  //       <Category header="Branża" names={jobTypes} set={setJobTypes} />
-  //       <FormFieldContainer>
-  //         <JobInput
-  //           value={job}
-  //           onChange={event => setJob(event.target.value)}
-  //         />
-  //         <ExperienceSelect value={experience} onChange={handleExperience} />
-  //       </FormFieldContainer>
-  //       <Filters>
-  //         <Category header="Miasta" names={cities} set={setCities} />
-  //         <Category
-  //           title="Kluczowe umiejętności"
-  //           names={keySkills}
-  //           set={setKeySkills}
-  //         />
-  //       </Filters>
-  //       <SalarySlider
-  //         values={salary}
-  //         onChange={setSalary}
-  //         name="Wynagrodzenie"
-  //       />
-  //       <Buttons>
-  //         <Btn onClick={resetForm}>Zresetuj</Btn>
-  //         <Btn onClick={handleSearch}>Szukaj</Btn>
-  //         <Btn onClick={setOffers}>Pokaż wszystkie</Btn>
-  //       </Buttons>
-  //     </StyledForm>
-  //   </Root>
-  // );
+  return (
+    <Root>
+      {loggedIn ? null : <Redirect to="/login" />}
+      <Heading>Szukaj pracy</Heading>
+      <Search />
+      <StyledForm>
+        <Category header="Branża" names={jobTypes} set={setJobTypes} />
+        <FormFieldContainer>
+          <JobInput
+            value={job}
+            onChange={event => setJob(event.target.value)}
+          />
+          <ExperienceSelect value={experience} onChange={handleExperience} />
+        </FormFieldContainer>
+        <Filters>
+          <Category header="Miasta" names={cities} set={setCities} />
+          <Category
+            title="Kluczowe umiejętności"
+            names={keySkills}
+            set={setKeySkills}
+          />
+        </Filters>
+        <SalarySlider
+          values={salary}
+          onChange={setSalary}
+          name="Wynagrodzenie"
+        />
+        <Buttons>
+          <Btn onClick={resetForm}>Zresetuj</Btn>
+          <Btn onClick={handleSearch}>Szukaj</Btn>
+          <Btn onClick={setOffers}>Pokaż wszystkie</Btn>
+        </Buttons>
+      </StyledForm>
+    </Root>
+  );
 }

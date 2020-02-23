@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import React from "react";
 import styled from "styled-components";
 import Divider from "@material-ui/core/Divider";
@@ -29,16 +30,13 @@ const Informations = styled.div`
   font-weight: 400;
   padding: 10px 0;
 `;
-const Salary = styled.span`
-  margin-right: 20px;
-`;
 const Cities = styled.span`
   margin-right: 20px;
 `;
-const JobTypes = styled.span`
+const Description = styled.div`
   margin-right: 20px;
 `;
-const Experience = styled.span`
+const JobTypes = styled.span`
   margin-right: 20px;
 `;
 const InfoTitle = styled.span`
@@ -66,13 +64,21 @@ const AppliedCountContainer = styled.div`
   padding: 10px;
   border-radius: 0px;
 `;
-
+const Date = styled.div`
+  font-size: 1rem;
+`;
+function convertDateObject({ year, month, day, hours, minutes }) {
+  month = month.length === 1 ? `0${month}` : month;
+  day = day.length === 1 ? `0${day}` : day;
+  return `${year}-${month}-${day} ${hours}:${minutes}`;
+}
 function Ivent({ ivent, ...props }) {
   const history = useHistory();
-  const { job, jobTypes, salary, cities, experience, ownerName } = ivent;
+  const { job, jobTypes, cities, description, ownerName, keySkills } = ivent;
   const handleEdit = iventId => {
     history.push(`/edit/${iventId}`);
   };
+  const date = convertDateObject(ivent.date);
   return (
     <Root>
       <Header>
@@ -94,22 +100,25 @@ function Ivent({ ivent, ...props }) {
             <InfoTitle>Branża:</InfoTitle> {jobTypes.join(", ")}
           </JobTypes>
         ) : null}
-        {salary.length ? (
-          <Salary>
-            <InfoTitle>Wynagrodzenie:</InfoTitle> {salary[0]} - {salary[1]}
-          </Salary>
-        ) : null}
         {cities.length ? (
           <Cities>
             <InfoTitle>Miasta:</InfoTitle> {cities.join(", ")}
           </Cities>
         ) : null}
-        {experience ? (
-          <Experience>
-            <InfoTitle>Doświadczenie: </InfoTitle>
-            {experience}
-          </Experience>
+        {keySkills.length ? (
+          <JobTypes>
+            <InfoTitle>Kluczowe umiejętności:</InfoTitle> {keySkills.join(", ")}
+          </JobTypes>
         ) : null}
+        {description ? (
+          <Description>
+            <p>
+              <strong>Opis: </strong>
+              {description}
+            </p>
+          </Description>
+        ) : null}
+        {date ? <Date>Data utworzenia: {date}</Date> : null}
       </Informations>
       <Actions>
         {props.apply ? (
@@ -122,6 +131,9 @@ function Ivent({ ivent, ...props }) {
           <Button onClick={() => props.remove(ivent, props.iventType)}>
             Usuń
           </Button>
+        ) : null}
+        {props.edit ? (
+          <Button onClick={() => handleEdit(ivent.id)}>Edytuj</Button>
         ) : null}
         {props.close ? (
           <Button onClick={() => props.close(ivent.id)}>Zamknij</Button>

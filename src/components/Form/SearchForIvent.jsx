@@ -2,10 +2,9 @@ import React from "react";
 import { Paper, Button } from "@material-ui/core";
 import styled from "styled-components";
 import { Redirect } from "react-router-dom";
-import { ExperienceSelect } from "./Select";
+import TextField from "@material-ui/core/TextField";
 import { JobInput } from "./Input";
 import Category from "./FiltersCategory";
-import SalarySlider from "./Slider";
 import Search from "../Search/Search";
 
 const Filters = styled.div`
@@ -62,11 +61,9 @@ export default function SearchForIvent({
   setCities,
   keySkills,
   setKeySkills,
-  setSalary,
-  salary,
-  experience,
-  setExperience,
-  loggedIn
+  loggedIn,
+  description,
+  setDescription
 }) {
   const handleSearch = () => {
     const inputs = {
@@ -74,48 +71,49 @@ export default function SearchForIvent({
       jobTypes: Object.keys(jobTypes).filter(key => jobTypes[key]),
       cities: Object.keys(cities).filter(key => cities[key]),
       keySkills: Object.keys(keySkills).filter(key => keySkills[key]),
-      experience,
-      salary
+      description
     };
     searchIvent(inputs);
   };
-  const handleExperience = event => {
-    setExperience(event.target.value);
+  const handleDescription = event => {
+    setDescription(event.target.value);
   };
-  return null;
-  // return (
-  //   <Root>
-  //     {loggedIn ? null : <Redirect to="/login" />}
-  //     <Heading>Szukaj szkolenia</Heading>
-  //     <Search />
-  //     <StyledForm>
-  //       <Category header="Branża" names={jobTypes} set={setJobTypes} />
-  //       <FormFieldContainer>
-  //         <JobInput
-  //           value={job}
-  //           onChange={event => setJob(event.target.value)}
-  //         />
-  //         <ExperienceSelect value={experience} onChange={handleExperience} />
-  //       </FormFieldContainer>
-  //       <Filters>
-  //         <Category header="Miasta" names={cities} set={setCities} />
-  //         <Category
-  //           title="Kluczowe umiejętności"
-  //           names={keySkills}
-  //           set={setKeySkills}
-  //         />
-  //       </Filters>
-  //       <SalarySlider
-  //         values={salary}
-  //         onChange={setSalary}
-  //         name="Wynagrodzenie"
-  //       />
-  //       <Buttons>
-  //         <Btn onClick={resetForm}>Zresetuj</Btn>
-  //         <Btn onClick={handleSearch}>Szukaj</Btn>
-  //         <Btn onClick={getAllIvents}>Pokaż wszystkie</Btn>
-  //       </Buttons>
-  //     </StyledForm>
-  //   </Root>
-  // );
+  return (
+    <Root>
+      {loggedIn ? null : <Redirect to="/login" />}
+      <Heading>Szukaj szkolenia</Heading>
+      <Search />
+      <StyledForm>
+        <Category header="Branża" names={jobTypes} set={setJobTypes} />
+        <FormFieldContainer>
+          <JobInput
+            value={job}
+            onChange={event => setJob(event.target.value)}
+          />
+        </FormFieldContainer>
+        <Filters>
+          <Category header="Miasta" names={cities} set={setCities} />
+          <Category
+            title="Kluczowe umiejętności"
+            names={keySkills}
+            set={setKeySkills}
+          />
+        </Filters>
+        <TextField
+          id="outlined-multiline-static"
+          label="Opis"
+          multiline
+          rows="7"
+          defaultValue=""
+          onChange={handleDescription}
+          variant="outlined"
+        />
+        <Buttons>
+          <Btn onClick={resetForm}>Zresetuj</Btn>
+          <Btn onClick={handleSearch}>Szukaj</Btn>
+          <Btn onClick={getAllIvents}>Pokaż wszystkie</Btn>
+        </Buttons>
+      </StyledForm>
+    </Root>
+  );
 }

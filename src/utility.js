@@ -34,14 +34,11 @@ export const isDocMatching = (inputObj, docObj) => {
       return true;
     }
     if (key === "salary") {
-      console.log(key, matchesRange(inputs[key], docObj[key]));
       return matchesRange(inputs[key], docObj[key]);
     }
     if (Array.isArray(inputs[key])) {
-      console.log(key, compareArrays(inputs[key], docObj[key]));
       return compareArrays(inputs[key], docObj[key]);
     }
-    console.log(key, compareProps(inputs[key], docObj[key]));
     return compareProps(inputs[key], docObj[key]);
   });
   const falsyFilteredMatches = matches.filter(value => value);

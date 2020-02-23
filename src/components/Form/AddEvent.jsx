@@ -3,9 +3,8 @@ import { Paper, Button } from "@material-ui/core";
 import styled from "styled-components";
 import { Redirect } from "react-router-dom";
 import { JobInput } from "./Input";
-import { ExperienceSelect } from "./Select";
 import Category from "./FiltersCategory";
-import SalarySlider from "./Slider";
+import TextField from "@material-ui/core/TextField";
 
 const Filters = styled.div`
   display: flex;
@@ -58,11 +57,9 @@ export default function AddEvent({
   cities,
   setCities,
   setKeySkills,
+  setDescription,
+  description,
   keySkills,
-  setSalary,
-  salary,
-  experience,
-  setExperience,
   addIvent,
   loggedIn
 }) {
@@ -76,13 +73,12 @@ export default function AddEvent({
       jobTypes: Object.keys(jobTypes).filter(key => jobTypes[key]),
       cities: Object.keys(cities).filter(key => cities[key]),
       keySkills: Object.keys(keySkills).filter(key => keySkills[key]),
-      experience,
-      salary
+      description
     };
     addIvent(inputs);
   };
-  const handleExperience = event => {
-    setExperience(event.target.value);
+  const handleDescription = event => {
+    setDescription(event.target.value);
   };
   return (
     <Root>
@@ -104,6 +100,15 @@ export default function AddEvent({
             set={setKeySkills}
           />
         </Filters>
+        <TextField
+          id="outlined-multiline-static"
+          label="Opis"
+          multiline
+          rows="7"
+          defaultValue=""
+          onChange={handleDescription}
+          variant="outlined"
+        />
         <Buttons>
           <Btn onClick={resetForm}>Zresetuj</Btn>
           <Btn onClick={handleAddIvent}>Dodaj wydarzenie</Btn>

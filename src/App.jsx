@@ -54,6 +54,20 @@ function App(props) {
     props.setUsers();
     return () => unsubscribe();
   }, [auth.onAuthStateChanged]);
+  function checkOffers() {
+    const { offers, searchResults } = props;
+    if (searchResults.length) {
+      return searchResults;
+    }
+    return offers;
+  }
+  function checkIvents() {
+    const { ivents, searchIventResults } = props;
+    if (searchIventResults.length) {
+      return searchIventResults;
+    }
+    return ivents;
+  }
   return (
     <Router>
       <StylesProvider injectFirst>
@@ -70,7 +84,7 @@ function App(props) {
                 <Form formType="search" />
                 {props.offers.length ? (
                   <OfferList
-                    offers={props.offers}
+                    offers={checkOffers()}
                     title="Oferty"
                     apply={props.apply}
                     save={props.save}
@@ -81,7 +95,7 @@ function App(props) {
                 <Form formType="searchForIvent" />
                 {props.ivents.length ? (
                   <IventList
-                    ivents={props.ivents}
+                    ivents={checkIvents()}
                     title="Wydarzenia"
                     apply={props.applyToIvent}
                     save={props.saveIvent}

@@ -1,9 +1,4 @@
-Profil Klienta
-W strefie Klienta przy Dodaj Szkolenie i Dodaj Wydarzenie usunąć opcje 
-Doświadczenie i opcje Wynagrodzenie i dodać pole Opis z miejscem na opis + 
-dodać pole „data” gdzie póki co można manualnie wpisać datę.
-W Strefie Klienta Szkolenia i Wydarzenia które są aktywne powinny mieć opcje 
-Edytuj tak jak mają aktywne oferty pracy.
+Edycja ofert/wydarzeń
 
 Profil Użytkownika
 W profilu Użytkownika powinny być dwie wyszukiwarki: jedna w zakładce 

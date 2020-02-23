@@ -20,7 +20,8 @@ const initialState = {
     Word: false,
     Excel: false,
     PowerPoint: false
-  }
+  },
+  description: ""
 };
 
 export default function formReducer(state = initialState, action) {
@@ -75,6 +76,11 @@ export default function formReducer(state = initialState, action) {
           ...state.keySkills,
           [action.value]: !state.keySkills[action.value]
         }
+      };
+    case types.SET_DESCRIPTION:
+      return {
+        ...state,
+        description: action.value
       };
     case types.SET_SALARY:
       return {

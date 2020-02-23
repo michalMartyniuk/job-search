@@ -2,10 +2,9 @@ import React from "react";
 import { Paper, Button } from "@material-ui/core";
 import styled from "styled-components";
 import { Redirect } from "react-router-dom";
+import TextField from "@material-ui/core/TextField";
 import { JobInput } from "./Input";
-import { ExperienceSelect } from "./Select";
 import Category from "./FiltersCategory";
-import SalarySlider from "./Slider";
 
 const Filters = styled.div`
   display: flex;
@@ -59,10 +58,8 @@ export default function AddTraining({
   setCities,
   setKeySkills,
   keySkills,
-  setSalary,
-  salary,
-  experience,
-  setExperience,
+  description,
+  setDescription,
   addIvent,
   loggedIn
 }) {
@@ -76,13 +73,12 @@ export default function AddTraining({
       jobTypes: Object.keys(jobTypes).filter(key => jobTypes[key]),
       cities: Object.keys(cities).filter(key => cities[key]),
       keySkills: Object.keys(keySkills).filter(key => keySkills[key]),
-      experience,
-      salary
+      description
     };
     addIvent(inputs);
   };
-  const handleExperience = event => {
-    setExperience(event.target.value);
+  const handleDescription = event => {
+    setDescription(event.target.value);
   };
   return (
     <Root>
@@ -95,7 +91,6 @@ export default function AddTraining({
             value={job}
             onChange={event => setJob(event.target.value)}
           />
-          <ExperienceSelect value={experience} onChange={handleExperience} />
         </FormFieldContainer>
         <Filters>
           <Category title="Miasta" names={cities} set={setCities} />
@@ -105,10 +100,14 @@ export default function AddTraining({
             set={setKeySkills}
           />
         </Filters>
-        <SalarySlider
-          values={salary}
-          onChange={setSalary}
-          name="Wynagrodzenie"
+        <TextField
+          id="outlined-multiline-static"
+          label="Opis"
+          multiline
+          rows="7"
+          defaultValue=""
+          onChange={handleDescription}
+          variant="outlined"
         />
         <Buttons>
           <Btn onClick={resetForm}>Zresetuj</Btn>
