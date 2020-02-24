@@ -91,7 +91,7 @@ export default function SearchForm({
     <Root>
       {loggedIn ? null : <Redirect to="/login" />}
       <Heading>Szukaj pracy</Heading>
-      <Search />
+      <Search searchType="offers" />
       <StyledForm>
         <Category title="Branża" names={jobTypes} set={setJobTypes} />
         <FormFieldContainer>

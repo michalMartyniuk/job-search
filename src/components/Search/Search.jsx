@@ -16,9 +16,6 @@ const Container = styled.div`
   margin: 50px 0px;
   // width: 600px;
 `;
-const InputContainer = styled.div`
-  display: flex;
-`;
 const SearchButton = styled(Button)`
   background-color: #00bcd4;
   font-size: 1rem;
@@ -51,7 +48,8 @@ function Search({
   setIvents,
   setSearchResults,
   setSearchIventResults,
-  setNotification
+  setNotification,
+  searchType
 }) {
   const [searchValue, setSearchValue] = React.useState("");
   const [foundOffers, setFoundOffers] = React.useState([]);
@@ -65,7 +63,7 @@ function Search({
       const lowerCaseValue = isString(value) && value.toLowerCase();
       return lowerCaseItem === lowerCaseValue;
     });
-    return filteredArray.length ? true : false;
+    return !!filteredArray.length;
   };
 
   const offerMatch = (offer, value) => {
@@ -78,7 +76,7 @@ function Search({
       return lowerCaseItem === lowerCaseValue;
     });
     matchArray = matchArray.filter(item => item);
-    return matchArray.length ? true : false;
+    return !!matchArray.length;
   };
 
   const searchState = (state, value) => {
@@ -103,14 +101,31 @@ function Search({
     return { offer, ivent };
   };
   const handleSearch = () => {
-    setNotification(
-      `Znaleziono ${foundOffers.length} ${
-        resultsNotification(foundOffers.length).offer
-      } i  ${foundIvents.length} ${
-        resultsNotification(foundIvents.length).ivent
-      }
-      dla "${searchValue}"`
-    );
+    switch (searchType) {
+      case "offers":
+        setNotification(
+          `Znaleziono ${foundOffers.length} ${
+            resultsNotification(foundOffers.length).offer
+          } dla "${searchValue}"`
+        );
+        break;
+      case "events":
+        setNotification(
+          `Znaleziono ${foundIvents.length} ${
+            resultsNotification(foundIvents.length).ivent
+          } dla "${searchValue}"`
+        );
+        break;
+      default:
+        setNotification(
+          `Znaleziono ${foundOffers.length} ${
+            resultsNotification(foundOffers.length).offer
+          } i  ${foundIvents.length} ${
+            resultsNotification(foundIvents.length).ivent
+          } dla "${searchValue}"`
+        );
+        break;
+    }
     setSearchResults(foundOffers);
     setSearchIventResults(foundIvents);
   };

@@ -87,7 +87,7 @@ export default function SearchForIvent({
     <Root>
       {loggedIn ? null : <Redirect to="/login" />}
       <Heading>Szukaj szkolenia</Heading>
-      <Search />
+      <Search searchType="events" />
       <StyledForm>
         <Category title="Branża" names={jobTypes} set={setJobTypes} />
         <FormFieldContainer>

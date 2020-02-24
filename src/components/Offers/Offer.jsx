@@ -148,14 +148,14 @@ function Offer({ offer, ...props }) {
             Usuń
           </Button>
         ) : null}
+        {props.edit ? (
+          <Button onClick={() => handleEdit(offer.id)}>Edytuj</Button>
+        ) : null}
         {props.close ? (
           <Button onClick={() => props.close(offer.id)}>Zamknij</Button>
         ) : null}
         {props.reactivate ? (
           <Button onClick={() => props.reactivate(offer.id)}>Wznów</Button>
-        ) : null}
-        {props.edit ? (
-          <Button onClick={() => handleEdit(offer.id)}>Edytuj</Button>
         ) : null}
       </Actions>
       <Divider component="span" />
