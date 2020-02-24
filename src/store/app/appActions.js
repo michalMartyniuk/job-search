@@ -89,14 +89,25 @@ export const search = inputs => {
   const inputsKeys = Object.keys(filteredInputs);
   const myQuery = offersRef.where(inputsKeys[0], "==", inputs[inputsKeys[0]]);
 
-  return async dispatch => {
-    const snapshot = await myQuery.get();
-    const offers = snapshot.docs.map(createDocWithId);
-    const matches = offers.filter(offer => isDocMatching(inputs, offer));
-    dispatch(
-      setNotification(true, `Znaleziono ${matches.length} ofert`, "success")
-    );
-    dispatch(setSearchResults(matches));
+  return dispatch => {
+    myQuery
+      .get()
+      .then(snapshot => {
+        return snapshot.docs.map(doc => {
+          const data = doc.data();
+          const { id } = doc;
+          return { ...data, id };
+        });
+      })
+      .then(docs => {
+        return docs.filter(doc => isDocMatching(inputs, doc));
+      })
+      .then(docs => {
+        dispatch(
+          setNotification(true, `Znaleziono ${docs.length} wydarzeń`, "success")
+        );
+        dispatch(setSearchResults(docs));
+      });
   };
 };
 export const searchIvent = inputs => {

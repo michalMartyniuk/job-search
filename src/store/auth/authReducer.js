@@ -32,7 +32,8 @@ const initialState = {
   logInError: false,
   signUpError: false,
   accountType: "",
-  editedOffer: null
+  editedOffer: null,
+  editedIvent: null
 };
 
 export default function authReducer(state = initialState, action) {
@@ -127,6 +128,11 @@ export default function authReducer(state = initialState, action) {
         ...state,
         editedOffer: action.offer
       };
+    case types.GET_IVENT:
+      return {
+        ...state,
+        editedIvent: action.ivent
+      };
     case types.ADD_OFFER:
       return {
         ...state,
@@ -135,9 +141,15 @@ export default function authReducer(state = initialState, action) {
           offers: [...state.user.offers, action.offer]
         }
       };
+    case types.UPDATE_USER:
+      return {
+        ...state,
+        user: action.updatedUser
+      };
     case types.EDIT_OFFER:
       return {
-        ...state
+        ...state,
+        user: action.updatedUser
       };
     case types.APPLY_TO_OFFER:
       return {
@@ -207,7 +219,11 @@ export default function authReducer(state = initialState, action) {
       };
     case types.EDIT_IVENT:
       return {
-        ...state
+        ...state,
+        user: {
+          ...state.user,
+          ivents: [...state.user.ivents, action.ivent]
+        }
       };
     case types.APPLY_TO_IVENT:
       return {

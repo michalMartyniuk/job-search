@@ -60,64 +60,96 @@ async function getDoc(collection, id) {
   const doc = await db.collection(collection).doc(id);
   return doc;
 }
-export const setLogIn = user => {
-  return async dispatch => {
-    const userDoc = await getDoc("users", user.uid);
-    const userData = await userDoc.get().then(snapshot => snapshot.data());
-    const offersSnapshot = await userDoc.collection("offers").get();
-    const eventsSnapshot = await userDoc.collection("events").get();
-    const { accountType } = userData;
-    const offers = [];
-    const ivents = [];
+function arrayFromSnapshot(snapshot) {
+  const container = [];
+  snapshot.forEach(item => container.push({ id: item.id, ...item.data() }));
+  return container;
+}
+function updateFromArray(targetArray, sourceArray) {
+  const updatedArray = targetArray
+    .map(targetItem => {
+      return sourceArray.filter(
+        sourceItem => sourceItem.id === targetItem.id
+      )[0];
+    })
+    .filter(value => value);
+  return updatedArray;
+}
+export const getUserData = async userId => {
+  const userDoc = await db.collection("users").doc(userId);
+  const userData = await userDoc.get().then(snapshot => snapshot.data());
+  const globalOffersSnapshot = await db.collection("offers").get();
+  const globalIventsSnapshot = await db.collection("events").get();
+  const userOffersSnapshot = await userDoc.collection("offers").get();
+  const userEventsSnapshot = await userDoc.collection("events").get();
+  const offers = arrayFromSnapshot(userOffersSnapshot);
+  const ivents = arrayFromSnapshot(userEventsSnapshot);
+  const globalOffers = arrayFromSnapshot(globalOffersSnapshot);
+  const globalIvents = arrayFromSnapshot(globalIventsSnapshot);
 
-    offersSnapshot.forEach(offer =>
-      offers.push({ id: offer.id, ...offer.data() })
-    );
-    eventsSnapshot.forEach(ivent =>
-      ivents.push({ id: ivent.id, ...ivent.data() })
-    );
+  const appliedOffers = updateFromArray(userData.appliedOffers, globalOffers);
+  const appliedIvents = updateFromArray(userData.appliedIvents, globalIvents);
+  const savedOffers = updateFromArray(userData.savedOffers, globalOffers);
+  const savedIvents = updateFromArray(userData.savedIvents, globalIvents);
+  const closedOffers = updateFromArray(userData.closedOffers, globalOffers);
+  const closedIvents = updateFromArray(userData.closedIvents, globalIvents);
+
+  const user = {
+    ...userData,
+    id: userId,
+    offers,
+    ivents,
+    appliedOffers,
+    appliedIvents,
+    savedOffers,
+    savedIvents,
+    closedOffers,
+    closedIvents
+  };
+  return user;
+};
+export const setLogIn = userId => {
+  return async dispatch => {
+    const user = await getUserData(userId);
     dispatch({
       type: types.LOGIN,
-      user: {
-        ...userData,
-        id: user.uid,
-        offers,
-        ivents
-      }
+      user
     });
-    dispatch(setAccountType(accountType));
+    dispatch(setAccountType(user.accountType));
     dispatch({ type: types.SIGNUP_ERROR_RESET });
     dispatch({ type: types.LOG_IN_ERROR_RESET });
   };
 };
 export const authSignUp = (name, email, password, accountType) => {
   let accountData = { name, email, accountType };
-  if (accountType === "employee") {
-    accountData = {
-      ...accountData,
-      savedOffers: [],
-      appliedOffers: [],
-      savedIvents: [],
-      appliedIvents: [],
-      userKeySkills: {
-        Word: false,
-        Excel: false,
-        PowerPoint: false
-      }
-    };
-  } else if (accountType === "employer") {
-    accountData = {
-      ...accountData,
-      closedOffers: [],
-      closedIvents: []
-    };
-  }
+  // if (accountType === "employee") {
+  accountData = {
+    ...accountData,
+    savedOffers: [],
+    appliedOffers: [],
+    savedIvents: [],
+    appliedIvents: [],
+    userKeySkills: {
+      Word: false,
+      Excel: false,
+      PowerPoint: false
+    },
+    closedOffers: [],
+    closedIvents: []
+    // };
+    // } else if (accountType === "employer") {
+    // accountData = {
+    // ...accountData,
+    // closedOffers: [],
+    // closedIvents: []
+    // };
+  };
   return async dispatch => {
     const account = await auth.createUserWithEmailAndPassword(email, password);
     const userDoc = await getDoc("users", account.user.uid);
     await userDoc.set(accountData);
     dispatch(setNotification(true, "Zostałeś pomyślnie zalogowany", "success"));
-    dispatch(setLogIn(account.user));
+    dispatch(setLogIn(account.user.uid));
   };
 };
 const checkAccountTypeMatch = async (email, accountType) => {
@@ -155,7 +187,7 @@ export const authLogIn = (email, password, accountType) => {
         setNotification(true, `Nie znaleziono konta ${accountName}`, "error");
       });
     if (user) {
-      dispatch(setLogIn(user.user));
+      dispatch(setLogIn(user.user.uid));
       dispatch(
         setNotification(true, "Zostałeś pomyślnie zalogowany", "success")
       );
@@ -236,22 +268,25 @@ async function checkIfApplied(id, type) {
 }
 export const applyToOffer = offerId => {
   return async dispatch => {
+    // Check if user already applied to offer and return if he did.
     const alreadyApplied = await checkIfApplied(offerId, "offer");
     if (alreadyApplied) {
       dispatch(setNotification(true, "Aplikowałeś już na tę ofertę", "info"));
       return;
     }
+    // Get global offer document and update its appliedCount.
     const offerDoc = await getDoc("offers", offerId);
     await offerDoc.update({
       appliedCount: firebase.firestore.FieldValue.increment(1)
     });
+    // Get global updated offer data.
     const offerData = await offerDoc.get().then(snapshot => snapshot.data());
-
+    // Get user document.
     const userDoc = await db.collection("users").doc(auth.currentUser.uid);
+    // Update user appliedOffers array with updated offer.
     await userDoc.update({
       appliedOffers: firebase.firestore.FieldValue.arrayUnion(offerData)
     });
-
     const offer = offerData;
     dispatch({ type: types.APPLY_TO_OFFER, offer });
     dispatch(setNotification(true, "Aplikowałeś ofertę", "success"));
@@ -290,18 +325,49 @@ export const getOffer = offerId => {
     });
   };
 };
+export const getIvent = iventId => {
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      db.collection(`users/${auth.currentUser.uid}/events`)
+        .doc(iventId)
+        .get()
+        .then(doc => {
+          dispatch({ type: types.GET_IVENT, ivent: doc.data() });
+          resolve(doc.data());
+        });
+    });
+  };
+};
 export const editOffer = inputs => {
   const date = createTimestamp();
   const offer = { ...inputs, date };
   return async dispatch => {
+    // Update offer in global offers collection
     const globalOfferDoc = await db.collection("offers").doc(inputs.id);
     await globalOfferDoc.set(offer);
-
+    // Update offer in users/offers collection
     const userOfferDoc = db
       .collection(`users/${auth.currentUser.uid}/offers`)
       .doc(inputs.id);
     await userOfferDoc.set(offer);
-    dispatch(setOffers());
+    const updatedUser = await getUserData(auth.currentUser.uid);
+    dispatch({ type: types.UPDATE_USER, updatedUser });
+  };
+};
+export const editIvent = inputs => {
+  const date = createTimestamp();
+  const ivent = { ...inputs, date };
+  return async dispatch => {
+    // Update offer in global offers collection
+    const globalIventDoc = await db.collection("events").doc(inputs.id);
+    await globalIventDoc.set(ivent);
+    // Update offer in users/offers collection
+    const userIventDoc = db
+      .collection(`users/${auth.currentUser.uid}/events`)
+      .doc(inputs.id);
+    await userIventDoc.set(ivent);
+    const updatedUser = await getUserData(auth.currentUser.uid);
+    dispatch({ type: types.UPDATE_USER, updatedUser });
   };
 };
 export const closeOffer = offerId => {

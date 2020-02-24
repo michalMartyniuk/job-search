@@ -73,6 +73,8 @@ const Date = styled.div`
 function convertDateObject({ year, month, day, hours, minutes }) {
   month = month.length === 1 ? `0${month}` : month;
   day = day.length === 1 ? `0${day}` : day;
+  hours = hours.length === 1 ? `0${hours}` : hours;
+  minutes = minutes.length === 1 ? `0${minutes}` : minutes;
   return `${year}-${month}-${day} ${hours}:${minutes}`;
 }
 function Offer({ offer, ...props }) {
@@ -87,7 +89,7 @@ function Offer({ offer, ...props }) {
     keySkills
   } = offer;
   const handleEdit = offerId => {
-    history.push(`/edit/${offerId}`);
+    history.push(`/edit/offer/${offerId}`);
   };
   const date = convertDateObject(offer.date);
   return (

@@ -13,19 +13,23 @@ import {
 import {
   search,
   setOffers,
+  setIvents,
   searchIvent,
   getAllIvents
 } from "../../store/app/appActions";
 import {
   editOffer,
   getOffer,
+  getIvent,
   addOffer,
-  addIvent
+  addIvent,
+  editIvent
 } from "../../store/auth/authActions";
 import AddForm from "./AddForm";
 import AddTraining from "./AddTraining";
 import AddEvent from "./AddEvent";
 import EditForm from "./EditForm";
+import EditIvent from "./EditIvent";
 import SearchForm from "./SearchForm";
 import SearchForIvent from "./SearchForIvent";
 
@@ -40,6 +44,7 @@ function Form({ formType, ...props }) {
       {formType === "addTraining" && <AddTraining {...props} />}
       {formType === "addEvent" && <AddEvent {...props} />}
       {formType === "edit" && <EditForm {...props} />}
+      {formType === "editIvent" && <EditIvent {...props} />}
       {formType === "search" && <SearchForm {...props} />}
       {formType === "searchForIvent" && <SearchForIvent {...props} />}
     </>
@@ -54,9 +59,12 @@ const mapDispatchToProps = dispatch => ({
   search: inputs => dispatch(search(inputs)),
   searchIvent: inputs => dispatch(searchIvent(inputs)),
   setOffers: () => dispatch(setOffers()),
+  setIvents: () => dispatch(setIvents()),
   getAllIvents: () => dispatch(getAllIvents()),
   getOffer: id => dispatch(getOffer(id)),
+  getIvent: id => dispatch(getIvent(id)),
   editOffer: inputs => dispatch(editOffer(inputs)),
+  editIvent: inputs => dispatch(editIvent(inputs)),
   addOffer: inputs => dispatch(addOffer(inputs)),
   addIvent: inputs => dispatch(addIvent(inputs)),
   resetForm: () => dispatch(resetForm()),

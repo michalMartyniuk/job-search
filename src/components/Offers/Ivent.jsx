@@ -70,13 +70,15 @@ const Date = styled.div`
 function convertDateObject({ year, month, day, hours, minutes }) {
   month = month.length === 1 ? `0${month}` : month;
   day = day.length === 1 ? `0${day}` : day;
+  hours = hours.length === 1 ? `0${hours}` : hours;
+  minutes = minutes.length === 1 ? `0${minutes}` : minutes;
   return `${year}-${month}-${day} ${hours}:${minutes}`;
 }
 function Ivent({ ivent, ...props }) {
   const history = useHistory();
   const { job, jobTypes, cities, description, ownerName, keySkills } = ivent;
   const handleEdit = iventId => {
-    history.push(`/edit/${iventId}`);
+    history.push(`/edit/event/${iventId}`);
   };
   const date = convertDateObject(ivent.date);
   return (

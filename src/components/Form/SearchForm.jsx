@@ -56,6 +56,7 @@ export default function SearchForm({
   resetForm,
   search,
   setOffers,
+  setIvents,
   jobTypes,
   setJobTypes,
   cities,
@@ -82,13 +83,17 @@ export default function SearchForm({
   const handleExperience = event => {
     setExperience(event.target.value);
   };
+  const handleShowAll = () => {
+    setOffers();
+    setIvents();
+  };
   return (
     <Root>
       {loggedIn ? null : <Redirect to="/login" />}
       <Heading>Szukaj pracy</Heading>
       <Search />
       <StyledForm>
-        <Category header="Branża" names={jobTypes} set={setJobTypes} />
+        <Category title="Branża" names={jobTypes} set={setJobTypes} />
         <FormFieldContainer>
           <JobInput
             value={job}
@@ -97,7 +102,7 @@ export default function SearchForm({
           <ExperienceSelect value={experience} onChange={handleExperience} />
         </FormFieldContainer>
         <Filters>
-          <Category header="Miasta" names={cities} set={setCities} />
+          <Category title="Miasta" names={cities} set={setCities} />
           <Category
             title="Kluczowe umiejętności"
             names={keySkills}
@@ -112,7 +117,7 @@ export default function SearchForm({
         <Buttons>
           <Btn onClick={resetForm}>Zresetuj</Btn>
           <Btn onClick={handleSearch}>Szukaj</Btn>
-          <Btn onClick={setOffers}>Pokaż wszystkie</Btn>
+          <Btn onClick={handleShowAll}>Pokaż wszystkie</Btn>
         </Buttons>
       </StyledForm>
     </Root>

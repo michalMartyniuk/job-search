@@ -1,11 +1,10 @@
 import React from "react";
 import { Paper, Button } from "@material-ui/core";
 import styled from "styled-components";
-import { Redirect } from "react-router-dom";
+import { Redirect, useParams } from "react-router-dom";
 import TextField from "@material-ui/core/TextField";
 import { JobInput } from "./Input";
 import Category from "./FiltersCategory";
-import Search from "../Search/Search";
 
 const Filters = styled.div`
   display: flex;
@@ -49,47 +48,62 @@ const Btn = styled(Button).attrs({
     background-color: #008c9e;
   }
 `;
-export default function SearchForIvent({
+export default function EditFormNew({
+  getIvent,
   job,
   setJob,
   resetForm,
-  searchIvent,
   jobTypes,
   setJobTypes,
   cities,
   setCities,
   keySkills,
   setKeySkills,
-  loggedIn,
   description,
   setDescription,
-  setOffers,
-  setIvents
+  editIvent,
+  loggedIn
 }) {
-  const handleSearch = () => {
+  const { id } = useParams();
+  React.useEffect(() => {
+    getIvent(id).then(ivent => {
+      ivent.cities.map(city => {
+        setCities(city);
+        return 1;
+      });
+      ivent.jobTypes.map(jobType => {
+        setCities(jobType);
+        return 1;
+      });
+      ivent.keySkills.map(keySkill => {
+        setKeySkills(keySkill);
+        return 1;
+      });
+      setJob(ivent.job);
+      setDescription(ivent.description);
+    });
+  }, []);
+  const handleEditOffer = () => {
+    if (!job.trim()) return;
     const inputs = {
+      id,
       job,
       jobTypes: Object.keys(jobTypes).filter(key => jobTypes[key]),
       cities: Object.keys(cities).filter(key => cities[key]),
       keySkills: Object.keys(keySkills).filter(key => keySkills[key]),
       description
     };
-    searchIvent(inputs);
+    editIvent(inputs);
   };
   const handleDescription = event => {
     setDescription(event.target.value);
   };
-  const handleShowAll = () => {
-    setOffers();
-    setIvents();
-  };
   return (
     <Root>
       {loggedIn ? null : <Redirect to="/login" />}
-      <Heading>Szukaj szkolenia</Heading>
-      <Search />
+      <Heading>Edytuj ofertę</Heading>
       <StyledForm>
-        <Category title="Branża" names={jobTypes} set={setJobTypes} />
+        <Category header="Branża" names={jobTypes} set={setJobTypes} />
         <FormFieldContainer>
           <JobInput
             value={job}
@@ -97,7 +111,7 @@ export default function SearchForIvent({
           />
         </FormFieldContainer>
         <Filters>
-          <Category title="Miasta" names={cities} set={setCities} />
+          <Category header="Miasta" names={cities} set={setCities} />
           <Category
             title="Kluczowe umiejętności"
             names={keySkills}
@@ -115,8 +129,7 @@ export default function SearchForIvent({
         />
         <Buttons>
           <Btn onClick={resetForm}>Zresetuj</Btn>
-          <Btn onClick={handleSearch}>Szukaj</Btn>
-          <Btn onClick={handleShowAll}>Pokaż wszystkie</Btn>
+          <Btn onClick={handleEditOffer}>Zatwierdź</Btn>
         </Buttons>
       </StyledForm>
     </Root>

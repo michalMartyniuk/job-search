@@ -46,7 +46,7 @@ function App(props) {
   React.useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(() => {
       if (auth.currentUser) {
-        setLogIn(auth.currentUser);
+        setLogIn(auth.currentUser.uid);
       }
     });
     props.setOffers();
@@ -124,8 +124,11 @@ function App(props) {
               <Route path="/auth">
                 {props.loggedIn ? <Redirect to="/profile" /> : <Auth />}
               </Route>
-              <Route path="/edit/:id">
+              <Route path="/edit/offer/:id">
                 <Form formType="edit" />
+              </Route>
+              <Route path="/edit/event/:id">
+                <Form formType="editIvent" />
               </Route>
               <Route path="/" exact>
                 {props.loggedIn ? <Redirect to="/profile" /> : <Home />}
@@ -151,7 +154,7 @@ const mapStateToProps = state => ({
   form: { ...state.form }
 });
 const mapDispatchToProps = dispatch => ({
-  setLogIn: user => dispatch(setLogIn(user)),
+  setLogIn: userId => dispatch(setLogIn(userId)),
   authLogOut: () => dispatch(authLogOut()),
   setOffers: () => dispatch(setOffers()),
   setIvents: () => dispatch(setIvents()),

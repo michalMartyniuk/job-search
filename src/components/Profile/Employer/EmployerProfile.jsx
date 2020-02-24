@@ -14,9 +14,10 @@ import {
   closeOffer,
   reactivateOffer,
   editOffer,
+  editIvent,
   closeIvent,
   removeIvent,
-  reactivateIvent,
+  reactivateIvent
 } from "../../../store/auth/authActions";
 function TabPanel({ children, value, index, className }) {
   return (
@@ -49,6 +50,7 @@ const StyledTab = styled(Tab)`
 function EmployerProfile({
   user,
   edit,
+  editIvent,
   closeOffer,
   closeIvent,
   remove,
@@ -86,7 +88,11 @@ function EmployerProfile({
         />
       </StyledTabPanel>
       <StyledTabPanel value={value} index={3}>
-        <ActiveIvents ivents={user.ivents} close={closeIvent} />
+        <ActiveIvents
+          ivents={user.ivents}
+          edit={editIvent}
+          close={closeIvent}
+        />
       </StyledTabPanel>
 
       <StyledTabPanel value={value} index={4}>
@@ -108,6 +114,7 @@ const mapDispatchToProps = dispatch => ({
   reactivate: offerId => dispatch(reactivateOffer(offerId)),
   reactivateIvent: iventId => dispatch(reactivateIvent(iventId)),
   edit: offer => dispatch(editOffer(offer)),
+  editIvent: ivent => dispatch(editIvent(ivent))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EmployerProfile);
