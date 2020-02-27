@@ -40,10 +40,11 @@ const Container = styled.div`
 `;
 const OffersAndEventsContainer = styled.div`
   display: flex;
-  // margin-left: 50px;
+  flex: 1;
 `;
 const OffersContainer = styled.div`
   display: flex;
+  flex: 1;
 `;
 const EventsContainer = styled.div`
   display: flex;
@@ -86,7 +87,7 @@ function Home({
   const classes = useStyles();
 
   const displayOffers = (
-    <OfferList offers={offers} title="Aktualne oferty pracy" width="100vw" />
+    <OfferList offers={offers} title="Aktualne oferty pracy" />
   );
 
   const displaySearchResults = (
@@ -95,11 +96,10 @@ function Home({
       title={`Znaleziono ${searchResults.length} ${
         resultsNotification(searchResults.length).offer
       } `}
-      width="100vw"
     />
   );
   const displayIvents = (
-    <IventList ivents={ivents} title="Aktualne wydarzenia" width="100vw" />
+    <IventList ivents={ivents} title="Aktualne wydarzenia" />
   );
 
   const displayIventsSearchResults = (
@@ -108,7 +108,6 @@ function Home({
       title={`Znaleziono ${searchIventResults.length} ${
         resultsNotification(searchIventResults.length).ivent
       } `}
-      width="100vw"
     />
   );
   const offersEventsContent = (

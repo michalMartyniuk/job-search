@@ -27,6 +27,10 @@ export const removeFalsyProps = obj => {
   });
   return filteredObj;
 };
+export const getItemWithId = (id, collection) => {
+  // console.log(collection);
+  return collection.filter(item => item.id === id)[0];
+}
 export const isDocMatching = (inputObj, docObj) => {
   const inputs = removeFalsyProps(inputObj);
   const matches = Object.keys(inputs).map(key => {

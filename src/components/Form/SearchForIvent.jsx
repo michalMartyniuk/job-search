@@ -2,7 +2,6 @@ import React from "react";
 import { Paper, Button } from "@material-ui/core";
 import styled from "styled-components";
 import { Redirect } from "react-router-dom";
-import TextField from "@material-ui/core/TextField";
 import { JobInput } from "./Input";
 import Category from "./FiltersCategory";
 import Search from "../Search/Search";
@@ -61,8 +60,6 @@ export default function SearchForIvent({
   keySkills,
   setKeySkills,
   loggedIn,
-  description,
-  setDescription,
   setOffers,
   setIvents
 }) {
@@ -72,12 +69,8 @@ export default function SearchForIvent({
       jobTypes: Object.keys(jobTypes).filter(key => jobTypes[key]),
       cities: Object.keys(cities).filter(key => cities[key]),
       keySkills: Object.keys(keySkills).filter(key => keySkills[key]),
-      description
     };
     searchIvent(inputs);
-  };
-  const handleDescription = event => {
-    setDescription(event.target.value);
   };
   const handleShowAll = () => {
     setOffers();
@@ -104,15 +97,6 @@ export default function SearchForIvent({
             set={setKeySkills}
           />
         </Filters>
-        <TextField
-          id="outlined-multiline-static"
-          label="Opis"
-          multiline
-          rows="7"
-          defaultValue=""
-          onChange={handleDescription}
-          variant="outlined"
-        />
         <Buttons>
           <Btn onClick={resetForm}>Zresetuj</Btn>
           <Btn onClick={handleSearch}>Szukaj</Btn>

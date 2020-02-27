@@ -27,7 +27,9 @@ import { setOffers, setIvents, setUsers } from "./store/app/appActions";
 import Form from "./components/Form/Form";
 import OfferList from "./components/Offers/OfferList";
 import IventList from "./components/Offers/IventList";
-import SimilarOffers from "./components/Offers/SimilarOffers";
+import Candidates from "./components/Offers/Candidates";
+import Clients from "./components/Clients";
+import { Details } from "./components/Details/Details";
 
 const auth = firebase.auth();
 
@@ -114,9 +116,9 @@ function App(props) {
               <Route path="/addEvent">
                 <Form formType="addEvent" />
               </Route>
-              <Route path="/similarOffers">
+              <Route path="/kandydaci">
                 {props.loggedIn ? (
-                  <SimilarOffers users={props.users} />
+                  <Candidates users={props.users} />
                 ) : (
                   <Redirect to="/" />
                 )}
@@ -127,8 +129,23 @@ function App(props) {
               <Route path="/edit/offer/:id">
                 <Form formType="edit" />
               </Route>
+              <Route path="/pracodawcy">
+                <Clients users={props.users} />
+              </Route>
               <Route path="/edit/event/:id">
                 <Form formType="editIvent" />
+              </Route>
+              <Route path="/details/employee/:id">
+                <Details collection={props.users} type="employee" />
+              </Route>
+              <Route path="/details/employer/:id">
+                <Details collection={props.users} type="employer" />
+              </Route>
+              <Route path="/details/offer/:id">
+                <Details collection={props.offers} type="offer" />
+              </Route>
+              <Route path="/details/event/:id">
+                <Details collection={props.ivents} type="ivent" />
               </Route>
               <Route path="/" exact>
                 {props.loggedIn ? <Redirect to="/profile" /> : <Home />}

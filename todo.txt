@@ -1,10 +1,12 @@
-Edycja ofert/wydarzeń
+23. W profilu Użytkownika w wyszukiwarce ofert pracy wyszukiwanie po wynagrodzeniu trzeba poprawić: 
+jeżeli zakres wynagrodzenia jest zbieżny choćby w najmniejszym stopniu z zakresem wynagrodzenia 
+wyszukiwanej pracy to oferta powinna się wyświetlać. 
+Przykład 1: Wystawiona oferta ma zakres wynagrodzenia 7-10tys a my szukamy pracy z wynagrodzeniem
+5-7tys = oferta powinna się pokazać. Przykład 2: Wystawiona oferta ma zakres wynagrodzenia 1-10 tys 
+a my szukamy 9-14 tys = Oferta powinna się wyświetlić.
 
-Profil Użytkownika
-W profilu Użytkownika powinny być dwie wyszukiwarki: jedna w zakładce 
-Szukaj Szkolenia (taka sama jak na stronie głównej) i druga w zakładce 
-Szukaj Pracy, która powinna uwzględniać też poziom wynagrodzenia 
-(taki sam suwak jak przy dodawaniu ofert pracy przez Klienta).
+
+
 
 
 

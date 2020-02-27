@@ -26,7 +26,8 @@ const initialState = {
       Word: false,
       Excel: false,
       PowerPoint: false
-    }
+    },
+    userDescription: null
   },
   loggedIn: false,
   logInError: false,
@@ -275,6 +276,14 @@ export default function authReducer(state = initialState, action) {
             ...state.user.userKeySkills,
             [action.value]: !state.user.userKeySkills[action.value]
           }
+        }
+      };
+    case types.SET_USER_DESCRIPTION:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          description: action.description
         }
       };
     default:

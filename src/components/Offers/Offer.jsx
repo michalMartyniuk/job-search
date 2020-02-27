@@ -12,10 +12,14 @@ const Root = styled.div`
   padding-left: 50px;
   padding-right: 50px;
 `;
-const Title = styled.h2`
+const Title = styled.span`
   font-size: 1.5rem;
   font-weight: 500;
   margin-bottom: 5px;
+  cursor: pointer;
+  &:hover {
+    color: #00bcd4;
+  }
 `;
 const Owner = styled.h3`
   font-size: 1.3rem;
@@ -46,6 +50,7 @@ const InfoTitle = styled.span`
 `;
 const Actions = styled.div`
   display: flex;
+  margin-top: 10px;
 `;
 const Header = styled.div`
   display: flex;
@@ -73,9 +78,9 @@ const Date = styled.div`
 function convertDateObject({ year, month, day, hours, minutes }) {
   month = month.length === 1 ? `0${month}` : month;
   day = day.length === 1 ? `0${day}` : day;
-  hours = hours.length === 1 ? `0${hours}` : hours;
-  minutes = minutes.length === 1 ? `0${minutes}` : minutes;
-  return `${year}-${month}-${day} ${hours}:${minutes}`;
+  // hours = hours.length === 1 ? `0${hours}` : hours;
+  // minutes = minutes.length === 1 ? `0${minutes}` : minutes;
+  return `${year}-${month}-${day}`;
 }
 function Offer({ offer, ...props }) {
   const history = useHistory();
@@ -91,12 +96,16 @@ function Offer({ offer, ...props }) {
   const handleEdit = offerId => {
     history.push(`/edit/offer/${offerId}`);
   };
-  const date = convertDateObject(offer.date);
+  const date = offer.date && convertDateObject(offer.date);
+  const expireDate = offer.expireDate && convertDateObject(offer.expireDate);
+  const handleOfferDetails = id => {
+    history.push(`/details/offer/${id}`);
+  };
   return (
     <Root width={props.width}>
       <Header>
         <Header_col>
-          <Title>{job}</Title>
+          <Title onClick={() => handleOfferDetails(offer.id)}>{job}</Title>
           <Owner>Oferta użytkownika: {ownerName}</Owner>
         </Header_col>
         <Header_col_2>
@@ -136,6 +145,7 @@ function Offer({ offer, ...props }) {
         ) : null}
       </Informations>
       {date ? <Date>Data utworzenia: {date}</Date> : null}
+      {expireDate ? <Date>Data wygaśnięcia: {expireDate}</Date> : null}
       <Actions>
         {props.apply ? (
           <Button onClick={() => props.apply(offer.id)}>Aplikuj</Button>

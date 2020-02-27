@@ -1,4 +1,5 @@
 import React from "react";
+import TextField from "@material-ui/core/TextField";
 import { Paper, Button } from "@material-ui/core";
 import styled from "styled-components";
 import { Redirect } from "react-router-dom";
@@ -49,6 +50,9 @@ const Btn = styled(Button).attrs({
     background-color: #008c9e;
   }
 `;
+const Description = styled(TextField)`
+  margin-top: 20px;
+`;
 export default function AddFormNew({
   job,
   setJob,
@@ -64,6 +68,8 @@ export default function AddFormNew({
   experience,
   setExperience,
   addOffer,
+  description,
+  setDescription,
   loggedIn
 }) {
   React.useEffect(() => {
@@ -77,12 +83,16 @@ export default function AddFormNew({
       cities: Object.keys(cities).filter(key => cities[key]),
       keySkills: Object.keys(keySkills).filter(key => keySkills[key]),
       experience,
-      salary
+      salary,
+      description
     };
     addOffer(inputs);
   };
   const handleExperience = event => {
     setExperience(event.target.value);
+  };
+  const handleDescription = event => {
+    setDescription(event.target.value);
   };
   return (
     <Root>
@@ -109,6 +119,15 @@ export default function AddFormNew({
           values={salary}
           onChange={setSalary}
           name="Wynagrodzenie"
+        />
+        <Description
+          id="outlined-multiline-static"
+          label="Opis"
+          multiline
+          rows="7"
+          defaultValue=""
+          onChange={handleDescription}
+          variant="outlined"
         />
         <Buttons>
           <Btn onClick={resetForm}>Zresetuj</Btn>

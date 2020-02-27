@@ -9,13 +9,15 @@ const useStyles = makeStyles(theme => ({
   root: {
     display: "flex",
     flexDirection: "column",
-    marginBottom: 50
+    marginBottom: 50,
+    flex: 1
   },
   inline: {
     display: "inline"
   },
   list: {
-    padding: 0
+    padding: 0,
+    flex: 1
   },
   listHeader: {
     padding: "12px 20px",

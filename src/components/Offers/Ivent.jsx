@@ -13,10 +13,14 @@ const Root = styled.div`
   padding-right: 50px;
   min-width: 400px;
 `;
-const Title = styled.h2`
+const Title = styled.span`
   font-size: 1.5rem;
   font-weight: 500;
   margin-bottom: 5px;
+  cursor: pointer;
+  &:hover {
+    color: #00bcd4;
+  }
 `;
 const Owner = styled.h3`
   font-size: 1.3rem;
@@ -81,11 +85,14 @@ function Ivent({ ivent, ...props }) {
     history.push(`/edit/event/${iventId}`);
   };
   const date = convertDateObject(ivent.date);
+  const handleIventDetails = id => {
+    history.push(`/details/event/${id}`);
+  };
   return (
     <Root>
       <Header>
         <Header_col>
-          <Title>{job}</Title>
+          <Title onClick={() => handleIventDetails(ivent.id)}>{job}</Title>
           <Owner>Wydarzenie użytkownika: {ownerName}</Owner>
         </Header_col>
         <Header_col_2>
@@ -120,7 +127,7 @@ function Ivent({ ivent, ...props }) {
             </p>
           </Description>
         ) : null}
-        {date ? <Date>Data utworzenia: {date}</Date> : null}
+        {date ? <Date>Data wydarzenia: {date}</Date> : null}
       </Informations>
       <Actions>
         {props.apply ? (

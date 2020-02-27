@@ -55,7 +55,10 @@ export const logInErrorReset = () => {
 export const setAccountType = accountType => {
   return { type: types.SET_ACCOUNT_TYPE, accountType };
 };
-
+export const setUserDescription = description => ({
+  type: types.SET_USER_DESCRIPTION,
+  description
+});
 async function getDoc(collection, id) {
   const doc = await db.collection(collection).doc(id);
   return doc;
@@ -209,8 +212,9 @@ export const updateProfile = updateData => {
     const userUpdated = {
       ...userData,
       userKeySkills: {
-        ...updateData
-      }
+        ...updateData.userKeySkills
+      },
+      description: updateData.description
     };
     await userDoc.set(userUpdated);
     dispatch({ type: types.UPDATE_PROFILE });
@@ -220,8 +224,7 @@ export const updateProfile = updateData => {
     dispatch(toggleUpdateProfile());
   };
 };
-function createTimestamp() {
-  const date = new Date();
+function createTimestamp(date = new Date()) {
   const year = date.getFullYear().toString();
   const month = (date.getMonth() + 1).toString();
   const day = date.getDate().toString();
@@ -232,7 +235,10 @@ function createTimestamp() {
 }
 export const addOffer = inputs => {
   const date = createTimestamp();
-  const data = { ...inputs, date };
+  let expireDate = new Date();
+  expireDate.setMonth(expireDate.getMonth() + 1);
+  expireDate = createTimestamp(expireDate);
+  const data = { ...inputs, date, expireDate };
 
   return async dispatch => {
     const userDoc = await getDoc("users", auth.currentUser.uid);
@@ -252,7 +258,7 @@ export const addOffer = inputs => {
     const globalNewOffer = await getDoc("offers", newOffer.id);
     globalNewOffer.set(offer);
     dispatch({ type: types.ADD_OFFER, offer });
-    dispatch(setNotification(true, "Twoja oferta została dodana", "success"));
+    dispatch(setNotification(true, "Dodano", "success"));
   };
 };
 async function checkIfApplied(id, type) {
@@ -289,7 +295,7 @@ export const applyToOffer = offerId => {
     });
     const offer = offerData;
     dispatch({ type: types.APPLY_TO_OFFER, offer });
-    dispatch(setNotification(true, "Aplikowałeś ofertę", "success"));
+    dispatch(setNotification(true, "Aplikowałeś", "success"));
     dispatch(setOffers());
   };
 };
@@ -458,9 +464,10 @@ export const reactivateOffer = offerId => {
   };
 };
 export const addIvent = inputs => {
-  const date = createTimestamp();
-  const data = { ...inputs, date };
-
+  const data = { ...inputs };
+  if (inputs.date) {
+    data.date = createTimestamp(inputs.date);
+  }
   return async dispatch => {
     const userDoc = await getDoc("users", auth.currentUser.uid);
     const userIvents = await userDoc.collection("events");
@@ -479,9 +486,7 @@ export const addIvent = inputs => {
     const globalNewIvent = await getDoc("events", newIvent.id);
     globalNewIvent.set(ivent);
     dispatch({ type: types.ADD_IVENT, ivent });
-    dispatch(
-      setNotification(true, "Twoje wydarzenie zostało dodana", "success")
-    );
+    dispatch(setNotification(true, "Dodano", "success"));
   };
 };
 export const applyToIvent = iventId => {

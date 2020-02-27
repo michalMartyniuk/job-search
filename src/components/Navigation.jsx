@@ -62,6 +62,13 @@ export default function Navigation({ loggedIn, logout, accountType }) {
             Wyszukiwarka pracy
           </Typography>
           {!loggedIn && (
+            <Link to="/pracodawcy" className={classes.link}>
+              <Button className={classes.button}>
+                Pracodawcy i organizatorzy szkoleń
+              </Button>
+            </Link>
+          )}
+          {!loggedIn && (
             <Link to="/home" className={classes.link}>
               <Button className={classes.button}>Strona główna</Button>
             </Link>
@@ -77,7 +84,7 @@ export default function Navigation({ loggedIn, logout, accountType }) {
             </Link>
           )}
           {loggedIn && accountType === "employer" && (
-            <Link to="/similarOffers" className={classes.link}>
+            <Link to="/kandydaci" className={classes.link}>
               <Button className={classes.button}>Znajdź kandydata</Button>
             </Link>
           )}
