@@ -2,7 +2,8 @@
 jeżeli zakres wynagrodzenia jest zbieżny choćby w najmniejszym stopniu z zakresem wynagrodzenia 
 wyszukiwanej pracy to oferta powinna się wyświetlać. 
 Przykład 1: Wystawiona oferta ma zakres wynagrodzenia 7-10tys a my szukamy pracy z wynagrodzeniem
-5-7tys = oferta powinna się pokazać. Przykład 2: Wystawiona oferta ma zakres wynagrodzenia 1-10 tys 
+5-7tys = oferta powinna się pokazać. 
+Przykład 2: Wystawiona oferta ma zakres wynagrodzenia 1-10 tys 
 a my szukamy 9-14 tys = Oferta powinna się wyświetlić.
 
 

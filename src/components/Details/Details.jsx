@@ -212,8 +212,10 @@ export const IventDetails = ({ ivent }) => {
         <Key>Opis: </Key>
         <Value>{ivent.description}</Value>
       </KeyValueContainer>
+      <KeyValueContainer>
+        <Date>Data wydarzenia: {date}</Date>
+      </KeyValueContainer>
       <GoBackButton onClick={() => history.goBack()} />
-      <Date>Data wydarzenia: {date}</Date>
     </Container>
   );
 };

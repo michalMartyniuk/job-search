@@ -3,6 +3,14 @@ import { Paper, Button } from "@material-ui/core";
 import styled from "styled-components";
 import { Redirect } from "react-router-dom";
 import TextField from "@material-ui/core/TextField";
+import "date-fns";
+import Grid from "@material-ui/core/Grid";
+import DateFnsUtils from "@date-io/date-fns";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker
+} from "@material-ui/pickers";
 import { JobInput } from "./Input";
 import Category from "./FiltersCategory";
 
@@ -66,6 +74,12 @@ export default function AddTraining({
   React.useEffect(() => {
     resetForm();
   }, []);
+  const [selectedDate, setSelectedDate] = React.useState(
+    new Date("2020-03-18T21:11:54")
+  );
+  const handleDateChange = date => {
+    setSelectedDate(date);
+  };
   const handleAddTraining = () => {
     if (!job.trim()) return;
     const inputs = {
@@ -73,7 +87,8 @@ export default function AddTraining({
       jobTypes: Object.keys(jobTypes).filter(key => jobTypes[key]),
       cities: Object.keys(cities).filter(key => cities[key]),
       keySkills: Object.keys(keySkills).filter(key => keySkills[key]),
-      description
+      description,
+      date: selectedDate
     };
     addIvent(inputs);
   };
@@ -109,6 +124,33 @@ export default function AddTraining({
           onChange={handleDescription}
           variant="outlined"
         />
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <Grid container justify="space-around">
+            <KeyboardDatePicker
+              disableToolbar
+              variant="inline"
+              format="dd/MM/yyyy"
+              margin="normal"
+              id="date-picker-inline"
+              label="Data wydarzenia"
+              value={selectedDate}
+              onChange={handleDateChange}
+              KeyboardButtonProps={{
+                "aria-label": "change date"
+              }}
+            />
+            <KeyboardTimePicker
+              margin="normal"
+              id="time-picker"
+              label="Godzina rozpoczęcia"
+              value={selectedDate}
+              onChange={handleDateChange}
+              KeyboardButtonProps={{
+                "aria-label": "change time"
+              }}
+            />
+          </Grid>
+        </MuiPickersUtilsProvider>
         <Buttons>
           <Btn onClick={resetForm}>Zresetuj</Btn>
           <Btn onClick={handleAddTraining}>Dodaj szkolenie</Btn>

@@ -74,9 +74,9 @@ const Date = styled.div`
 function convertDateObject({ year, month, day, hours, minutes }) {
   month = month.length === 1 ? `0${month}` : month;
   day = day.length === 1 ? `0${day}` : day;
-  hours = hours.length === 1 ? `0${hours}` : hours;
-  minutes = minutes.length === 1 ? `0${minutes}` : minutes;
-  return `${year}-${month}-${day} ${hours}:${minutes}`;
+  // hours = hours.length === 1 ? `0${hours}` : hours;
+  // minutes = minutes.length === 1 ? `0${minutes}` : minutes;
+  return `${year}-${month}-${day}`;
 }
 function Ivent({ ivent, ...props }) {
   const history = useHistory();
@@ -127,8 +127,8 @@ function Ivent({ ivent, ...props }) {
             </p>
           </Description>
         ) : null}
-        {date ? <Date>Data wydarzenia: {date}</Date> : null}
       </Informations>
+      {date ? <Date>Data wydarzenia: {date}</Date> : null}
       <Actions>
         {props.apply ? (
           <Button onClick={() => props.apply(ivent.id)}>Aplikuj</Button>
