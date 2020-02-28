@@ -65,17 +65,13 @@ function ProfileInfo({ user, toggleUpdateProfile, updateProfileActive }) {
     return null;
   };
   const handleChangeInfo = () => {
-    if (accountType === "klient") {
-      return;
-    }
     toggleUpdateProfile();
   };
-  const updateProfile =
-    accountType === "użytkownik" ? (
-      <StyledProfileInfo>
-        <UpdateProfile />
-      </StyledProfileInfo>
-    ) : null;
+  const updateProfile = (
+    <StyledProfileInfo>
+      <UpdateProfile />
+    </StyledProfileInfo>
+  );
   const keySkillsArr =
     user.userKeySkills &&
     Object.keys(user.userKeySkills).filter(key => user.userKeySkills[key]);
@@ -87,6 +83,7 @@ function ProfileInfo({ user, toggleUpdateProfile, updateProfileActive }) {
           <InfoItem name="Imię: " value={user.name} />
           <InfoItem name="Email: " value={user.email} />
           <InfoItem name="Rodzaj konta: " value={accountType} />
+          <InfoItem name="Opis: " value={user.description || "Brak"} />
           {accountType === "użytkownik" ? (
             <KeySkillsContainer>
               <KeySkillsHeader>Kluczowe umiejętności:</KeySkillsHeader>
@@ -94,7 +91,7 @@ function ProfileInfo({ user, toggleUpdateProfile, updateProfileActive }) {
                 ? keySkillsArr.map(skill => (
                     <KeySkill key={skill}>{skill}</KeySkill>
                   ))
-                : null}
+                : "Brak"}
             </KeySkillsContainer>
           ) : null}
           <Actions>

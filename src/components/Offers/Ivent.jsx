@@ -71,7 +71,7 @@ const AppliedCountContainer = styled.div`
 const Date = styled.div`
   font-size: 1rem;
 `;
-function convertDateObject({ year, month, day, hours, minutes }) {
+function convertDateObject({ year, month, day }) {
   month = month.length === 1 ? `0${month}` : month;
   day = day.length === 1 ? `0${day}` : day;
   // hours = hours.length === 1 ? `0${hours}` : hours;

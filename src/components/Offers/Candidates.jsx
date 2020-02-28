@@ -144,7 +144,7 @@ function Candidates({ users, setNotification }) {
                 key => user.userKeySkills[key]
               );
             return (
-              <UserContainer>
+              <UserContainer key={user.id}>
                 <div>
                   <UserName onClick={() => handleUserDetails(user.id)}>
                     {user.name.split(" ")[0]}
@@ -177,7 +177,7 @@ function Candidates({ users, setNotification }) {
                 key => user.userKeySkills[key]
               );
             return (
-              <UserContainer>
+              <UserContainer key={user.id}>
                 <div>
                   <UserName onClick={() => handleUserDetails(user.id)}>
                     {user.name.split(" ")[0]}

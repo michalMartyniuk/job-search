@@ -65,13 +65,15 @@ function UpdateProfile({
     <Root>
       <Heading>Aktualizuj profil</Heading>
       <StyledForm>
-        <Filters>
-          <Category
-            title="Kluczowe umiejętności"
-            names={user.userKeySkills}
-            set={setUserKeySkills}
-          />
-        </Filters>
+        {user.accountType === "employee" ? (
+          <Filters>
+            <Category
+              title="Kluczowe umiejętności"
+              names={user.userKeySkills}
+              set={setUserKeySkills}
+            />
+          </Filters>
+        ) : null}
         <TextField
           id="outlined-multiline-static"
           label="Opis"

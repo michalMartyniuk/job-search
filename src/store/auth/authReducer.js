@@ -12,6 +12,7 @@ const initialState = {
     accountType: "",
     name: "",
     email: "",
+    description: "",
     offers: [],
     savedOffers: [],
     appliedOffers: [],

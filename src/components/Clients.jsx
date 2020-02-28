@@ -37,7 +37,7 @@ export default function Clients({ users }) {
                 return;
               }
               return (
-                <UserContainer>
+                <UserContainer key={user.id}>
                   <div>
                     <UserName onClick={() => handleUserDetails(user.id)}>
                       {user.name.split(" ")[0]}
