@@ -130,7 +130,7 @@ function App(props) {
                 <Form formType="edit" />
               </Route>
               <Route path="/pracodawcy">
-                <Clients users={props.users} />
+                <Clients />
               </Route>
               <Route path="/edit/event/:id">
                 <Form formType="editIvent" />

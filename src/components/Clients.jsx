@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
+import { connect } from "react-redux";
+import { setUsers } from "../store/app/appActions";
 
 const UserList = styled.div`
   display: flex;
@@ -23,11 +25,14 @@ const UserName = styled.span`
   }
 `;
 
-export default function Clients({ users }) {
+function Clients({ users, setUsers }) {
   const history = useHistory();
   const handleUserDetails = id => {
     history.push(`/details/employer/${id}`);
   };
+  React.useEffect(() => {
+    setUsers();
+  }, []);
   return (
     <div>
       <UserList>
@@ -51,3 +56,12 @@ export default function Clients({ users }) {
     </div>
   );
 }
+const mapStateToProps = state => ({
+  ...state.auth,
+  ...state.app,
+  form: { ...state.form }
+});
+const mapDispatchToProps = dispatch => ({
+  setUsers: () => dispatch(setUsers())
+});
+export default connect(mapStateToProps, mapDispatchToProps)(Clients);

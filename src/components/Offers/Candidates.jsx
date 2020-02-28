@@ -8,7 +8,8 @@ import {
   setSearchIventResults,
   setNotification,
   setOffers,
-  setIvents
+  setIvents,
+  setUsers
 } from "../../store/app/appActions";
 
 const Container = styled.div`
@@ -74,7 +75,10 @@ const Text = styled.span`
   font-weight: 400;
   margin-left: 10px;
 `;
-function Candidates({ users, setNotification }) {
+function Candidates({ users, setUsers, setNotification }) {
+  React.useEffect(() => {
+    setUsers();
+  }, []);
   const history = useHistory();
 
   const [searchValue, setSearchValue] = React.useState("");
@@ -208,6 +212,7 @@ const mapStateToProps = state => ({ ...state.auth, ...state.app });
 const mapDispatchToProps = dispatch => ({
   setOffers: () => dispatch(setOffers()),
   setIvents: () => dispatch(setIvents()),
+  setUsers: () => dispatch(setUsers()),
   setNotification: (state, message, variant) =>
     dispatch(setNotification(state, message, variant)),
   setSearchResults: results => dispatch(setSearchResults(results)),
