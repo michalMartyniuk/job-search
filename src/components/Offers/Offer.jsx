@@ -74,7 +74,9 @@ const AppliedCountContainer = styled.div`
 const Date = styled.div`
   font-size: 1rem;
 `;
-
+const ProcessLength = styled.div`
+  margin-right: 20px;
+`;
 function convertDateObject({ year, month, day, hours, minutes }) {
   month = month.length === 1 ? `0${month}` : month;
   day = day.length === 1 ? `0${day}` : day;
@@ -91,7 +93,8 @@ function Offer({ offer, ...props }) {
     cities,
     experience,
     ownerName,
-    keySkills
+    keySkills,
+    processLength
   } = offer;
   const handleEdit = offerId => {
     history.push(`/edit/offer/${offerId}`);
@@ -142,6 +145,14 @@ function Offer({ offer, ...props }) {
           <JobTypes>
             <InfoTitle>Kluczowe umiejętności:</InfoTitle> {keySkills.join(", ")}
           </JobTypes>
+        ) : null}
+        {processLength ? (
+          <ProcessLength>
+            <p>
+              <strong>Długość procesu rekrutacji: </strong>
+              {processLength}
+            </p>
+          </ProcessLength>
         ) : null}
       </Informations>
       {date ? <Date>Data utworzenia: {date}</Date> : null}

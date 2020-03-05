@@ -22,3 +22,39 @@ export function JobInput({ value, onChange }) {
     />
   );
 }
+export function PlaceInput({ value, onChange, ...props }) {
+  return (
+    <MainInput
+      value={value}
+      onChange={onChange}
+      label="Ilość miejsc"
+      variant="outlined"
+      className={props.className}
+      {...props}
+    />
+  );
+}
+export function MinSalaryInput({ value, onChange, ...props }) {
+  return (
+    <MainInput
+      value={value}
+      onChange={onChange}
+      label="Wynagrodzenie"
+      variant="outlined"
+      className={props.className}
+      {...props}
+    />
+  );
+}
+export function ProcessLengthInput({ value, onChange, ...props }) {
+  return (
+    <MainInput
+      value={value}
+      onChange={onChange}
+      label="Długość procesu rekrutacji"
+      variant="outlined"
+      className={props.className}
+      {...props}
+    />
+  );
+}

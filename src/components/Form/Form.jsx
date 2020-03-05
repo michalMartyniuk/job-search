@@ -8,7 +8,10 @@ import {
   setKeySkills,
   setSalary,
   setExperience,
-  setDescription
+  setDescription,
+  setPlaceCount,
+  decreasePlaceCount,
+  setProcessLength
 } from "../../store/form/formActions";
 import {
   search,
@@ -74,7 +77,10 @@ const mapDispatchToProps = dispatch => ({
   setKeySkills: skill => dispatch(setKeySkills(skill)),
   setSalary: (event, values) => dispatch(setSalary(values)),
   setExperience: value => dispatch(setExperience(value)),
-  setDescription: value => dispatch(setDescription(value))
+  setDescription: value => dispatch(setDescription(value)),
+  setPlaceCount: value => dispatch(setPlaceCount(value)),
+  decreasePlaceCount: () => dispatch(decreasePlaceCount()),
+  setProcessLength: value => dispatch(setProcessLength(value))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Form);

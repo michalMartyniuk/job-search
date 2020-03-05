@@ -7,8 +7,10 @@ import Category from "../../Form/FiltersCategory";
 import {
   updateProfile,
   setUserKeySkills,
-  setUserDescription
+  setUserDescription,
+  setMinPrefSalary
 } from "../../../store/auth/authActions";
+import { MinSalaryInput } from "../../Form/Input";
 
 const Filters = styled.div`
   display: flex;
@@ -47,17 +49,29 @@ const Btn = styled(Button).attrs({
     background-color: #008c9e;
   }
 `;
+const InputWrapper = styled.div`
+  display: flex;
+  margin: 20px 0px;
+`;
+const InputTitle = styled.h2`
+  font-size: 1.2rem;
+  font-weight: 400;
+  margin: auto auto auto 0;
+`;
 function UpdateProfile({
   user,
   setUserKeySkills,
   setUserDescription,
-  updateProfile
+  updateProfile,
+  setMinPrefSalary
 }) {
-  const handleUpdateProfile = () =>
+  const handleUpdateProfile = () => {
     updateProfile({
       userKeySkills: user.userKeySkills,
-      description: user.description
+      description: user.description,
+      minPrefSalary: user.minPrefSalary || ""
     });
+  };
   const handleDescription = event => {
     setUserDescription(event.target.value);
   };
@@ -66,13 +80,24 @@ function UpdateProfile({
       <Heading>Aktualizuj profil</Heading>
       <StyledForm>
         {user.accountType === "employee" ? (
-          <Filters>
-            <Category
-              title="Kluczowe umiejętności"
-              names={user.userKeySkills}
-              set={setUserKeySkills}
-            />
-          </Filters>
+          <>
+            <Filters>
+              <Category
+                title="Kluczowe umiejętności"
+                names={user.userKeySkills}
+                set={setUserKeySkills}
+              />
+            </Filters>
+            <InputWrapper>
+              <InputTitle>Minimalne preferowane wynagrodzenie:</InputTitle>
+              <MinSalaryInput
+                value={user.minPrefSalary}
+                onChange={event => {
+                  setMinPrefSalary(event.target.value);
+                }}
+              />
+            </InputWrapper>
+          </>
         ) : null}
         <TextField
           id="outlined-multiline-static"
@@ -95,7 +120,8 @@ const mapStateToProps = state => state.auth;
 const mapDispatchToProps = dispatch => ({
   setUserKeySkills: value => dispatch(setUserKeySkills(value)),
   updateProfile: updateData => dispatch(updateProfile(updateData)),
-  setUserDescription: description => dispatch(setUserDescription(description))
+  setUserDescription: description => dispatch(setUserDescription(description)),
+  setMinPrefSalary: value => dispatch(setMinPrefSalary(value))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UpdateProfile);

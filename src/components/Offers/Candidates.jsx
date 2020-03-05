@@ -162,6 +162,10 @@ function Candidates({ users, setUsers, setNotification }) {
                     <Text>Brak</Text>
                   )}
                 </DataField>
+                <DataField>
+                  <Label>Minimalne preferowane wynagrodzenie: </Label>
+                  <Text>{user.minPrefSalary || "Brak"}</Text>
+                </DataField>
               </UserContainer>
             );
           })
@@ -194,6 +198,10 @@ function Candidates({ users, setUsers, setNotification }) {
                   ) : (
                     <Text>Brak</Text>
                   )}
+                </DataField>
+                <DataField>
+                  <Label>Minimalne preferowane wynagrodzenie:</Label>
+                  <Text>{user.minPrefSalary || "Brak"}</Text>
                 </DataField>
               </UserContainer>
             );

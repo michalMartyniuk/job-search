@@ -12,7 +12,7 @@ import {
   KeyboardDatePicker
 } from "@material-ui/pickers";
 import Category from "./FiltersCategory";
-import { JobInput } from "./Input";
+import { JobInput, PlaceInput } from "./Input";
 
 const Filters = styled.div`
   display: flex;
@@ -69,7 +69,9 @@ export default function AddEvent({
   description,
   keySkills,
   addIvent,
-  loggedIn
+  loggedIn,
+  setPlaceCount,
+  placeCount
 }) {
   React.useEffect(() => {
     resetForm();
@@ -88,6 +90,7 @@ export default function AddEvent({
       cities: Object.keys(cities).filter(key => cities[key]),
       keySkills: Object.keys(keySkills).filter(key => keySkills[key]),
       description,
+      placeCount,
       date: selectedDate
     };
     addIvent(inputs);
@@ -95,6 +98,7 @@ export default function AddEvent({
   const handleDescription = event => {
     setDescription(event.target.value);
   };
+  console.log(placeCount);
   return (
     <Root>
       {loggedIn ? null : <Redirect to="/login" />}
@@ -151,7 +155,12 @@ export default function AddEvent({
             />
           </Grid>
         </MuiPickersUtilsProvider>
-
+        <FormFieldContainer>
+          <PlaceInput
+            value={placeCount}
+            onChange={event => setPlaceCount(event.target.value)}
+          />
+        </FormFieldContainer>
         <Buttons>
           <Btn onClick={resetForm}>Zresetuj</Btn>
           <Btn onClick={handleAddIvent}>Dodaj wydarzenie</Btn>

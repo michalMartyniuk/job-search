@@ -87,7 +87,6 @@ const mapDispatchToProps = dispatch => ({
   apply: offerId => dispatch(applyToOffer(offerId)),
   save: offerId => dispatch(saveOffer(offerId)),
   remove: (offer, offerType) => dispatch(removeOffer(offer, offerType)),
-
   applyToIvent: iventId => dispatch(applyToIvent(iventId)),
   saveIvent: iventId => dispatch(saveIvent(iventId)),
   removeIvent: (ivent, iventType) => dispatch(removeIvent(ivent, iventType))

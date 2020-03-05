@@ -14,6 +14,10 @@ export const setUserKeySkills = value => ({
   type: types.SET_USER_KEY_SKILLS,
   value
 });
+export const setMinPrefSalary = value => ({
+  type: types.SET_MIN_PREF_SALARY,
+  value
+});
 export const setSignUpName = name => ({ type: types.SET_SIGNUP_NAME, name });
 export const setSignUpEmail = email => ({
   type: types.SET_SIGNUP_EMAIL,
@@ -138,14 +142,8 @@ export const authSignUp = (name, email, password, accountType) => {
       PowerPoint: false
     },
     closedOffers: [],
-    closedIvents: []
-    // };
-    // } else if (accountType === "employer") {
-    // accountData = {
-    // ...accountData,
-    // closedOffers: [],
-    // closedIvents: []
-    // };
+    closedIvents: [],
+    minPrefSalary: ""
   };
   return async dispatch => {
     const account = await auth.createUserWithEmailAndPassword(email, password);
@@ -214,7 +212,8 @@ export const updateProfile = updateData => {
       userKeySkills: {
         ...updateData.userKeySkills
       },
-      description: updateData.description
+      description: updateData.description,
+      minPrefSalary: updateData.minPrefSalary
     };
     await userDoc.set(userUpdated);
     dispatch({ type: types.UPDATE_PROFILE });

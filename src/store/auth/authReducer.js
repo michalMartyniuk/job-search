@@ -28,7 +28,8 @@ const initialState = {
       Excel: false,
       PowerPoint: false
     },
-    userDescription: null
+    userDescription: "",
+    minPrefSalary: ""
   },
   loggedIn: false,
   logInError: false,
@@ -285,6 +286,14 @@ export default function authReducer(state = initialState, action) {
         user: {
           ...state.user,
           description: action.description
+        }
+      };
+    case types.SET_MIN_PREF_SALARY:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          minPrefSalary: action.value
         }
       };
     default:

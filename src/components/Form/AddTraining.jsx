@@ -11,7 +11,7 @@ import {
   KeyboardTimePicker,
   KeyboardDatePicker
 } from "@material-ui/pickers";
-import { JobInput } from "./Input";
+import { JobInput, PlaceInput } from "./Input";
 import Category from "./FiltersCategory";
 
 const Filters = styled.div`
@@ -69,7 +69,9 @@ export default function AddTraining({
   description,
   setDescription,
   addIvent,
-  loggedIn
+  loggedIn,
+  setPlaceCount,
+  placeCount
 }) {
   React.useEffect(() => {
     resetForm();
@@ -88,6 +90,7 @@ export default function AddTraining({
       cities: Object.keys(cities).filter(key => cities[key]),
       keySkills: Object.keys(keySkills).filter(key => keySkills[key]),
       description,
+      placeCount,
       date: selectedDate
     };
     addIvent(inputs);
@@ -151,6 +154,12 @@ export default function AddTraining({
             />
           </Grid>
         </MuiPickersUtilsProvider>
+        <FormFieldContainer>
+          <PlaceInput
+            value={placeCount}
+            onChange={event => setPlaceCount(event.target.value)}
+          />
+        </FormFieldContainer>
         <Buttons>
           <Btn onClick={resetForm}>Zresetuj</Btn>
           <Btn onClick={handleAddTraining}>Dodaj szkolenie</Btn>

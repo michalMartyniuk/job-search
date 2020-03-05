@@ -3,7 +3,7 @@ import TextField from "@material-ui/core/TextField";
 import { Paper, Button } from "@material-ui/core";
 import styled from "styled-components";
 import { Redirect } from "react-router-dom";
-import { JobInput } from "./Input";
+import { JobInput, ProcessLengthInput } from "./Input";
 import { ExperienceSelect } from "./Select";
 import Category from "./FiltersCategory";
 import SalarySlider from "./Slider";
@@ -53,6 +53,10 @@ const Btn = styled(Button).attrs({
 const Description = styled(TextField)`
   margin-top: 20px;
 `;
+const ProcessLengthWrapper = styled.div`
+  margin-top: 20px;
+`;
+
 export default function AddFormNew({
   job,
   setJob,
@@ -70,7 +74,9 @@ export default function AddFormNew({
   addOffer,
   description,
   setDescription,
-  loggedIn
+  loggedIn,
+  setProcessLength,
+  processLength
 }) {
   React.useEffect(() => {
     resetForm();
@@ -84,7 +90,8 @@ export default function AddFormNew({
       keySkills: Object.keys(keySkills).filter(key => keySkills[key]),
       experience,
       salary,
-      description
+      description,
+      processLength
     };
     addOffer(inputs);
   };
@@ -129,6 +136,12 @@ export default function AddFormNew({
           onChange={handleDescription}
           variant="outlined"
         />
+        <ProcessLengthWrapper>
+          <ProcessLengthInput
+            value={processLength}
+            onChange={event => setProcessLength(event.target.value)}
+          />
+        </ProcessLengthWrapper>
         <Buttons>
           <Btn onClick={resetForm}>Zresetuj</Btn>
           <Btn onClick={handleAddOffer}>Dodaj ofertę</Btn>

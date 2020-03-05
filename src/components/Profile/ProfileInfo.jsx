@@ -49,7 +49,6 @@ const KeySkillsHeader = styled.h2`
   font-size: 1.4rem;
   font-weight: 500;
 `;
-
 function ProfileInfo({ user, toggleUpdateProfile, updateProfileActive }) {
   let accountType;
   if (user) {
@@ -85,14 +84,20 @@ function ProfileInfo({ user, toggleUpdateProfile, updateProfileActive }) {
           <InfoItem name="Rodzaj konta: " value={accountType} />
           <InfoItem name="Opis: " value={user.description || "Brak"} />
           {accountType === "użytkownik" ? (
-            <KeySkillsContainer>
-              <KeySkillsHeader>Kluczowe umiejętności:</KeySkillsHeader>
-              {keySkillsArr.length
-                ? keySkillsArr.map(skill => (
-                    <KeySkill key={skill}>{skill}</KeySkill>
-                  ))
-                : "Brak"}
-            </KeySkillsContainer>
+            <>
+              <KeySkillsContainer>
+                <KeySkillsHeader>Kluczowe umiejętności:</KeySkillsHeader>
+                {keySkillsArr.length
+                  ? keySkillsArr.map(skill => (
+                      <KeySkill key={skill}>{skill}</KeySkill>
+                    ))
+                  : "Brak"}
+              </KeySkillsContainer>
+              <InfoItem
+                name="Minimalne preferowane wynagrodzenie: "
+                value={user.minPrefSalary || "Brak"}
+              />
+            </>
           ) : null}
           <Actions>
             <ActionButton variant="outlined" onClick={handleChangeInfo}>

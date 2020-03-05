@@ -1,3 +1,4 @@
+/* eslint-disable radix */
 import { types } from "./formTypes";
 
 const initialState = {
@@ -21,7 +22,9 @@ const initialState = {
     Excel: false,
     PowerPoint: false
   },
-  description: ""
+  description: "",
+  placeCount: "",
+  processLength: ""
 };
 
 export default function formReducer(state = initialState, action) {
@@ -81,6 +84,21 @@ export default function formReducer(state = initialState, action) {
       return {
         ...state,
         description: action.value
+      };
+    case types.SET_PROCESS_LENGTH:
+      return {
+        ...state,
+        processLength: action.value
+      };
+    case types.SET_PLACE_COUNT:
+      return {
+        ...state,
+        placeCount: action.value
+      };
+    case types.DECREASE_PLACE_COUNT:
+      return {
+        ...state,
+        placeCount: parseInt(state.placeCount) - 1
       };
     case types.SET_SALARY:
       return {

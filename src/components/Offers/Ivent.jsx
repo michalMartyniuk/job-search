@@ -80,7 +80,15 @@ function convertDateObject({ year, month, day }) {
 }
 function Ivent({ ivent, ...props }) {
   const history = useHistory();
-  const { job, jobTypes, cities, description, ownerName, keySkills } = ivent;
+  const {
+    job,
+    jobTypes,
+    cities,
+    description,
+    placeCount,
+    ownerName,
+    keySkills
+  } = ivent;
   const handleEdit = iventId => {
     history.push(`/edit/event/${iventId}`);
   };
@@ -124,6 +132,14 @@ function Ivent({ ivent, ...props }) {
             <p>
               <strong>Opis: </strong>
               {description}
+            </p>
+          </Description>
+        ) : null}
+        {placeCount ? (
+          <Description>
+            <p>
+              <strong>Ilość miejsc: </strong>
+              {placeCount}
             </p>
           </Description>
         ) : null}
